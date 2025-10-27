@@ -3,16 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora de Itens</title>
+<title>Calculadora de Itens com Som</title>
 
 <style>
-  /* Reset simples */
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: Arial, sans-serif;
     background: #1e1e1e;
@@ -23,40 +17,23 @@
     min-height: 100vh;
     padding: 10px;
   }
-
   .container {
     background: #2d2d2d;
     padding: 20px;
     border-radius: 12px;
     width: 100%;
-    max-width: 420px; /* Limite máximo para telas grandes */
+    max-width: 420px;
     box-shadow: 0 0 15px rgba(0,0,0,0.5);
   }
-
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 1.6rem;
-  }
-
-  .item {
-    display: flex;
-    flex-direction: column; /* Melhor para mobile */
-    margin-bottom: 20px;
-  }
-
-  .item label {
-    margin-bottom: 8px;
-    font-size: 1rem;
-  }
-
+  h2 { text-align: center; margin-bottom: 20px; font-size: 1.6rem; }
+  .item { display: flex; flex-direction: column; margin-bottom: 20px; }
+  .item label { margin-bottom: 8px; font-size: 1rem; }
   .controls {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     gap: 10px;
   }
-
   button {
     width: 50px;
     height: 50px;
@@ -68,11 +45,7 @@
     border-radius: 8px;
     transition: background 0.2s;
   }
-
-  button:active {
-    background: #666;
-  }
-
+  button:active { background: #666; }
   input {
     width: 60px;
     text-align: center;
@@ -82,7 +55,6 @@
     border: none;
     border-radius: 6px;
   }
-
   .cost-option {
     display: flex;
     align-items: center;
@@ -91,7 +63,6 @@
     font-size: 1rem;
     flex-wrap: wrap;
   }
-
   .total {
     text-align: center;
     font-weight: bold;
@@ -102,38 +73,25 @@
     color: #fff;
     word-break: break-word;
   }
-
-  /* Responsividade para telas pequenas (iPhones mais estreitos) */
-  @media (max-width: 400px) {
-    h2 {
-      font-size: 1.4rem;
-    }
-
-    button {
-      width: 45px;
-      height: 45px;
-      font-size: 20px;
-    }
-
-    input {
-      width: 50px;
-      font-size: 18px;
-    }
-
-    .total {
-      font-size: 1.3rem;
-      padding: 12px;
-    }
+  .reset-btn {
+    width: 100%;
+    margin-top: 15px;
+    background: #b90000;
+    font-size: 1.1rem;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
   }
+  .reset-btn:active { background: #e60000; }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <h2>Calculadora de Preços</h2>
+  <h2>CAPITAL HP CUS CALCULADORA</h2>
 
   <div class="item">
-    <label id="labelKit">Kit (R$ 700,00)</label>
+    <label id="labelKit">KIT CUS (R$ 700,00)</label>
     <div class="controls">
       <button onclick="update('kit', -1)">-</button>
       <input type="text" id="kit" value="0" disabled>
@@ -142,7 +100,7 @@
   </div>
 
   <div class="item">
-    <label id="labelBand">Bandagem (R$ 400,00)</label>
+    <label id="labelBand">BANDAGEM CUS(R$ 400,00)</label>
     <div class="controls">
       <button onclick="update('bandagem', -1)">-</button>
       <input type="text" id="bandagem" value="0" disabled>
@@ -151,7 +109,7 @@
   </div>
 
   <div class="item">
-    <label id="labelCalm">Calmante (R$ 1.000,00)</label>
+    <label id="labelCalm">CALMANTE CUS (R$ 1.000,00)</label>
     <div class="controls">
       <button onclick="update('calmante', -1)">-</button>
       <input type="text" id="calmante" value="0" disabled>
@@ -165,9 +123,16 @@
   </label>
 
   <div class="total" id="total">Total: R$ 0,00</div>
+
+  <button class="reset-btn" onclick="limpar()">Limpar</button>
 </div>
 
 <script>
+  // Áudios configurados
+  const somPlus = new Audio("som_plus.mp3");
+  const somMinus = new Audio("som_minus.mp3");
+  const somReset = new Audio("som_reset.mp3");
+
   const precoNormal = {
     kit: 700,
     bandagem: 400,
@@ -183,6 +148,12 @@
   function update(id, change) {
     const input = document.getElementById(id);
     let value = parseInt(input.value);
+
+    if (change > 0) {
+      somPlus.play();
+    } else if (value > 0) {
+      somMinus.play();
+    }
 
     value += change;
     if (value < 0) value = 0;
@@ -211,6 +182,15 @@
 
     document.getElementById('total').textContent = 
       "Total: R$ " + total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function limpar() {
+    somReset.play();
+    document.getElementById('kit').value = 0;
+    document.getElementById('bandagem').value = 0;
+    document.getElementById('calmante').value = 0;
+    document.getElementById('custo').checked = false;
+    calcular();
   }
 </script>
 
