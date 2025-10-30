@@ -5,70 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Calculadora SNUK</title>
 <style>
-  body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #0a0a0a;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    margin: 0;
-    background-image: radial-gradient(circle at top left, #222, #000);
-  }
-  .container {
-    background: rgba(20, 20, 20, 0.95);
-    border: 2px solid #ff0000;
-    border-radius: 15px;
-    padding: 25px;
-    width: 90%;
-    max-width: 360px;
-    box-shadow: 0 0 20px #ff000099;
-    text-align: center;
-    position: relative;
-  }
-  h1 {
-    color: #ff0000;
-    text-shadow: 0 0 8px #ff0000aa;
-    margin-bottom: 15px;
-    font-size: 1.8em;
-  }
-  label, select, input, button {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-    font-size: 1em;
-  }
-  select, input {
-    background: #111;
-    border: 1px solid #ff0000;
-    color: #fff;
-    border-radius: 8px;
-    padding: 10px;
-    text-align: center;
-  }
-  button {
-    background: #ff0000;
-    border: none;
-    color: #fff;
-    padding: 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s, transform 0.1s;
-  }
-  button:hover { background: #cc0000; transform: scale(1.03); }
-  .resultado { margin-top: 15px; background: #111; border: 1px solid #ff0000; border-radius: 10px; padding: 10px; font-size: 0.95em; }
-  .taxa { position: absolute; top: 10px; right: 15px; background: #1a1a1a; border: 1px solid #ff0000; border-radius: 8px; padding: 5px 10px; font-size: 14px; color: #ff5555; }
-
-  /* Popup de senha */
-  .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 10; }
-  .popup { background: #111; border: 2px solid #ff0000; border-radius: 12px; padding: 20px; text-align: center; width: 80%; max-width: 300px; box-shadow: 0 0 15px #ff000066; }
-  .popup h2 { color: #ff0000; margin-bottom: 10px; }
-  .popup input { width: 80%; padding: 8px; margin-top: 10px; border: 1px solid #ff0000; border-radius: 8px; text-align: center; background: #222; color: #fff; }
-  .popup button { margin-top: 10px; width: 80%; }
-
+  body {font-family: 'Roboto', sans-serif;background-color: #0a0a0a;color: #fff;display: flex;flex-direction: column;align-items: center;justify-content: center;min-height: 100vh;margin: 0;background-image: radial-gradient(circle at top left, #222, #000);}  
+  .container {background: rgba(20, 20, 20, 0.95);border: 2px solid #ff0000;border-radius: 15px;padding: 25px;width: 90%;max-width: 360px;box-shadow: 0 0 20px #ff000099;text-align: center;position: relative;}  
+  h1 {color: #ff0000;text-shadow: 0 0 8px #ff0000aa;margin-bottom: 15px;font-size: 1.8em;}  
+  label, select, input, button {display: block;width: 100%;margin-bottom: 10px;font-size: 1em;}  
+  select, input {background: #111;border: 1px solid #ff0000;color: #fff;border-radius: 8px;padding: 10px;text-align: center;}  
+  button {background: #ff0000;border: none;color: #fff;padding: 12px;border-radius: 8px;cursor: pointer;font-weight: bold;transition: background 0.3s, transform 0.1s;}  
+  button:hover { background: #cc0000; transform: scale(1.03); }  
+  .resultado { margin-top: 15px; background: #111; border: 1px solid #ff0000; border-radius: 10px; padding: 10px; font-size: 0.95em; text-align:left; }  
+  .taxa { position: absolute; top: 10px; right: 15px; background: #1a1a1a; border: 1px solid #ff0000; border-radius: 8px; padding: 5px 10px; font-size: 14px; color: #ff5555; }  
+  .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 10; }  
+  .popup { background: #111; border: 2px solid #ff0000; border-radius: 12px; padding: 20px; text-align: center; width: 80%; max-width: 300px; box-shadow: 0 0 15px #ff000066; }  
+  .popup h2 { color: #ff0000; margin-bottom: 10px; }  
+  .popup input { width: 80%; padding: 8px; margin-top: 10px; border: 1px solid #ff0000; border-radius: 8px; text-align: center; background: #222; color: #fff; }  
+  .popup button { margin-top: 10px; width: 80%; }  
   @media (max-width:480px){ .container{ padding:20px; } h1{ font-size:1.4em;} }
 </style>
 </head>
@@ -133,7 +83,6 @@
         precoParceria.focus();
       } else {
         overlay.style.display = 'none';
-        // aviso simples sem alert do navegador
         showTempMessage('Senha incorreta');
       }
     }
@@ -157,16 +106,28 @@
       const totalBruto = precoVenda * qtd;
       const taxaPrefeitura = totalBruto * lavagem;
       const totalLiquido = totalBruto - taxaPrefeitura;
-      const custoTotal = precoParceriaVal * qtd;
-      const lucro = totalLiquido - custoTotal;
+      const custoTotal = precoParceriaVal * qtd; // custo do revendedor (preco de parceria * unidades)
+
+      // Calculos adicionais: lucro do revendedor (quem comprou na parceria e vendeu aos NPCs)
+      // assumimos que o revendedor vende para NPCs por precoVenda (350) ou para player (180)
+      const lucroRevendedor = totalLiquido - custoTotal;
+
+      // Lucro do player (se o revendedor for um intermediário que comprou de outro por precoPlayer)
+      // Considera-se precoPlayer = 180 (preco que players pagam ao comprar de quem tiver parceria)
+      const precoPlayer = 180;
+      const custoPlayerTotal = precoPlayer * qtd;
+      const lucroPlayer = totalLiquido - custoPlayerTotal;
 
       document.getElementById('resultado').innerHTML = `
         <p><strong>Tipo:</strong> ${tipo === 'player' ? 'Player (Dinheiro Limpo)' : 'NPC / Gringo (Dinheiro Sujo)'}</p>
         <p><strong>Venda total:</strong> R$ ${fmt(totalBruto)}</p>
         ${tipo === 'npc' ? `<p><strong>Taxa Prefeitura (40%):</strong> -R$ ${fmt(taxaPrefeitura)}</p>` : ''}
         <p><strong>Receita Líquida:</strong> R$ ${fmt(totalLiquido)}</p>
-        <p><strong>Custo Total:</strong> R$ ${fmt(custoTotal)}</p>
-        <p style="color:${lucro >= 0 ? '#00ff00' : '#ff4444'}"><strong>Lucro:</strong> R$ ${fmt(lucro)}</p>
+        <p><strong>Custo Total (preço de parceria x unidades):</strong> R$ ${fmt(custoTotal)}</p>
+        <p style="color:${lucroRevendedor >= 0 ? '#00ff00' : '#ff4444'}"><strong>Lucro (revendedor):</strong> R$ ${fmt(lucroRevendedor)}</p>
+        <hr>
+        <p class="muted"><strong>Legenda / comparação</strong></p>
+        <p><small>Se um player tivesse comprado essas unidades por R$ ${fmt(precoPlayer)} cada, o custo total do player seria R$ ${fmt(custoPlayerTotal)} e o lucro do player (após lavagem) seria R$ ${fmt(lucroPlayer)}</small></p>
       `;
     }
   </script>
