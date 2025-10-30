@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Calculadora SNUK</title>
 <style>
   body {
@@ -23,7 +23,7 @@
     border-radius: 15px;
     padding: 25px;
     width: 90%;
-    max-width: 350px;
+    max-width: 360px;
     box-shadow: 0 0 20px #ff000099;
     text-align: center;
     position: relative;
@@ -32,97 +32,44 @@
     color: #ff0000;
     text-shadow: 0 0 8px #ff0000aa;
     margin-bottom: 15px;
+    font-size: 1.8em;
   }
   label, select, input, button {
     display: block;
     width: 100%;
     margin-bottom: 10px;
-    font-size: 16px;
+    font-size: 1em;
   }
   select, input {
     background: #111;
     border: 1px solid #ff0000;
     color: #fff;
     border-radius: 8px;
-    padding: 8px;
+    padding: 10px;
     text-align: center;
-  }
-  input[readonly] {
-    letter-spacing: 4px;
-    color: #ff5555;
   }
   button {
     background: #ff0000;
     border: none;
     color: #fff;
-    padding: 10px;
+    padding: 12px;
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
     transition: background 0.3s, transform 0.1s;
   }
-  button:hover {
-    background: #cc0000;
-    transform: scale(1.05);
-  }
-  .resultado {
-    margin-top: 15px;
-    background: #111;
-    border: 1px solid #ff0000;
-    border-radius: 10px;
-    padding: 10px;
-  }
-  .taxa {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background: #1a1a1a;
-    border: 1px solid #ff0000;
-    border-radius: 8px;
-    padding: 5px 10px;
-    font-size: 14px;
-    color: #ff5555;
-  }
+  button:hover { background: #cc0000; transform: scale(1.03); }
+  .resultado { margin-top: 15px; background: #111; border: 1px solid #ff0000; border-radius: 10px; padding: 10px; font-size: 0.95em; }
+  .taxa { position: absolute; top: 10px; right: 15px; background: #1a1a1a; border: 1px solid #ff0000; border-radius: 8px; padding: 5px 10px; font-size: 14px; color: #ff5555; }
 
   /* Popup de senha */
-  .overlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-  }
-  .popup {
-    background: #111;
-    border: 2px solid #ff0000;
-    border-radius: 12px;
-    padding: 20px;
-    text-align: center;
-    width: 80%;
-    max-width: 300px;
-    box-shadow: 0 0 15px #ff000066;
-  }
-  .popup h2 {
-    color: #ff0000;
-    margin-bottom: 10px;
-  }
-  .popup input {
-    width: 80%;
-    padding: 8px;
-    margin-top: 10px;
-    border: 1px solid #ff0000;
-    border-radius: 8px;
-    text-align: center;
-    background: #222;
-    color: #fff;
-  }
-  .popup button {
-    margin-top: 10px;
-    width: 80%;
-  }
+  .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 10; }
+  .popup { background: #111; border: 2px solid #ff0000; border-radius: 12px; padding: 20px; text-align: center; width: 80%; max-width: 300px; box-shadow: 0 0 15px #ff000066; }
+  .popup h2 { color: #ff0000; margin-bottom: 10px; }
+  .popup input { width: 80%; padding: 8px; margin-top: 10px; border: 1px solid #ff0000; border-radius: 8px; text-align: center; background: #222; color: #fff; }
+  .popup button { margin-top: 10px; width: 80%; }
+
+  @media (max-width:480px){ .container{ padding:20px; } h1{ font-size:1.4em;} }
 </style>
 </head>
 <body>
@@ -186,15 +133,25 @@
         precoParceria.focus();
       } else {
         overlay.style.display = 'none';
-        alert('Senha incorreta!');
+        // aviso simples sem alert do navegador
+        showTempMessage('Senha incorreta');
       }
+    }
+
+    function fmt(v){ return Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+
+    function showTempMessage(msg){
+      const res = document.getElementById('resultado');
+      const prev = res.innerHTML;
+      res.innerHTML = `<div style="color:#ffbbbb;background:#220000;padding:8px;border-radius:6px">${msg}</div>`;
+      setTimeout(()=>{ res.innerHTML = prev; }, 1400);
     }
 
     function calcular() {
       const tipo = tipoVenda.value;
       const precoParceriaVal = precoParceria.value === '******' ? 125 : parseFloat(precoParceria.value);
       const precoVenda = parseFloat(precoUnidade.value);
-      const qtd = parseInt(document.getElementById('quantidade').value);
+      const qtd = parseInt(document.getElementById('quantidade').value) || 0;
 
       const lavagem = tipo === 'npc' ? 0.4 : 0;
       const totalBruto = precoVenda * qtd;
@@ -205,14 +162,13 @@
 
       document.getElementById('resultado').innerHTML = `
         <p><strong>Tipo:</strong> ${tipo === 'player' ? 'Player (Dinheiro Limpo)' : 'NPC / Gringo (Dinheiro Sujo)'}</p>
-        <p><strong>Venda total:</strong> R$ ${totalBruto.toFixed(2)}</p>
-        ${tipo === 'npc' ? `<p><strong>Taxa Prefeitura (40%):</strong> -R$ ${taxaPrefeitura.toFixed(2)}</p>` : ''}
-        <p><strong>Receita Líquida:</strong> R$ ${totalLiquido.toFixed(2)}</p>
-        <p><strong>Custo Total:</strong> R$ ${custoTotal.toFixed(2)}</p>
-        <p style="color:${lucro >= 0 ? '#00ff00' : '#ff4444'}"><strong>Lucro:</strong> R$ ${lucro.toFixed(2)}</p>
+        <p><strong>Venda total:</strong> R$ ${fmt(totalBruto)}</p>
+        ${tipo === 'npc' ? `<p><strong>Taxa Prefeitura (40%):</strong> -R$ ${fmt(taxaPrefeitura)}</p>` : ''}
+        <p><strong>Receita Líquida:</strong> R$ ${fmt(totalLiquido)}</p>
+        <p><strong>Custo Total:</strong> R$ ${fmt(custoTotal)}</p>
+        <p style="color:${lucro >= 0 ? '#00ff00' : '#ff4444'}"><strong>Lucro:</strong> R$ ${fmt(lucro)}</p>
       `;
     }
   </script>
 </body>
 </html>
-
