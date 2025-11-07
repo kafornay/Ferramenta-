@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Bravo13 — Painel</title>
+<style>
+  :root {
+    --bg:#0f0f12;
+    --card:#121216;
+    --accent:#c32b2b;
+    --muted:#bfc6cc;
+    --success:#25d366;
+    font-family: 'Inter', system-ui, Arial;
+  }
+
+  body {
+    margin: 0;
+    background: linear-gradient(180deg,#070708,#0f0f12);
+    color: #e6e6e6;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* Cabeçalho */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .svg-wrap {
+    width: 240px;
+    height: 90px;
+  }
+
+  .big-money {
+    background: linear-gradient(90deg,rgba(195,43,43,0.12),rgba(195,43,43,0.06));
+    padding: 14px;
+    border-radius: 12px;
+    text-align: right;
+    min-width: 180px;
+  }
+
+  .big-money .label { font-size: 12px; color: var(--muted); }
+  .big-money .value { font-size: 22px; font-weight: 700; }
+
+  /* Contadores */
+  .counters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .counter {
+    background: var(--card);
+    padding: 10px;
+    border-radius: 10px;
+    min-width: 110px;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  }
+
+  .counter .num { font-weight: 700; font-size: 16px; }
+
+  /* Painel de tarefas */
+  .panel {
+    margin-top: 20px;
+    background: linear-gradient(180deg,rgba(255,255,255,0.02),transparent);
+    padding: 14px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+
+  th, td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    text-align: left;
+    font-size: 14px;
+  }
+
+  th { color: var(--muted); font-weight: 600; }
+
+  .status-dot {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .pending { background: #6b1313; }
+  .done { background: var(--success); }
+
+  .btn {
+    background: var(--accent);
+    color: #fff;
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: 0;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .btn.ghost {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .small { font-size: 12px; color: var(--muted); }
+
+  /* Modal */
+  .modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.6);
+  }
+
+  .modal .box {
+    background: #0d0d0f;
+    padding: 16px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 520px;
+  }
+
+  input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.04);
+    background: transparent;
+    color: #e6e6e6;
+    margin-top: 8px;
+  }
+
+  label { font-size: 13px; color: var(--muted); display: block; margin-top: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <!-- Logo curvada -->
+    <div class="svg-wrap">
+      <svg viewBox="0 0 420 120" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <path id="arc" d="M20,80 A180,80 0 0,1 400,80" />
+          <linearGradient id="g" x1="0" x2="1">
+            <stop offset="0" stop-color="#fff"/>
+            <stop offset="1" stop-color="#c32b2b"/>
+          </linearGradient>
+        </defs>
+        <text font-family="Impact, Arial Black" font-size="34" fill="url(#g)" font-weight="700">
+          <textPath href="#arc" startOffset="50">BRAVO 13</textPath>
+        </text>
+      </svg>
+    </div>
+
+    <div class="big-money">
+      <div class="label">DINHEIRO TOTAL</div>
+      <div id="money" class="value">—</div>
+    </div>
+  </header>
+
+  <div class="counters">
+    <div class="counter"><div class="small">ARMAS</div><div id="cnt-armas" class="num">—</div></div>
+    <div class="counter"><div class="small">DROGAS</div><div id="cnt-drogas" class="num">—</div></div>
+    <div class="counter"><div class="small">MUNIÇÃO</div><div id="cnt-municao" class="num">—</div></div>
+    <div class="counter"><div class="small">DIN. SUJO</div><div id="cnt-sujo" class="num">—</div></div>
+  </div>
+
+  <div class="panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+      <div>
+        <button id="addBtn" class="btn">+ Adicionar</button>
+        <button id="refreshBtn" class="btn ghost">Atualizar</button>
+      </div>
+      <div class="small">Status: <span id="statusMsg">Carregando...</span></div>
+    </div>
+
+    <table id="tasksTable">
+      <thead>
+        <tr><th>Status</th><th>Tarefa</th><th>Responsável</th><th>Observação</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal para adicionar -->
+<div class="modal" id="modal">
+  <div class="box">
+    <h3>Adicionar Tarefa</h3>
+    <label for="tarefa">Tarefa</label>
+    <input id="tarefa" placeholder="Nome da tarefa" />
+    <label for="responsavel">Responsável</label>
+    <input id="responsavel" placeholder="Quem executa" />
+    <label for="observacao">Observação</label>
+    <textarea id="observacao" rows="3" placeholder="Detalhes / local / hora"></textarea>
+    <label for="statusSelect">Status</label>
+    <select id="statusSelect">
+      <option value="Pendente">Pendente</option>
+      <option value="Concluída">Concluída</option>
+    </select>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+      <button id="cancel" class="btn ghost">Cancelar</button>
+      <button id="save" class="btn">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzJ378-lOwCExKPI6ylJJHT7f5G5q_brpx1zj2bNjQMVX1FNmJ03e8Hvw_mvoB79zyHRg/exec';
+
+const statusMsg = document.getElementById('statusMsg');
+const tbody = document.querySelector('#tasksTable tbody');
+const moneyEl = document.getElementById('money');
+const armasEl = document.getElementById('cnt-armas');
+const drogasEl = document.getElementById('cnt-drogas');
+const munEl = document.getElementById('cnt-municao');
+const sujoEl = document.getElementById('cnt-sujo');
+
+async function fetchData(){
+  statusMsg.textContent = 'Buscando...';
+  try {
+    const res = await fetch(ENDPOINT);
+    const j = await res.json();
+    renderStatus(j.status || {});
+    renderTasks(j.tarefas || []);
+    statusMsg.textContent = 'Sincronizado';
+  } catch (err) {
+    console.error(err);
+    statusMsg.textContent = 'Erro ao buscar dados';
+  }
+}
+
+function renderStatus(s){
+  moneyEl.textContent = s.dinheiro ?? '—';
+  armasEl.textContent = s.armas ?? '—';
+  drogasEl.textContent = s.drogas ?? '—';
+  munEl.textContent = s.municao ?? '—';
+  sujoEl.textContent = s.dinheiroSujo ?? '—';
+}
+
+function renderTasks(list){
+  tbody.innerHTML = '';
+  if(!list.length){
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td colspan=\"4\" class=\"small\">Nenhuma tarefa</td>';
+    tbody.appendChild(tr);
+    return;
+  }
+  list.forEach(r=>{
+    const tr = document.createElement('tr');
+    const isDone = (r.status||'').toLowerCase().includes('concl');
+    tr.innerHTML = `
+      <td><span class=\"status-dot ${isDone?'done':'pending'}\"></span></td>
+      <td>${r.tarefa||''}</td>
+      <td>${r.responsavel||''}</td>
+      <td>${r.observacao||''}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+const modal = document.getElementById('modal');
+document.getElementById('addBtn').onclick = ()=> modal.style.display='flex';
+document.getElementById('cancel').onclick = ()=> modal.style.display='none';
+document.getElementById('refreshBtn').onclick = fetchData;
+
+document.getElementById('save').onclick = async ()=>{
+  const tarefa = document.getElementById('tarefa').value.trim();
+  const responsavel = document.getElementById('responsavel').value.trim();
+  const observacao = document.getElementById('observacao').value.trim();
+  const status = document.getElementById('statusSelect').value;
+  if(!tarefa){ alert('Preencha o nome da tarefa'); return; }
+  try {
+    await fetch(ENDPOINT, {
+      method: 'POST',
+      body: JSON.stringify({ tarefa, responsavel, status, observacao }),
+      headers: { 'Content-Type':'application/json' }
+    });
+    modal.style.display='none';
+    document.getElementById('tarefa').value='';
+    document.getElementById('responsavel').value='';
+    document.getElementById('observacao').value='';
+    document.getElementById('statusSelect').value='Pendente';
+    await fetchData();
+    alert('Tarefa enviada!');
+  } catch(err){
+    console.error(err);
+    alert('Erro ao enviar.');
+  }
+};
+
+fetchData();
+</script>
+</body>
+</html>
