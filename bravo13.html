@@ -1,273 +1,287 @@
-<!doctype html>
-<html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-br">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Bravo13 — Painel (v2)</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Painel Bravo 13</title>
 <style>
-  :root{
-    --bg:#0f0f12; --card:#121216; --accent:#c32b2b; --muted:#bfc6cc; --success:#25d366;
-    font-family:Inter, system-ui, Arial, sans-serif;
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #0d0d0d;
+    color: #e5e5e5;
+    margin: 0;
+    padding: 0;
   }
-  html,body{height:100%;margin:0;background:linear-gradient(180deg,#070708,#0f0f12);color:#e6e6e6}
-  .wrap{max-width:1100px;margin:18px auto;padding:18px}
-  header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-  .brand{display:flex;align-items:center;gap:14px}
-  .svg-wrap{width:240px;height:100px}
-  .top-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
-  .big-money{background:linear-gradient(90deg,rgba(195,43,43,0.12),rgba(195,43,43,0.06));padding:14px;border-radius:12px;min-width:200px;text-align:right}
-  .big-money .label{font-size:12px;color:var(--muted)} .big-money .value{font-size:20px;font-weight:800}
-  .counters{display:flex;gap:8px;flex-wrap:wrap}
-  .counter{background:var(--card);padding:8px 12px;border-radius:10px;min-width:120px;text-align:center;box-shadow:0 6px 18px rgba(0,0,0,0.6)}
-  .counter .label{font-size:12px;color:var(--muted)} .counter input{background:transparent;border:0;color:inherit;font-weight:700;font-size:16px;text-align:center;outline:none}
-  .panel{margin-top:16px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:12px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.6)}
-  table{width:100%;border-collapse:collapse;margin-top:12px}
-  th,td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.04);text-align:left;font-size:14px}
-  th{color:var(--muted);font-weight:700}
-  .status-dot{display:inline-block;width:14px;height:14px;border-radius:3px;cursor:pointer;border:2px solid rgba(0,0,0,0.3)}
-  .pending{background:#6b1313} .done{background:var(--success)}
-  .btn{background:var(--accent);color:#fff;padding:9px 12px;border-radius:10px;border:0;cursor:pointer;font-weight:700}
-  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06)}
-  .small{font-size:12px;color:var(--muted)}
-  .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6)}
-  .box{background:#0d0d0f;padding:16px;border-radius:12px;width:92%;max-width:520px}
-  input[type="text"],textarea,select{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;margin-top:8px}
-  label{font-size:13px;color:var(--muted);display:block;margin-top:8px}
-  .top-edit{display:flex;gap:8px;align-items:center}
-  .save-info{font-size:12px;color:var(--muted);margin-top:8px}
-  @media(max-width:760px){header{flex-direction:column;align-items:flex-start}.top-right{align-items:flex-start}}
+
+  header {
+    text-align: center;
+    background-color: #1a1a1a;
+    padding: 20px 10px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 0 15px rgba(0,0,0,0.6);
+  }
+
+  h1 {
+    color: #c32b2b;
+    font-size: 36px;
+    font-weight: bold;
+    letter-spacing: 3px;
+  }
+
+  .topo {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin: 15px 0;
+  }
+
+  .campo {
+    background: #1a1a1a;
+    border: 2px solid #2e2e2e;
+    border-radius: 12px;
+    padding: 15px;
+    min-width: 160px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  }
+
+  .campo input {
+    width: 80%;
+    text-align: center;
+    background: transparent;
+    border: none;
+    color: #00ff80;
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  .botao-atualizar {
+    background: #c32b2b;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  .botao-atualizar:hover {
+    background: #ff4d4d;
+  }
+
+  .tarefas-container {
+    margin: 20px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+
+  th, td {
+    border-bottom: 1px solid #333;
+    padding: 10px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #c32b2b;
+    color: #fff;
+  }
+
+  tr:nth-child(even) {
+    background-color: #1a1a1a;
+  }
+
+  tr:nth-child(odd) {
+    background-color: #111;
+  }
+
+  .btn-adicionar {
+    background: #00ff80;
+    color: #000;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+
+  .btn-adicionar:hover {
+    background: #00cc66;
+  }
+
+  .status {
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-weight: bold;
+  }
+
+  .status.Pendente {
+    background: #c32b2b;
+    color: white;
+  }
+
+  .status.Concluído {
+    background: #00ff80;
+    color: #000;
+  }
+
+  footer {
+    text-align: center;
+    padding: 15px;
+    font-size: 13px;
+    color: #999;
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
   <header>
-    <div class="brand">
-      <div class="svg-wrap" aria-hidden="true">
-        <svg viewBox="0 0 420 120" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <path id="arc" d="M20,80 A180,80 0 0,1 400,80" />
-            <linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#c32b2b"/></linearGradient>
-          </defs>
-          <text font-family="Impact, Arial Black" font-size="34" fill="url(#g)" font-weight="700">
-            <textPath href="#arc" startOffset="50">BRAVO 13</textPath>
-          </text>
-        </svg>
-      </div>
-      <div>
-        <div style="font-weight:800;font-size:18px">Bravo13 — Painel de Operações</div>
-        <div class="small">Edite os contadores e gerencie tarefas</div>
-      </div>
-    </div>
-
-    <div class="top-right">
-      <div class="big-money">
-        <div class="label">DINHEIRO TOTAL</div>
-        <div class="value"><input id="moneyInput" type="text" value="—" /></div>
-      </div>
-
-      <div class="counters">
-        <div class="counter"><div class="label">ARMAS</div><input id="armasInput" type="text" value="—"></div>
-        <div class="counter"><div class="label">DROGAS</div><input id="drogasInput" type="text" value="—"></div>
-        <div class="counter"><div class="label">MUNIÇÃO</div><input id="munInput" type="text" value="—"></div>
-        <div class="counter"><div class="label">DIN. SUJO</div><input id="sujoInput" type="text" value="—"></div>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:6px">
-        <button id="saveTop" class="btn">Salvar Topo</button>
-        <button id="reload" class="btn ghost">Atualizar</button>
-      </div>
-    </div>
+    <h1>BRAVO 13</h1>
   </header>
 
-  <div class="panel">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
-      <div class="controls">
-        <button id="addBtn" class="btn">+ Adicionar</button>
-        <button id="exportCSV" class="btn ghost">Exportar CSV</button>
-        <div class="small">Tarefas sincronizadas com a aba <strong>Tarefas</strong> da planilha</div>
-      </div>
-      <div class="small">Status: <span id="statusMsg">Carregando...</span></div>
+  <section class="topo" id="painelStatus">
+    <div class="campo">
+      <label>Dinheiro Total</label><br>
+      <input type="number" id="dinheiro" value="0">
     </div>
+    <div class="campo">
+      <label>Armas</label><br>
+      <input type="number" id="armas" value="0">
+    </div>
+    <div class="campo">
+      <label>Drogas</label><br>
+      <input type="number" id="drogas" value="0">
+    </div>
+    <div class="campo">
+      <label>Munição</label><br>
+      <input type="number" id="municao" value="0">
+    </div>
+    <div class="campo">
+      <label>Dinheiro Sujo</label><br>
+      <input type="number" id="dinheiroSujo" value="0">
+    </div>
+  </section>
 
-    <table id="tasksTable" aria-live="polite">
-      <thead><tr><th style="width:80px">Status</th><th>Tarefa</th><th>Responsável</th><th>Observação</th></tr></thead>
+  <div style="text-align:center; margin:10px;">
+    <button class="botao-atualizar" onclick="atualizarStatus()">Atualizar Painel</button>
+  </div>
+
+  <section class="tarefas-container">
+    <h2>Tarefas Bravo 13</h2>
+    <table id="tabelaTarefas">
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Tarefa</th>
+          <th>Responsável</th>
+          <th>Observação</th>
+        </tr>
+      </thead>
       <tbody></tbody>
     </table>
-  </div>
-</div>
 
-<!-- modal add -->
-<div class="modal" id="modal">
-  <div class="box">
-    <h3>Adicionar Tarefa</h3>
-    <label for="tarefa">Tarefa</label>
-    <input id="tarefa" placeholder="Nome da tarefa"/>
-    <label for="responsavel">Responsável</label>
-    <input id="responsavel" placeholder="Quem executa"/>
-    <label for="observacao">Observação</label>
-    <textarea id="observacao" rows="3" placeholder="Detalhes / local / hora"></textarea>
-    <label for="statusSelect">Status</label>
-    <select id="statusSelect"><option value="Pendente">Pendente</option><option value="Concluída">Concluída</option></select>
+    <button class="btn-adicionar" onclick="adicionarTarefa()">+ Adicionar Tarefa</button>
+  </section>
 
-    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
-      <button id="cancel" class="btn ghost">Cancelar</button>
-      <button id="save" class="btn">Salvar</button>
-    </div>
-    <div class="save-info">OBS: adicionar tarefas salva direto na planilha. Edição do topo salva os contadores.</div>
-  </div>
-</div>
+  <footer>
+    Painel Bravo13 — Desenvolvido por Ronaldo © 2025
+  </footer>
 
 <script>
-/* CONFIG: endpoint do Apps Script (SEU link) */
-const ENDPOINT = 'https://script.google.com/macros/s/AKfycbyMZ-qulcEAcJGE9HBWLPkM77o4KtwAx1dZVmRBVWblAGtJUosJyMWAgXN972BQ4sIN0Q/exec';
+  // 👉 Substitua aqui pelo seu link do Apps Script:
+  const ENDPOINT = 'https://script.google.com/macros/s/AKfycbyMZ-qulcEAcJGE9HBWLPkM77o4KtwAx1dZVmRBVWblAGtJUosJyMWAgXN972BQ4sIN0Q/exec';
 
-/* elementos */
-const statusMsg = document.getElementById('statusMsg');
-const tbody = document.querySelector('#tasksTable tbody');
-const moneyInput = document.getElementById('moneyInput');
-const armasInput = document.getElementById('armasInput');
-const drogasInput = document.getElementById('drogasInput');
-const munInput = document.getElementById('munInput');
-const sujoInput = document.getElementById('sujoInput');
+  // Carregar dados ao abrir
+  window.onload = carregarDados;
 
-/* modal */
-const modal = document.getElementById('modal');
-document.getElementById('addBtn').addEventListener('click',()=> modal.style.display='flex');
-document.getElementById('cancel').addEventListener('click',()=> modal.style.display='none');
-document.getElementById('reload').addEventListener('click', fetchData);
-document.getElementById('exportCSV').addEventListener('click', exportCSV);
+  async function carregarDados() {
+    try {
+      const response = await fetch(ENDPOINT);
+      const data = await response.json();
 
-/* salvar topo */
-document.getElementById('saveTop').addEventListener('click', saveTopCounters);
+      // Preenche os campos do topo
+      document.getElementById('dinheiro').value = data.status.dinheiro || 0;
+      document.getElementById('armas').value = data.status.armas || 0;
+      document.getElementById('drogas').value = data.status.drogas || 0;
+      document.getElementById('municao').value = data.status.municao || 0;
+      document.getElementById('dinheiroSujo').value = data.status.dinheiroSujo || 0;
 
-/* salvar tarefa */
-document.getElementById('save').addEventListener('click', async ()=>{
-  const tarefa = document.getElementById('tarefa').value.trim();
-  if(!tarefa){ alert('Preencha a tarefa'); return; }
-  const payload = {
-    action: 'addTask',
-    tarefa,
-    responsavel: document.getElementById('responsavel').value.trim(),
-    status: document.getElementById('statusSelect').value,
-    observacao: document.getElementById('observacao').value.trim()
-  };
-  setStatus('Enviando tarefa...');
-  try{
-    const r = await fetch(ENDPOINT, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
-    });
-    const j = await r.json();
-    if(j.status === 'success' || j === 'Tarefa adicionada com sucesso!' || (j.message && j.status==='success')){
-      modal.style.display='none';
-      document.getElementById('tarefa').value='';document.getElementById('responsavel').value='';document.getElementById('observacao').value='';
-      await fetchData();
-      alert('Tarefa adicionada!');
-    } else {
-      alert('Resposta do servidor: ' + JSON.stringify(j));
+      // Preenche a tabela
+      const tbody = document.querySelector('#tabelaTarefas tbody');
+      tbody.innerHTML = '';
+      data.tarefas.forEach(t => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><span class="status ${t.status}">${t.status}</span></td>
+          <td>${t.tarefa}</td>
+          <td>${t.responsavel}</td>
+          <td>${t.observacao}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    } catch (error) {
+      console.error('Erro ao carregar dados:', error);
     }
-  }catch(err){
-    console.error(err); alert('Erro ao enviar tarefa. Veja console.');
-  } finally { setStatus('Pronto'); }
-});
-
-/* Fetch inicial */
-fetchData();
-
-/* Funções */
-function setStatus(t){ statusMsg.textContent = t; }
-
-async function fetchData(){
-  setStatus('Buscando dados...');
-  try{
-    const res = await fetch(ENDPOINT);
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const data = await res.json();
-    renderTop(data.status || {});
-    renderTasks(data.tarefas || []);
-    setStatus('Sincronizado');
-  }catch(err){
-    console.error(err);
-    setStatus('Erro ao buscar (ver console)');
-    alert('Erro ao conectar ao endpoint. Verifique deploy/permissões ou CORS.');
   }
-}
 
-function renderTop(s){
-  moneyInput.value = s.dinheiro ?? '';
-  armasInput.value = s.armas ?? '';
-  drogasInput.value = s.drogas ?? '';
-  munInput.value = s.municao ?? '';
-  sujoInput.value = s.dinheiroSujo ?? '';
-}
+  async function adicionarTarefa() {
+    const tarefa = prompt('Descrição da tarefa:');
+    if (!tarefa) return;
+    const responsavel = prompt('Responsável:') || '';
+    const observacao = prompt('Observação:') || '';
 
-function renderTasks(list){
-  tbody.innerHTML='';
-  if(!list.length){
-    tbody.innerHTML = '<tr><td colspan="4" class="small">Nenhuma tarefa</td></tr>'; return;
+    const payload = {
+      action: 'addTask',
+      tarefa,
+      responsavel,
+      observacao,
+      status: 'Pendente'
+    };
+
+    try {
+      const response = await fetch(ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const result = await response.json();
+      alert(result.message || 'Salvo!');
+      carregarDados();
+    } catch (error) {
+      alert('Erro ao salvar tarefa.');
+      console.error(error);
+    }
   }
-  list.forEach((r, idx)=>{
-    const tr = document.createElement('tr');
-    const isDone = (r.status||'').toLowerCase().includes('concl');
-    tr.innerHTML = `
-      <td><span class="status-dot ${isDone? 'done':'pending'}" data-idx="${idx}" title="Clique para alternar"></span></td>
-      <td>${escapeHtml(r.tarefa||'')}</td>
-      <td>${escapeHtml(r.responsavel||'')}</td>
-      <td>${escapeHtml(r.observacao||'')}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-  // toggle visual only (to persist require server update handler)
-  tbody.querySelectorAll('.status-dot').forEach(el=>{
-    el.addEventListener('click', ()=> el.classList.toggle('done'));
-  });
-}
 
-function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+  async function atualizarStatus() {
+    const status = {
+      dinheiro: document.getElementById('dinheiro').value,
+      armas: document.getElementById('armas').value,
+      drogas: document.getElementById('drogas').value,
+      municao: document.getElementById('municao').value,
+      dinheiroSujo: document.getElementById('dinheiroSujo').value
+    };
 
-/* Export CSV - tarefas */
-function exportCSV(){
-  const rows = Array.from(tbody.querySelectorAll('tr')).map(tr=>{
-    return Array.from(tr.children).slice(0,4).map(td=> '"'+td.innerText.replace(/"/g,'""')+'"').join(',');
-  });
-  const csv = 'Status,Tarefa,Responsavel,Observacao\\n' + rows.join('\\n');
-  const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'}); const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'bravo13_tarefas.csv'; a.click(); URL.revokeObjectURL(url);
-}
+    const payload = { action: 'updateStatus', status };
 
-/* Salva os contadores do topo (envia para Apps Script)
-   Payload: { action: 'updateStatus', status: {dinheiro,armas,drogas,municao,dinheiroSujo} }
-*/
-async function saveTopCounters(){
-  const payload = {
-    action: 'updateStatus',
-    status: {
-      dinheiro: moneyInput.value.trim(),
-      armas: armasInput.value.trim(),
-      drogas: drogasInput.value.trim(),
-      municao: munInput.value.trim(),
-      dinheiroSujo: sujoInput.value.trim()
+    try {
+      const response = await fetch(ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const result = await response.json();
+      alert(result.message || 'Painel atualizado!');
+    } catch (error) {
+      alert('Erro ao atualizar valores.');
+      console.error(error);
     }
-  };
-  setStatus('Salvando contadores...');
-  try{
-    const r = await fetch(ENDPOINT, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
-    });
-    const j = await r.json();
-    if(j.status === 'success'){
-      alert('Contadores atualizados na planilha.');
-      await fetchData();
-    } else {
-      alert('Resposta do servidor: ' + JSON.stringify(j));
-    }
-  }catch(err){
-    console.error(err); alert('Erro ao salvar contadores. Veja console.');
-  } finally { setStatus('Pronto'); }
-}
+  }
 </script>
 </body>
 </html>
