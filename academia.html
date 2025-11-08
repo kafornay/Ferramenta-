@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Academia Couto</title>
+<style>
+  body {
+    font-family: Arial;
+    background: #111;
+    color: white;
+    text-align: center;
+    padding: 20px;
+  }
+  input, select, button {
+    margin: 8px;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+  }
+  button {
+    background: #c32b2b;
+    color: white;
+    cursor: pointer;
+  }
+  #painel { display: none; }
+</style>
+</head>
+<body>
+
+<h1>🏋 Academia Couto</h1>
+
+<div id="loginBox">
+  <h2>Login do Aluno</h2>
+  <input id="nome" placeholder="Seu nome completo"><br>
+  <input id="senha" placeholder="Senha (se já tiver)"><br>
+  <button onclick="fazerLogin()">Entrar</button>
+</div>
+
+<div id="painel">
+  <h3>Bem-vindo, <span id="alunoNome"></span></h3>
+  <form id="formTreino">
+    <label>Dia da semana:</label><br>
+    <input id="dia" placeholder="Ex: Segunda"><br>
+
+    <label>Tipo de treino:</label><br>
+    <select id="tipo">
+      <option>Peito</option>
+      <option>Costas</option>
+      <option>Perna</option>
+      <option>Ombro</option>
+      <option>Bíceps</option>
+      <option>Tríceps</option>
+    </select><br>
+
+    <label>Fez o treino?</label><br>
+    <select id="feito">
+      <option>Sim</option>
+      <option>Não</option>
+    </select><br>
+
+    <button type="submit">Salvar treino</button>
+  </form>
+</div>
+
+<script>
+const scriptURL = "https://script.google.com/macros/s/SEU_WEBAPP_ID/exec";
+
+function fazerLogin() {
+  const nome = document.getElementById('nome').value.trim();
+  const senha = document.getElementById('senha').value.trim();
+
+  if (!nome) return alert("Digite seu nome!");
+
+  fetch(scriptURL + "?acao=login&nome=" + encodeURIComponent(nome) + "&senha=" + encodeURIComponent(senha))
+  .then(r => r.json())
+  .then(res => {
+    if (res.status === "novo") {
+      alert("Senha gerada para você: " + res.senha + " (anote!)");
+      document.getElementById('loginBox').style.display = 'none';
+      document.getElementById('painel').style.display = 'block';
+      document.getElementById('alunoNome').textContent = nome;
+    } else if (res.status === "ok") {
+      document.getElementById('loginBox').style.display = 'none';
+      document.getElementById('painel').style.display = 'block';
+      document.getElementById('alunoNome').textContent = nome;
+    } else {
+      alert("Senha incorreta!");
+    }
+  });
+}
+
+document.getElementById('formTreino').addEventListener('submit', e => {
+  e.preventDefault();
+  const dados = {
+    acao: "salvar",
+    nome: document.getElementById('alunoNome').textContent,
+    dia: document.getElementById('dia').value,
+    tipo: document.getElementById('tipo').value,
+    feito: document.getElementById('feito').value
+  };
+
+  fetch(scriptURL, {
+    method: "POST",
+    body: JSON.stringify(dados)
+  }).then(r => r.text()).then(() => {
+    alert("Treino salvo com sucesso!");
+    document.getElementById('formTreino').reset();
+  });
+});
+</script>
+
+</body>
+</html>
