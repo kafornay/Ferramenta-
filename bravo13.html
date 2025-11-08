@@ -45,6 +45,12 @@
     min-width: 160px;
     text-align: center;
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    transition: all 0.3s ease;
+  }
+
+  .campo:hover {
+    transform: scale(1.03);
+    border-color: #c32b2b;
   }
 
   .campo input {
@@ -65,6 +71,7 @@
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
+    transition: background 0.3s;
   }
 
   .botao-atualizar:hover {
@@ -73,6 +80,17 @@
 
   .tarefas-container {
     margin: 20px;
+  }
+
+  h2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .resumo {
+    font-size: 14px;
+    color: #00ff80;
   }
 
   table {
@@ -92,12 +110,25 @@
     color: #fff;
   }
 
+  tr {
+    transition: all 0.3s ease;
+  }
+
   tr:nth-child(even) {
     background-color: #1a1a1a;
   }
 
   tr:nth-child(odd) {
     background-color: #111;
+  }
+
+  tr.fade {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { background-color: #333; }
+    to { background-color: inherit; }
   }
 
   .btn-adicionar {
@@ -109,6 +140,7 @@
     cursor: pointer;
     font-weight: bold;
     margin-top: 10px;
+    transition: background 0.3s;
   }
 
   .btn-adicionar:hover {
@@ -119,6 +151,7 @@
     padding: 5px 10px;
     border-radius: 8px;
     font-weight: bold;
+    transition: all 0.3s ease;
   }
 
   .status.Pendente {
@@ -131,11 +164,60 @@
     color: #000;
   }
 
+  .acoes button {
+    margin-right: 5px;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-concluir {
+    background: #00ff80;
+    color: #000;
+  }
+
+  .btn-concluir:hover {
+    background: #00cc66;
+  }
+
+  .btn-excluir {
+    background: #c32b2b;
+    color: white;
+  }
+
+  .btn-excluir:hover {
+    background: #ff4d4d;
+  }
+
   footer {
     text-align: center;
     padding: 15px;
     font-size: 13px;
     color: #999;
+  }
+
+  /* 📱 Responsividade */
+  @media (max-width: 700px) {
+    .topo {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    table, th, td {
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 8px;
+    }
+
+    .acoes button {
+      padding: 5px 8px;
+      font-size: 12px;
+    }
   }
 </style>
 </head>
@@ -172,7 +254,10 @@
   </div>
 
   <section class="tarefas-container">
-    <h2>Tarefas Bravo 13</h2>
+    <h2>
+      Tarefas Bravo 13
+      <span class="resumo" id="resumoTarefas">Carregando...</span>
+    </h2>
     <table id="tabelaTarefas">
       <thead>
         <tr>
@@ -180,6 +265,7 @@
           <th>Tarefa</th>
           <th>Responsável</th>
           <th>Observação</th>
+          <th>Ações</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -193,10 +279,8 @@
   </footer>
 
 <script>
-  // 👉 Substitua aqui pelo seu link do Apps Script:
   const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzolqAfTkQhZq0KgNMqvIae1HyqAu9G4vYFNaACj_vnUQyW7WXiLORYFco5QVkGLf3LMA/exec';
 
-  // Carregar dados ao abrir
   window.onload = carregarDados;
 
   async function carregarDados() {
@@ -204,28 +288,42 @@
       const response = await fetch(ENDPOINT);
       const data = await response.json();
 
-      // Preenche os campos do topo
       document.getElementById('dinheiro').value = data.status.dinheiro || 0;
       document.getElementById('armas').value = data.status.armas || 0;
       document.getElementById('drogas').value = data.status.drogas || 0;
       document.getElementById('municao').value = data.status.municao || 0;
       document.getElementById('dinheiroSujo').value = data.status.dinheiroSujo || 0;
 
-      // Preenche a tabela
       const tbody = document.querySelector('#tabelaTarefas tbody');
       tbody.innerHTML = '';
-      data.tarefas.forEach(t => {
+
+      let pendentes = 0;
+      let concluidas = 0;
+
+      data.tarefas.forEach((t, i) => {
+        if (t.status === 'Pendente') pendentes++;
+        if (t.status === 'Concluído') concluidas++;
+
         const tr = document.createElement('tr');
+        tr.classList.add('fade');
         tr.innerHTML = `
           <td><span class="status ${t.status}">${t.status}</span></td>
           <td>${t.tarefa}</td>
           <td>${t.responsavel}</td>
           <td>${t.observacao}</td>
+          <td class="acoes">
+            <button class="btn-concluir" onclick="alterarStatus(${i}, 'Concluído')">✔</button>
+            <button class="btn-excluir" onclick="excluirTarefa(${i})">✖</button>
+          </td>
         `;
         tbody.appendChild(tr);
       });
+
+      document.getElementById('resumoTarefas').innerText =
+        `Pendentes: ${pendentes} | Concluídas: ${concluidas}`;
     } catch (error) {
       console.error('Erro ao carregar dados:', error);
+      document.getElementById('resumoTarefas').innerText = 'Erro ao carregar';
     }
   }
 
@@ -235,13 +333,7 @@
     const responsavel = prompt('Responsável:') || '';
     const observacao = prompt('Observação:') || '';
 
-    const payload = {
-      action: 'addTask',
-      tarefa,
-      responsavel,
-      observacao,
-      status: 'Pendente'
-    };
+    const payload = { action: 'addTask', tarefa, responsavel, observacao, status: 'Pendente' };
 
     try {
       const response = await fetch(ENDPOINT, {
@@ -250,11 +342,46 @@
         body: JSON.stringify(payload)
       });
       const result = await response.json();
-      alert(result.message || 'Salvo!');
+      alert(result.message || 'Tarefa salva!');
       carregarDados();
     } catch (error) {
       alert('Erro ao salvar tarefa.');
-      console.error(error);
+    }
+  }
+
+  async function alterarStatus(index, novoStatus) {
+    const payload = { action: 'updateTaskStatus', index, status: novoStatus };
+
+    try {
+      const response = await fetch(ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const result = await response.json();
+      alert(result.message || 'Status atualizado!');
+      carregarDados();
+    } catch (error) {
+      alert('Erro ao atualizar status.');
+    }
+  }
+
+  async function excluirTarefa(index) {
+    if (!confirm('Tem certeza que deseja excluir esta tarefa?')) return;
+
+    const payload = { action: 'deleteTask', index };
+
+    try {
+      const response = await fetch(ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const result = await response.json();
+      alert(result.message || 'Tarefa excluída!');
+      carregarDados();
+    } catch (error) {
+      alert('Erro ao excluir tarefa.');
     }
   }
 
@@ -279,7 +406,6 @@
       alert(result.message || 'Painel atualizado!');
     } catch (error) {
       alert('Erro ao atualizar valores.');
-      console.error(error);
     }
   }
 </script>
