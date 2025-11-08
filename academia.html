@@ -1,180 +1,156 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Academia Online</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #121212;
-    color: white;
-    margin: 0;
-    padding: 0;
-  }
-  .container {
-    max-width: 600px;
-    margin: 40px auto;
-    background: #1e1e1e;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px #000;
-  }
-  h2, h3 { text-align: center; }
-  input, select, button {
-    width: 100%;
-    margin: 8px 0;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-  }
-  button {
-    background: #c32b2b;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  button:hover { background: #e03b3b; }
-  .treino-box {
-    background: #262626;
-    padding: 10px;
-    border-radius: 8px;
-    margin-top: 10px;
-  }
-  label {
-    display: block;
-    margin-top: 8px;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Treinos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: white;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #c32b2b;
+    }
+    .treino {
+      background: #1e1e1e;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 0 5px #333;
+    }
+    label { display: block; margin-top: 10px; }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: none;
+      outline: none;
+      background: #2a2a2a;
+      color: white;
+    }
+    button {
+      background: #c32b2b;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    button:hover { background: #a32222; }
+    .msg { margin-top: 15px; color: #4caf50; }
+  </style>
 </head>
 <body>
-  <div class="container" id="loginContainer">
-    <h2>Login - Academia Online 🏋️‍♂️</h2>
-    <input type="text" id="nome" placeholder="Nome do aluno">
-    <button onclick="registrar()">Gerar senha</button>
-    <input type="password" id="senha" placeholder="Senha">
-    <button onclick="login()">Entrar</button>
-    <p id="msg"></p>
-  </div>
+  <h1>Painel de Treinos</h1>
 
-  <div class="container" id="painelContainer" style="display:none;">
-    <h2>Painel de Treino</h2>
-    <h3 id="alunoNome"></h3>
-
-    <label for="dia">Dia da Semana:</label>
-    <select id="dia">
-      <option>Segunda</option>
-      <option>Terça</option>
-      <option>Quarta</option>
-      <option>Quinta</option>
-      <option>Sexta</option>
-      <option>Sábado</option>
-    </select>
-
+  <div class="treino">
     <label for="tipo">Tipo de Treino:</label>
-    <select id="tipo" onchange="mostrarExercicios()">
+    <select id="tipo" onchange="carregarExercicios()">
       <option value="">Selecione...</option>
-      <option value="peito">Peito</option>
-      <option value="costas">Costas</option>
-      <option value="ombro">Ombro</option>
-      <option value="perna">Perna</option>
-      <option value="bracos">Bíceps/Tríceps</option>
+      <option value="Peito">Peito</option>
+      <option value="Costas">Costas</option>
+      <option value="Pernas">Pernas</option>
+      <option value="Ombro">Ombro</option>
+      <option value="Braço">Braço</option>
     </select>
 
-    <div id="exercicios"></div>
+    <label for="exercicio">Exercício:</label>
+    <select id="exercicio">
+      <option value="">Selecione um tipo primeiro...</option>
+    </select>
 
-    <button onclick="salvarTreino()">Salvar treino ✅</button>
-    <p id="statusMsg"></p>
+    <label for="series">Séries:</label>
+    <select id="series">
+      <option value="4s">4s</option>
+      <option value="3s">3s</option>
+      <option value="2s">2s</option>
+      <option value="1s">1s</option>
+    </select>
+
+    <label for="repeticoes">Repetições:</label>
+    <select id="repeticoes">
+      <option value="12rp">12rp</option>
+      <option value="10rp">10rp</option>
+      <option value="8rp">8rp</option>
+    </select>
+
+    <button onclick="salvarTreino()">Salvar Treino</button>
+    <div class="msg" id="msg"></div>
   </div>
 
-<script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyUFFwmr6R1435ZH4Z3rGk3KUC-VaA_Cg64JDlAF0Z43kX-2_h5DK-KUVA96eNJaMe8HQ/exec";
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyUFFwmr6R1435ZH4Z3rGk3KUC-VaA_Cg64JDlAF0Z43kX-2_h5DK-KUVA96eNJaMe8HQ/exec";
 
-function registrar() {
-  const nome = document.getElementById("nome").value;
-  if (!nome) return alert("Digite seu nome primeiro!");
-  fetch(API_URL, {
-    method: "POST",
-    body: new URLSearchParams({ acao: "registrar", nome })
-  })
-  .then(r => r.json())
-  .then(d => {
-    if (d.status === "ok") {
-      document.getElementById("msg").innerText = "Senha gerada: " + d.senha;
-    }
-  });
-}
+    const exercicios = {
+      "Peito": ["Supino reto", "Crucifixo", "Supino máquina", "Crossover", "Flexão"],
+      "Costas": ["Puxada frente", "Remada baixa", "Serrote", "Remada curvada", "Puxada neutra"],
+      "Pernas": ["Agachamento", "Leg Press", "Cadeira extensora", "Cadeira flexora", "Afundo"],
+      "Ombro": ["Desenvolvimento", "Elevação lateral", "Elevação frontal", "Remada alta", "Crucifixo invertido"],
+      "Braço": ["Rosca direta", "Tríceps corda", "Rosca martelo", "Tríceps francês", "Rosca concentrada"]
+    };
 
-function login() {
-  const nome = document.getElementById("nome").value;
-  const senha = document.getElementById("senha").value;
-  fetch(`${API_URL}?acao=login&nome=${nome}&senha=${senha}`)
-    .then(r => r.text())
-    .then(res => {
-      if (res.includes("ok") || res.includes("sucesso")) {
-        document.getElementById("loginContainer").style.display = "none";
-        document.getElementById("painelContainer").style.display = "block";
-        document.getElementById("alunoNome").innerText = "Aluno: " + nome;
-        localStorage.setItem("aluno", nome);
-      } else {
-        alert("Login inválido!");
+    function carregarExercicios() {
+      const tipo = document.getElementById("tipo").value;
+      const exercicioSelect = document.getElementById("exercicio");
+      exercicioSelect.innerHTML = "";
+
+      if (!tipo) {
+        exercicioSelect.innerHTML = "<option value=''>Selecione um tipo primeiro...</option>";
+        return;
       }
-    });
-}
 
-function mostrarExercicios() {
-  const tipo = document.getElementById("tipo").value;
-  const container = document.getElementById("exercicios");
-  container.innerHTML = "";
-  if (!tipo) return;
-
-  const lista = {
-    peito: ["Supino Reto", "Supino Inclinado", "Crucifixo", "Peck Deck", "Flexão"],
-    costas: ["Puxada Frente", "Remada Curvada", "Barra Fixa", "Serrote", "Remada Baixa"],
-    ombro: ["Desenvolvimento", "Elevação Lateral", "Frontal", "Remada Alta", "Encolhimento"],
-    perna: ["Agachamento", "Leg Press", "Cadeira Extensora", "Cadeira Flexora", "Panturrilha"],
-    bracos: ["Rosca Direta", "Rosca Martelo", "Tríceps Corda", "Tríceps Testa", "Tríceps Banco"]
-  }[tipo];
-
-  lista.forEach(ex => {
-    container.innerHTML += `
-      <div class="treino-box">
-        <strong>${ex}</strong><br>
-        Séries:
-        <select>
-          <option>4s</option><option>3s</option><option>2s</option><option>1s</option>
-        </select>
-        Repetições:
-        <select>
-          <option>12rp</option><option>10rp</option><option>8rp</option>
-        </select>
-      </div>`;
-  });
-}
-
-function salvarTreino() {
-  const nome = localStorage.getItem("aluno");
-  const dia = document.getElementById("dia").value;
-  const tipo = document.getElementById("tipo").value;
-  if (!tipo) return alert("Selecione o tipo de treino!");
-
-  fetch(API_URL, {
-    method: "POST",
-    body: new URLSearchParams({
-      acao: "salvarTreino",
-      nome,
-      dia,
-      tipo,
-      feito: "sim"
-    })
-  })
-  .then(r => r.json())
-  .then(d => {
-    if (d.status === "ok") {
-      document.getElementById("statusMsg").innerText = "✅ Treino salvo com sucesso!";
+      exercicios[tipo].forEach(ex => {
+        const opt = document.createElement("option");
+        opt.value = ex;
+        opt.textContent = ex;
+        exercicioSelect.appendChild(opt);
+      });
     }
-  });
-}
-</script>
+
+    async function salvarTreino() {
+      const tipo = document.getElementById("tipo").value;
+      const exercicio = document.getElementById("exercicio").value;
+      const series = document.getElementById("series").value;
+      const repeticoes = document.getElementById("repeticoes").value;
+      const msg = document.getElementById("msg");
+
+      if (!tipo || !exercicio) {
+        msg.textContent = "Selecione o tipo e exercício.";
+        msg.style.color = "red";
+        return;
+      }
+
+      msg.textContent = "Salvando...";
+      msg.style.color = "yellow";
+
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({
+            acao: "salvarTreino",
+            tipo, exercicio, series, repeticoes
+          }),
+          headers: { "Content-Type": "application/json" }
+        });
+        const data = await res.json();
+        if (data.status === "ok") {
+          msg.textContent = "✅ Treino salvo com sucesso!";
+          msg.style.color = "#4caf50";
+        } else {
+          msg.textContent = "Erro ao salvar.";
+          msg.style.color = "red";
+        }
+      } catch (e) {
+        msg.textContent = "Erro de conexão.";
+        msg.style.color = "red";
+      }
+    }
+  </script>
 </body>
 </html>
