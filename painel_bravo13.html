@@ -3,222 +3,182 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel Bravo13</title>
+<title>Painel Bravo 13</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #111;
-    color: #f5f5f5;
-    margin: 0;
-    padding: 0;
+  * { box-sizing: border-box; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; }
+  body { background: #0b0b0b; color: #f1f1f1; min-height: 100vh; padding: 20px; }
+  h1 { text-align: center; color: #e50914; margin-bottom: 20px; letter-spacing: 2px; }
+  .painel {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+    margin-bottom: 30px; background: #1a1a1a; padding: 20px; border-radius: 15px;
   }
-
-  h1 {
-    text-align: center;
-    margin: 20px 0;
+  .campo { display: flex; flex-direction: column; align-items: center; }
+  .campo label { font-size: 14px; color: #ccc; }
+  .campo input {
+    width: 100px; text-align: center; margin-top: 4px; border: none; outline: none;
+    padding: 5px; border-radius: 8px; background: #2a2a2a; color: #fff;
   }
-
-  #painel {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    background: #222;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-  }
-
-  input, select {
-    padding: 8px;
-    border: none;
-    border-radius: 4px;
-  }
-
   button {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    background: #0b5ed7;
-    color: white;
+    background: #e50914; border: none; color: white; padding: 10px 20px;
+    border-radius: 8px; cursor: pointer; transition: 0.3s; font-weight: 600;
   }
+  button:hover { background: #ff1f2d; transform: scale(1.05); }
 
-  button:hover {
-    background: #084298;
-  }
+  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+  th, td { padding: 10px; border-bottom: 1px solid #333; text-align: center; }
+  th { background: #141414; }
+  tr:hover { background: #1f1f1f; transition: 0.2s; }
 
-  table {
-    width: 90%;
-    border-collapse: collapse;
-    background: #1c1c1c;
+  .resumo {
+    text-align: center; background: #141414; padding: 10px;
+    border-radius: 10px; margin-top: 20px; font-weight: 600;
   }
-
-  th, td {
-    padding: 8px;
-    text-align: center;
-    border-bottom: 1px solid #333;
-  }
-
-  tr:hover {
-    background: #333;
-  }
-
-  .btn-remove {
-    background: #dc3545;
-  }
-
-  .btn-remove:hover {
-    background: #a71d2a;
-  }
-
-  .btn-status {
-    background: #198754;
-  }
-
-  .btn-status:hover {
-    background: #146c43;
-  }
+  .status-concluido { color: #4caf50; font-weight: bold; }
+  .status-pendente { color: #f5c518; font-weight: bold; }
 </style>
 </head>
 <body>
 
-<h1>🧩 Painel Bravo13</h1>
+<h1>🔴 PAINEL BRAVO 13</h1>
 
-<div id="painel">
-
-  <form id="formTarefa">
-    <select id="status">
-      <option value="Pendente">Pendente</option>
-      <option value="Concluído">Concluído</option>
-      <option value="Em andamento">Em andamento</option>
-    </select>
-    <input type="text" id="tarefa" placeholder="Tarefa" required>
-    <input type="text" id="responsavel" placeholder="Responsável">
-    <input type="text" id="observacao" placeholder="Observação">
-    <button type="submit">Adicionar</button>
-  </form>
-
-  <table id="tabela">
-    <thead>
-      <tr>
-        <th>Status</th>
-        <th>Tarefa</th>
-        <th>Responsável</th>
-        <th>Observação</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody id="listaTarefas"></tbody>
-  </table>
-
+<div class="painel">
+  <div class="campo"><label>Dinheiro</label><input id="dinheiro" type="text"></div>
+  <div class="campo"><label>Armas</label><input id="armas" type="text"></div>
+  <div class="campo"><label>Drogas</label><input id="drogas" type="text"></div>
+  <div class="campo"><label>Munição</label><input id="municao" type="text"></div>
+  <div class="campo"><label>Dinheiro Sujo</label><input id="dinheiroSujo" type="text"></div>
+  <button onclick="atualizarPainel()">Atualizar Painel</button>
 </div>
 
+<div style="text-align:center;">
+  <button onclick="adicionarTarefa()">+ Adicionar Tarefa</button>
+</div>
+
+<table id="tabela">
+  <thead>
+    <tr>
+      <th>Status</th>
+      <th>Tarefa</th>
+      <th>Responsável</th>
+      <th>Observação</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<div class="resumo" id="resumo"></div>
+
 <script>
-const scriptURL = "PASTE_AQUI_SUA_URL_DO_WEB_APP"; // ⚠️ Substitua pela URL publicada do Apps Script
+const API_URL = "https://script.google.com/macros/s/AKfycbzolqAfTkQhZq0KgNMqvIae1HyqAu9G4vYFNaACj_vnUQyW7WXiLORYFco5QVkGLf3LMA/exec";
 
-// ====================
-// Função: carregar dados
-// ====================
-async function carregarTarefas() {
-  const res = await fetch(scriptURL);
-  const data = await res.json();
-  const tbody = document.getElementById("listaTarefas");
-  tbody.innerHTML = "";
+async function carregarDados() {
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
 
-  if (!data.tarefas || data.tarefas.length === 0) {
-    tbody.innerHTML = "<tr><td colspan='5'>Nenhuma tarefa encontrada</td></tr>";
-    return;
+    if (data.status) {
+      document.getElementById("dinheiro").value = data.status.dinheiro || "";
+      document.getElementById("armas").value = data.status.armas || "";
+      document.getElementById("drogas").value = data.status.drogas || "";
+      document.getElementById("municao").value = data.status.municao || "";
+      document.getElementById("dinheiroSujo").value = data.status.dinheiroSujo || "";
+    }
+
+    if (data.tarefas) atualizarTabela(data.tarefas);
+  } catch (err) {
+    console.error("Erro ao carregar dados:", err);
   }
+}
 
-  data.tarefas.forEach((t, i) => {
+function atualizarTabela(tarefas) {
+  const tbody = document.querySelector("#tabela tbody");
+  tbody.innerHTML = "";
+  let pendentes = 0, concluidas = 0;
+
+  tarefas.forEach(t => {
     const tr = document.createElement("tr");
+    const statusClass = t.status.toLowerCase() === "concluída" ? "status-concluido" : "status-pendente";
+    if (t.status.toLowerCase() === "pendente") pendentes++;
+    if (t.status.toLowerCase() === "concluída") concluidas++;
+
     tr.innerHTML = `
-      <td>${t.status}</td>
+      <td class="${statusClass}">${t.status}</td>
       <td>${t.tarefa}</td>
       <td>${t.responsavel}</td>
       <td>${t.observacao}</td>
       <td>
-        <button class="btn-status" onclick="atualizarStatus(${t.row}, '${t.status}')">✔</button>
-        <button class="btn-remove" onclick="removerTarefa(${t.row})">🗑</button>
+        <button onclick="concluirTarefa('${t.tarefa}')">✅</button>
+        <button onclick="excluirTarefa('${t.tarefa}')">❌</button>
       </td>
     `;
     tbody.appendChild(tr);
   });
+
+  const total = tarefas.length;
+  document.getElementById("resumo").innerText =
+    `Total: ${total} | Pendentes: ${pendentes} | Concluídas: ${concluidas}`;
 }
 
-// ====================
-// Adicionar tarefa
-// ====================
-document.getElementById("formTarefa").addEventListener("submit", async (e) => {
-  e.preventDefault();
+async function adicionarTarefa() {
+  const tarefa = prompt("Descrição da tarefa:");
+  if (!tarefa) return;
+  const responsavel = prompt("Responsável:");
+  const observacao = prompt("Observação:");
 
-  const payload = {
-    action: "addTask",
-    status: document.getElementById("status").value,
-    tarefa: document.getElementById("tarefa").value,
-    responsavel: document.getElementById("responsavel").value,
-    observacao: document.getElementById("observacao").value
-  };
-
-  await fetch(scriptURL, {
+  await fetch(API_URL, {
     method: "POST",
-    body: JSON.stringify(payload)
+    body: JSON.stringify({
+      action: "addTask",
+      tarefa, responsavel, observacao, status: "Pendente"
+    })
   });
 
-  e.target.reset();
-  carregarTarefas();
-});
-
-// ====================
-// Atualizar status
-// ====================
-async function atualizarStatus(row, atual) {
-  const novo = atual === "Concluído" ? "Pendente" : "Concluído";
-  const payload = {
-    action: "updateTaskStatus",
-    row: row,
-    status: novo
-  };
-
-  await fetch(scriptURL, {
-    method: "POST",
-    body: JSON.stringify(payload)
-  });
-
-  carregarTarefas();
+  carregarDados();
 }
 
-// ====================
-// Remover tarefa
-// ====================
-async function removerTarefa(row) {
-  if (!confirm("Deseja realmente remover esta tarefa?")) return;
-
-  const payload = {
-    action: "deleteTask",
-    row: row
-  };
-
-  await fetch(scriptURL, {
+async function concluirTarefa(tarefa) {
+  await fetch(API_URL, {
     method: "POST",
-    body: JSON.stringify(payload)
+    body: JSON.stringify({
+      action: "updateTaskStatus",
+      tarefa, novoStatus: "Concluída"
+    })
   });
-
-  carregarTarefas();
+  carregarDados();
 }
 
-// ====================
-// Inicializar
-// ====================
-carregarTarefas();
+async function excluirTarefa(tarefa) {
+  if (!confirm("Tem certeza que deseja excluir esta tarefa?")) return;
+  await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "deleteTask",
+      tarefa
+    })
+  });
+  carregarDados();
+}
+
+async function atualizarPainel() {
+  const status = {
+    dinheiro: document.getElementById("dinheiro").value,
+    armas: document.getElementById("armas").value,
+    drogas: document.getElementById("drogas").value,
+    municao: document.getElementById("municao").value,
+    dinheiroSujo: document.getElementById("dinheiroSujo").value
+  };
+
+  await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({ action: "updateStatus", status })
+  });
+
+  alert("Painel atualizado com sucesso!");
+}
+
+carregarDados();
 </script>
-
 </body>
 </html>
