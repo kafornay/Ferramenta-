@@ -1,147 +1,197 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Login e Cadastro de Alunos</title>
+  <title>Login & Cadastro - Dark Mode</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: Arial, sans-serif; background: #f2f2f2; }
-    .container { max-width: 350px; margin: 60px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px #ccc; }
-    input, button { width: 100%; padding: 10px; margin: 8px 0; border-radius: 4px; border: 1px solid #ccc; }
-    button { background: #007bff; color: #fff; border: none; cursor: pointer; }
-    button:hover { background: #0056b3; }
-    .msg { color: red; margin-bottom: 10px; }
-    #area-treino { display:none; }
+    body {
+      background: #181a1b;
+      color: #f1f1f1;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      background: #23272a;
+      padding: 2rem 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px #0008;
+      width: 100%;
+      max-width: 350px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #00bfae;
+    }
+    label {
+      display: block;
+      margin-bottom: .5rem;
+      color: #bdbdbd;
+    }
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: .7rem;
+      margin-bottom: 1.2rem;
+      border-radius: 6px;
+      border: none;
+      background: #2c2f33;
+      color: #fff;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: .8rem;
+      border-radius: 6px;
+      border: none;
+      background: #00bfae;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    button:hover {
+      background: #009e8e;
+    }
+    .switch {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .switch a {
+      color: #00bfae;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .msg {
+      text-align: center;
+      margin-bottom: 1rem;
+      min-height: 24px;
+    }
   </style>
 </head>
 <body>
-<div class="container">
-  <h2>Login / Cadastro</h2>
-  <div id="login-area">
-    <input type="text" id="nome" placeholder="Nome do aluno">
-    <input type="password" id="senha" placeholder="Senha">
-    <button onclick="login()">Entrar</button>
-    <button onclick="cadastrar()">Cadastrar</button>
+  <div class="container">
+    <h2 id="form-title">Login</h2>
     <div class="msg" id="msg"></div>
+    <form id="login-form">
+      <label for="login-nome">Usuário</label>
+      <input type="text" id="login-nome" required autocomplete="username">
+      
+      <label for="login-senha">Senha</label>
+      <input type="password" id="login-senha" required autocomplete="current-password">
+      
+      <button type="submit">Entrar</button>
+    </form>
+    
+    <form id="cadastro-form" style="display:none;">
+      <label for="cadastro-nome">Usuário</label>
+      <input type="text" id="cadastro-nome" required autocomplete="username">
+      
+      <label for="cadastro-senha">Senha</label>
+      <input type="password" id="cadastro-senha" required autocomplete="new-password">
+      
+      <button type="submit">Cadastrar</button>
+    </form>
+    
+    <div class="switch">
+      <span id="switch-text">Não tem conta? <a id="switch-link">Cadastre-se</a></span>
+    </div>
   </div>
 
-  <div id="area-treino">
-    <h3>Bem-vindo, <span id="aluno-nome"></span>!</h3>
-    <textarea id="treino" rows="5" placeholder="Digite seu treino aqui..."></textarea>
-    <button onclick="salvarTreino()">Salvar Treino</button>
-    <button onclick="logout()">Sair</button>
-    <h4>Histórico de Treinos</h4>
-    <ul id="historico"></ul>
-  </div>
-</div>
+  <!-- SCRIPT ABAIXO -->
+  <script>
+    // URL do seu Google Apps Script
+    const API_URL = "https://script.google.com/macros/s/AKfycbyUFFwmr6R1435ZH4Z3rGk3KUC-VaA_Cg64JDlAF0Z43kX-2_h5DK-KUVA96eNJaMe8HQ/exec";
 
-<script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyUFFwmr6R1435ZH4Z3rGk3KUC-VaA_Cg64JDlAF0Z43kX-2_h5DK-KUVA96eNJaMe8HQ/exec";
+    // Elementos
+    const loginForm = document.getElementById('login-form');
+    const cadastroForm = document.getElementById('cadastro-form');
+    const switchLink = document.getElementById('switch-link');
+    const switchText = document.getElementById('switch-text');
+    const formTitle = document.getElementById('form-title');
+    const msg = document.getElementById('msg');
 
-function mostrarMsg(msg) {
-  document.getElementById("msg").innerText = msg;
-}
+    // Alternar entre login e cadastro
+    let isLogin = true;
 
-function login() {
-  const nome = document.getElementById("nome").value.trim();
-  const senha = document.getElementById("senha").value.trim();
-  if (!nome || !senha) return mostrarMsg("Preencha nome e senha!");
-  fetch(API_URL, {
-    method: "POST",
-    body: new URLSearchParams({ acao: "login", nome, senha })
-  })
-  .then(r => r.json())
-  .then(d => {
-    if (d.status === "ok") {
-      mostrarMsg("");
-      document.getElementById("login-area").style.display = "none";
-      document.getElementById("area-treino").style.display = "";
-      document.getElementById("aluno-nome").innerText = nome;
-      carregarHistorico(nome, senha);
-      localStorage.setItem("aluno", nome);
-      localStorage.setItem("senha", senha);
-    } else {
-      mostrarMsg(d.msg || "Erro ao logar");
+    switchLink.onclick = () => {
+      isLogin = !isLogin;
+      if (isLogin) {
+        loginForm.style.display = '';
+        cadastroForm.style.display = 'none';
+        formTitle.textContent = 'Login';
+        switchText.innerHTML = 'Não tem conta? <a id="switch-link">Cadastre-se</a>';
+        document.getElementById('switch-link').onclick = switchLink.onclick; // reatribui evento
+        msg.textContent = '';
+      } else {
+        loginForm.style.display = 'none';
+        cadastroForm.style.display = '';
+        formTitle.textContent = 'Cadastro';
+        switchText.innerHTML = 'Já tem conta? <a id="switch-link">Entrar</a>';
+        document.getElementById('switch-link').onclick = switchLink.onclick; // reatribui evento
+        msg.textContent = '';
+      }
+    };
+
+    // Função para exibir mensagem
+    function showMsg(text, ok=false) {
+      msg.textContent = text;
+      msg.style.color = ok ? "#00bfae" : "#ff5252";
     }
-  });
-}
 
-function cadastrar() {
-  const nome = document.getElementById("nome").value.trim();
-  const senha = document.getElementById("senha").value.trim();
-  if (!nome || !senha) return mostrarMsg("Preencha nome e senha!");
-  fetch(API_URL, {
-    method: "POST",
-    body: new URLSearchParams({ acao: "cadastrar", nome, senha })
-  })
-  .then(r => r.json())
-  .then(d => {
-    if (d.status === "ok") {
-      mostrarMsg("Cadastro realizado! Agora faça login.");
-    } else {
-      mostrarMsg(d.msg || "Erro ao cadastrar");
-    }
-  });
-}
+    // Login
+    loginForm.onsubmit = async (e) => {
+      e.preventDefault();
+      showMsg("Entrando...");
+      const nome = document.getElementById('login-nome').value.trim();
+      const senha = document.getElementById('login-senha').value.trim();
+      
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          body: new URLSearchParams({ acao: "login", nome, senha })
+        });
+        const data = await res.json();
+        if (data.sucesso) {
+          showMsg("Login realizado com sucesso!", true);
+          // Redirecione ou faça algo após login
+          // window.location.href = "pagina.html";
+        } else {
+          showMsg(data.mensagem || "Usuário ou senha inválidos.");
+        }
+      } catch (err) {
+        showMsg("Erro ao conectar ao servidor.");
+      }
+    };
 
-function salvarTreino() {
-  const treino = document.getElementById("treino").value.trim();
-  const nome = localStorage.getItem("aluno");
-  const senha = localStorage.getItem("senha");
-  if (!treino) return alert("Digite o treino!");
-  fetch(API_URL, {
-    method: "POST",
-    body: new URLSearchParams({ acao: "salvar_treino", nome, senha, treino })
-  })
-  .then(r => r.json())
-  .then(d => {
-    if (d.status === "ok") {
-      alert("Treino salvo!");
-      document.getElementById("treino").value = "";
-      carregarHistorico(nome, senha);
-    } else {
-      alert(d.msg || "Erro ao salvar treino");
-    }
-  });
-}
-
-function carregarHistorico(nome, senha) {
-  fetch(API_URL, {
-    method: "POST",
-    body: new URLSearchParams({ acao: "historico", nome, senha })
-  })
-  .then(r => r.json())
-  .then(d => {
-    const ul = document.getElementById("historico");
-    ul.innerHTML = "";
-    if (d.status === "ok" && d.dados.length) {
-      d.dados.forEach(item => {
-        const li = document.createElement("li");
-        li.textContent = `[${item.data}] ${item.treino}`;
-        ul.appendChild(li);
-      });
-    } else {
-      ul.innerHTML = "<li>Nenhum treino salvo ainda.</li>";
-    }
-  });
-}
-
-function logout() {
-  localStorage.removeItem("aluno");
-  localStorage.removeItem("senha");
-  document.getElementById("area-treino").style.display = "none";
-  document.getElementById("login-area").style.display = "";
-}
-
-window.onload = function() {
-  // Autologin se já estiver logado
-  const nome = localStorage.getItem("aluno");
-  const senha = localStorage.getItem("senha");
-  if (nome && senha) {
-    document.getElementById("nome").value = nome;
-    document.getElementById("senha").value = senha;
-    login();
-  }
-};
-</script>
+    // Cadastro
+    cadastroForm.onsubmit = async (e) => {
+      e.preventDefault();
+      showMsg("Cadastrando...");
+      const nome = document.getElementById('cadastro-nome').value.trim();
+      const senha = document.getElementById('cadastro-senha').value.trim();
+      
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          body: new URLSearchParams({ acao: "cadastrar", nome, senha })
+        });
+        const data = await res.json();
+        if (data.sucesso) {
+          showMsg("Cadastro realizado! Faça login.", true);
+          setTimeout(() => switchLink.onclick(), 1200);
+        } else {
+          showMsg(data.mensagem || "Erro ao cadastrar.");
+        }
+      } catch (err) {
+        showMsg("Erro ao conectar ao servidor.");
+      }
+    };
+  </script>
 </body>
 </html>
