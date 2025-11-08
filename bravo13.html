@@ -1,413 +1,435 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Painel Bravo 13</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Painel Bravo13 — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-  body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #0d0d0d;
-    color: #e5e5e5;
-    margin: 0;
-    padding: 0;
+  :root{
+    --bg:#070707;
+    --panel:#101010;
+    --muted:#9c9c9c;
+    --accent:#c32b2b;
+    --glass: rgba(255,255,255,0.03);
+    --card:#161616;
   }
 
-  header {
-    text-align: center;
-    background-color: #1a1a1a;
-    padding: 20px 10px;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: 0 0 15px rgba(0,0,0,0.6);
+  html,body{height:100%;margin:0;font-family:'Poppins',sans-serif;background:var(--bg);color:#eaeaea;}
+
+/* marca d'água central (logo bravo13.jpg) */
+  .watermark {
+    position:fixed;
+    inset:0;
+    z-index:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    pointer-events:none;
+    opacity:.2;
+    transform-origin:center;
+    animation: floatSlow 10s ease-in-out infinite;
+  }
+  .watermark img{ max-width:60vmin; width:60vmin; height:auto; filter:grayscale(20%) contrast(0.9); }
+
+  @keyframes floatSlow{
+    0%{ transform: scale(1) translateY(0px); opacity:.2 }
+    50%{ transform: scale(1.02) translateY(-8px); opacity:.22 }
+    100%{ transform: scale(1) translateY(0px); opacity:.2 }
   }
 
-  h1 {
-    color: #c32b2b;
-    font-size: 36px;
-    font-weight: bold;
-    letter-spacing: 3px;
+/* layout container */
+  .wrap{
+    position:relative;
+    z-index:2;
+    max-width:1200px;
+    margin:24px auto;
+    padding:20px;
   }
 
-  .topo {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    margin: 15px 0;
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+    border:1px solid rgba(255,255,255,0.03);
+    padding:18px 20px;
+    border-radius:12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+  }
+  .brand{
+    display:flex;align-items:center;gap:12px;
+  }
+  .logo-mini{
+    width:48px;height:48px;border-radius:8px;
+    background:linear-gradient(135deg,#2a2a2a,#111);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+    border:1px solid rgba(255,255,255,0.03);
+  }
+  .brand h1{ font-size:20px; color:var(--accent); margin:0; letter-spacing:2px;}
+  .brand p{ margin:0; font-size:12px; color:var(--muted); }
+
+/* dashboard cards */
+  .dashboard{
+    display:grid;
+    grid-template-columns: repeat(5,1fr);
+    gap:14px;
+    margin-top:18px;
   }
 
-  .campo {
-    background: #1a1a1a;
-    border: 2px solid #2e2e2e;
-    border-radius: 12px;
-    padding: 15px;
-    min-width: 160px;
-    text-align: center;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    transition: all 0.3s ease;
+  .card{
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+    border-radius:12px; padding:14px;
+    border:1px solid rgba(255,255,255,0.03);
+    min-height:100px;
+    display:flex;flex-direction:column;justify-content:space-between;
+    transition: transform .22s ease, box-shadow .22s ease;
+  }
+  .card:hover{ transform: translateY(-6px); box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+  .card .label{ font-size:13px; color:var(--muted); }
+  .card .value{ font-size:22px; font-weight:700; color:#fff; margin-top:8px; }
+
+  .card .icon{
+    width:40px;height:40px;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03);
+    color:var(--accent); font-weight:700;
   }
 
-  .campo:hover {
-    transform: scale(1.03);
-    border-color: #c32b2b;
+/* update button */
+  .controls{ display:flex; gap:12px; align-items:center; margin-top:16px; flex-wrap:wrap; }
+  .btn-primary{
+    background: linear-gradient(180deg,var(--accent), #ff5252); border:none;
+    padding:10px 14px; border-radius:10px; color:#fff; font-weight:700; cursor:pointer;
+    box-shadow: 0 8px 20px rgba(195,43,43,0.12); transition: transform .15s ease;
   }
+  .btn-primary:hover{ transform: translateY(-3px); }
 
-  .campo input {
-    width: 80%;
-    text-align: center;
-    background: transparent;
-    border: none;
-    color: #00ff80;
-    font-weight: bold;
-    font-size: 20px;
+/* tarefas section */
+  .tarefas-panel{
+    margin-top:22px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.05));
+    border-radius:12px; padding:14px;
+    border:1px solid rgba(255,255,255,0.03);
   }
+  .tarefas-header{ display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .tarefas-header h2{ margin:0; color:#fff; font-weight:700; }
+  .search{ display:flex; gap:8px; align-items:center; }
+  .search input{ background:var(--glass); border:1px solid rgba(255,255,255,0.03); padding:8px 10px; border-radius:8px; color:#fff; outline:none; }
 
-  .botao-atualizar {
-    background: #c32b2b;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s;
+/* table */
+  table{ width:100%; border-collapse:collapse; margin-top:12px; font-size:14px; }
+  th,td{ padding:10px 12px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.03); vertical-align:middle; }
+  th{ font-size:13px; color:var(--muted); text-transform:uppercase; font-weight:600; }
+  tr:hover td{ background: rgba(255,255,255,0.01); }
+  .status-badge{ padding:6px 10px; border-radius:8px; font-weight:700; font-size:13px; display:inline-block; }
+  .status-pendente{ background: rgba(195,43,43,0.12); color:var(--accent); border:1px solid rgba(195,43,43,0.12); }
+  .status-concluido{ background: rgba(76,175,80,0.08); color:#6fe08a; border:1px solid rgba(76,175,80,0.08); }
+
+/* small action buttons */
+  .actions button{ margin-right:6px; border:none; padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:700; }
+  .btn-accept{ background: linear-gradient(180deg,#00ff80,#00cc66); color:#000; }
+  .btn-delete{ background: linear-gradient(180deg,#c32b2b,#ff4d4d); color:#fff; }
+
+/* resumo footer */
+  .resumo{ margin-top:12px; display:flex; justify-content:flex-end; color:var(--muted); gap:12px; font-weight:600; }
+
+/* responsive */
+  @media (max-width:1100px){
+    .dashboard{ grid-template-columns: repeat(3,1fr); }
   }
-
-  .botao-atualizar:hover {
-    background: #ff4d4d;
+  @media (max-width:760px){
+    header{ flex-direction:column; align-items:flex-start; gap:12px; }
+    .dashboard{ grid-template-columns: repeat(2,1fr); }
+    .wrap{ padding:12px; }
   }
-
-  .tarefas-container {
-    margin: 20px;
-  }
-
-  h2 {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .resumo {
-    font-size: 14px;
-    color: #00ff80;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-  }
-
-  th, td {
-    border-bottom: 1px solid #333;
-    padding: 10px;
-    text-align: left;
-  }
-
-  th {
-    background-color: #c32b2b;
-    color: #fff;
-  }
-
-  tr {
-    transition: all 0.3s ease;
-  }
-
-  tr:nth-child(even) {
-    background-color: #1a1a1a;
-  }
-
-  tr:nth-child(odd) {
-    background-color: #111;
-  }
-
-  tr.fade {
-    animation: fadeIn 0.5s ease-in-out;
-  }
-
-  @keyframes fadeIn {
-    from { background-color: #333; }
-    to { background-color: inherit; }
-  }
-
-  .btn-adicionar {
-    background: #00ff80;
-    color: #000;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    margin-top: 10px;
-    transition: background 0.3s;
-  }
-
-  .btn-adicionar:hover {
-    background: #00cc66;
-  }
-
-  .status {
-    padding: 5px 10px;
-    border-radius: 8px;
-    font-weight: bold;
-    transition: all 0.3s ease;
-  }
-
-  .status.Pendente {
-    background: #c32b2b;
-    color: white;
-  }
-
-  .status.Concluído {
-    background: #00ff80;
-    color: #000;
-  }
-
-  .acoes button {
-    margin-right: 5px;
-    border: none;
-    border-radius: 6px;
-    padding: 6px 10px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-
-  .btn-concluir {
-    background: #00ff80;
-    color: #000;
-  }
-
-  .btn-concluir:hover {
-    background: #00cc66;
-  }
-
-  .btn-excluir {
-    background: #c32b2b;
-    color: white;
-  }
-
-  .btn-excluir:hover {
-    background: #ff4d4d;
-  }
-
-  footer {
-    text-align: center;
-    padding: 15px;
-    font-size: 13px;
-    color: #999;
-  }
-
-  /* 📱 Responsividade */
-  @media (max-width: 700px) {
-    .topo {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    table, th, td {
-      font-size: 13px;
-    }
-
-    th, td {
-      padding: 8px;
-    }
-
-    .acoes button {
-      padding: 5px 8px;
-      font-size: 12px;
-    }
+  @media (max-width:480px){
+    .dashboard{ grid-template-columns: 1fr; }
+    table{ font-size:13px; }
+    th,td{ padding:8px; }
+    .resumo{ justify-content:center; }
   }
 </style>
 </head>
 <body>
-  <header>
-    <h1>BRAVO 13</h1>
-  </header>
-
-  <section class="topo" id="painelStatus">
-    <div class="campo">
-      <label>Dinheiro Total</label><br>
-      <input type="number" id="dinheiro" value="0">
-    </div>
-    <div class="campo">
-      <label>Armas</label><br>
-      <input type="number" id="armas" value="0">
-    </div>
-    <div class="campo">
-      <label>Drogas</label><br>
-      <input type="number" id="drogas" value="0">
-    </div>
-    <div class="campo">
-      <label>Munição</label><br>
-      <input type="number" id="municao" value="0">
-    </div>
-    <div class="campo">
-      <label>Dinheiro Sujo</label><br>
-      <input type="number" id="dinheiroSujo" value="0">
-    </div>
-  </section>
-
-  <div style="text-align:center; margin:10px;">
-    <button class="botao-atualizar" onclick="atualizarStatus()">Atualizar Painel</button>
+  <!-- marca d'água (coloque bravo13.jpg no mesmo diretório) -->
+  <div class="watermark" aria-hidden="true">
+    <img src="bravo13.jpg" alt="Bravo13 logo watermark">
   </div>
 
-  <section class="tarefas-container">
-    <h2>
-      Tarefas Bravo 13
-      <span class="resumo" id="resumoTarefas">Carregando...</span>
-    </h2>
-    <table id="tabelaTarefas">
-      <thead>
-        <tr>
-          <th>Status</th>
-          <th>Tarefa</th>
-          <th>Responsável</th>
-          <th>Observação</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo-mini"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,0.08)"/><path d="M6 13 L10 9 L18 17" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <h1>BRAVO 13</h1>
+          <p>Painel Tático • Dashboard</p>
+        </div>
+      </div>
 
-    <button class="btn-adicionar" onclick="adicionarTarefa()">+ Adicionar Tarefa</button>
-  </section>
+      <div class="controls">
+        <button class="btn-primary" onclick="atualizarStatus()">Atualizar Painel</button>
+        <div style="color:var(--muted); font-weight:600;">Última sincronização: <span id="lastSync">—</span></div>
+      </div>
+    </header>
 
-  <footer>
-    Painel Bravo13 — Desenvolvido por Ronaldo © 2025
-  </footer>
+    <!-- CARDS -->
+    <section class="dashboard" aria-label="Painel de status">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div class="label">Dinheiro</div>
+            <div id="val-dinheiro" class="value">0</div>
+          </div>
+          <div class="icon">R$</div>
+        </div>
+        <input id="dinheiro" aria-label="Dinheiro" style="margin-top:8px;background:transparent;border:none;color:#fff;font-weight:700;font-size:14px;outline:none;">
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div class="label">Armas</div>
+            <div id="val-armas" class="value">0</div>
+          </div>
+          <div class="icon">🔫</div>
+        </div>
+        <input id="armas" aria-label="Armas" style="margin-top:8px;background:transparent;border:none;color:#fff;font-weight:700;font-size:14px;outline:none;">
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div class="label">Drogas</div>
+            <div id="val-drogas" class="value">0</div>
+          </div>
+          <div class="icon">💊</div>
+        </div>
+        <input id="drogas" aria-label="Drogas" style="margin-top:8px;background:transparent;border:none;color:#fff;font-weight:700;font-size:14px;outline:none;">
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div class="label">Munição</div>
+            <div id="val-municao" class="value">0</div>
+          </div>
+          <div class="icon">🔋</div>
+        </div>
+        <input id="municao" aria-label="Munição" style="margin-top:8px;background:transparent;border:none;color:#fff;font-weight:700;font-size:14px;outline:none;">
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div class="label">Dinheiro Sujo</div>
+            <div id="val-dinheiroSujo" class="value">0</div>
+          </div>
+          <div class="icon">💼</div>
+        </div>
+        <input id="dinheiroSujo" aria-label="Dinheiro Sujo" style="margin-top:8px;background:transparent;border:none;color:#fff;font-weight:700;font-size:14px;outline:none;">
+      </div>
+    </section>
+
+    <!-- tarefas -->
+    <section class="tarefas-panel" aria-label="Tarefas">
+      <div class="tarefas-header">
+        <h2>Tarefas Bravo 13</h2>
+        <div class="search">
+          <input id="searchT" placeholder="Procurar tarefa..." oninput="filtrarTabela()" />
+          <button class="btn-primary" onclick="adicionarTarefa()">+ Adicionar</button>
+        </div>
+      </div>
+
+      <table id="tabelaTarefas" aria-live="polite">
+        <thead>
+          <tr><th>Status</th><th>Tarefa</th><th>Responsável</th><th>Observação</th><th>Ações</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div class="resumo" id="resumoTarefas">Total: 0 • Pendentes: 0 • Concluídas: 0</div>
+    </section>
+  </div>
 
 <script>
-  const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzolqAfTkQhZq0KgNMqvIae1HyqAu9G4vYFNaACj_vnUQyW7WXiLORYFco5QVkGLf3LMA/exec';
+/* =================================================
+   Integração (mantive a mesma estrutura de payloads)
+   ================================================= */
+const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzolqAfTkQhZq0KgNMqvIae1HyqAu9G4vYFNaACj_vnUQyW7WXiLORYFco5QVkGLf3LMA/exec';
 
-  window.onload = carregarDados;
+window.addEventListener('load', carregarDados);
 
-  async function carregarDados() {
-    try {
-      const response = await fetch(ENDPOINT);
-      const data = await response.json();
+function formatValue(v){ return v===undefined||v===null||v==='' ? '' : v; }
 
-      document.getElementById('dinheiro').value = data.status.dinheiro || 0;
-      document.getElementById('armas').value = data.status.armas || 0;
-      document.getElementById('drogas').value = data.status.drogas || 0;
-      document.getElementById('municao').value = data.status.municao || 0;
-      document.getElementById('dinheiroSujo').value = data.status.dinheiroSujo || 0;
-
-      const tbody = document.querySelector('#tabelaTarefas tbody');
-      tbody.innerHTML = '';
-
-      let pendentes = 0;
-      let concluidas = 0;
-
-      data.tarefas.forEach((t, i) => {
-        if (t.status === 'Pendente') pendentes++;
-        if (t.status === 'Concluído') concluidas++;
-
-        const tr = document.createElement('tr');
-        tr.classList.add('fade');
-        tr.innerHTML = `
-          <td><span class="status ${t.status}">${t.status}</span></td>
-          <td>${t.tarefa}</td>
-          <td>${t.responsavel}</td>
-          <td>${t.observacao}</td>
-          <td class="acoes">
-            <button class="btn-concluir" onclick="alterarStatus(${i}, 'Concluído')">✔</button>
-            <button class="btn-excluir" onclick="excluirTarefa(${i})">✖</button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      document.getElementById('resumoTarefas').innerText =
-        `Pendentes: ${pendentes} | Concluídas: ${concluidas}`;
-    } catch (error) {
-      console.error('Erro ao carregar dados:', error);
-      document.getElementById('resumoTarefas').innerText = 'Erro ao carregar';
+async function carregarDados(){
+  try{
+    // tentamos receber JSON direto; se não, extraímos do HTML/text
+    const res = await fetch(ENDPOINT);
+    const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); }
+    catch(e){
+      // extrai primeiro objeto JSON do HTML retornado (compat com versões antigas)
+      const match = text.match(/\{[\s\S]*\}/);
+      if (match) data = JSON.parse(match[0]);
+      else throw new Error('Resposta inesperada do servidor');
     }
+
+    const s = data.status || {};
+    document.getElementById('dinheiro').value = formatValue(s.dinheiro);
+    document.getElementById('armas').value = formatValue(s.armas);
+    document.getElementById('drogas').value = formatValue(s.drogas);
+    document.getElementById('municao').value = formatValue(s.municao);
+    document.getElementById('dinheiroSujo').value = formatValue(s.dinheiroSujo);
+
+    // atualiza valores visuais (cards)
+    document.getElementById('val-dinheiro').innerText = formatValue(s.dinheiro) || '0';
+    document.getElementById('val-armas').innerText = formatValue(s.armas) || '0';
+    document.getElementById('val-drogas').innerText = formatValue(s.drogas) || '0';
+    document.getElementById('val-municao').innerText = formatValue(s.municao) || '0';
+    document.getElementById('val-dinheiroSujo').innerText = formatValue(s.dinheiroSujo) || '0';
+
+    // tarefas
+    const tarefas = data.tarefas || [];
+    montarTabela(tarefas);
+
+    document.getElementById('lastSync').innerText = new Date().toLocaleString();
+  }catch(err){
+    console.error('Erro carregarDados:', err);
   }
+}
 
-  async function adicionarTarefa() {
-    const tarefa = prompt('Descrição da tarefa:');
-    if (!tarefa) return;
-    const responsavel = prompt('Responsável:') || '';
-    const observacao = prompt('Observação:') || '';
+function montarTabela(tarefas){
+  const tbody = document.querySelector('#tabelaTarefas tbody');
+  tbody.innerHTML = '';
+  let pendentes = 0, concluidas = 0;
 
-    const payload = { action: 'addTask', tarefa, responsavel, observacao, status: 'Pendente' };
+  tarefas.forEach((t, idx) => {
+    const tr = document.createElement('tr');
+    const status = (t.status || 'Pendente').toString();
+    if (status.toLowerCase().startsWith('pend')) pendentes++;
+    if (status.toLowerCase().startsWith('concl')) concluidas++;
 
-    try {
-      const response = await fetch(ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const result = await response.json();
-      alert(result.message || 'Tarefa salva!');
-      carregarDados();
-    } catch (error) {
-      alert('Erro ao salvar tarefa.');
-    }
+    const badgeClass = status.toLowerCase().startsWith('concl') ? 'status-concluido' : 'status-pendente';
+    const rowNum = t.row || (idx + 2); // prefer row (linha real) se disponível
+
+    tr.innerHTML = `
+      <td><span class="status-badge ${badgeClass}">${escapeHtml(status)}</span></td>
+      <td>${escapeHtml(t.tarefa || '')}</td>
+      <td>${escapeHtml(t.responsavel || '')}</td>
+      <td>${escapeHtml(t.observacao || '')}</td>
+      <td class="actions">
+        <button class="btn-accept" title="Concluir" onclick="alterarStatusByRow(${rowNum}, 'Concluído')">✔</button>
+        <button class="btn-delete" title="Excluir" onclick="excluirTarefaByRow(${rowNum})">✖</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('resumoTarefas').innerText = `Total: ${tarefas.length} • Pendentes: ${pendentes} • Concluídas: ${concluidas}`;
+}
+
+/* Segurança mínima: escape de HTML em strings vindas do spreadsheet */
+function escapeHtml(str){
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+
+/* FILTRO (client-side) */
+function filtrarTabela(){
+  const q = (document.getElementById('searchT').value || '').toLowerCase();
+  const rows = document.querySelectorAll('#tabelaTarefas tbody tr');
+  rows.forEach(r=>{
+    const txt = r.innerText.toLowerCase();
+    r.style.display = txt.includes(q) ? '' : 'none';
+  });
+}
+
+/* AÇÕES: adicionar, alterar status, excluir - usamos 'row' (linha da planilha) para segurança */
+async function adicionarTarefa(){
+  const tarefa = prompt('Descrição da tarefa:');
+  if(!tarefa) return;
+  const responsavel = prompt('Responsável:') || '';
+  const observacao = prompt('Observação:') || '';
+
+  const payload = { action:'addTask', tarefa, responsavel, observacao, status:'Pendente' };
+  try {
+    await postJson(payload);
+    await carregarDados();
+  } catch(e){
+    console.error('Erro ao adicionar:', e);
+    alert('Erro ao adicionar tarefa.');
   }
+}
 
-  async function alterarStatus(index, novoStatus) {
-    const payload = { action: 'updateTaskStatus', index, status: novoStatus };
+async function alterarStatusByRow(row, novoStatus){
+  if (!row) { alert('Linha inválida'); return; }
+  const payload = { action: 'updateTaskStatus', row: Number(row), status: novoStatus };
+  try { await postJson(payload); await carregarDados(); } catch(e){ console.error(e); alert('Erro ao atualizar status'); }
+}
 
-    try {
-      const response = await fetch(ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const result = await response.json();
-      alert(result.message || 'Status atualizado!');
-      carregarDados();
-    } catch (error) {
-      alert('Erro ao atualizar status.');
-    }
+async function excluirTarefaByRow(row){
+  if (!confirm('Deseja realmente excluir esta tarefa?')) return;
+  const payload = { action: 'deleteTask', row: Number(row) };
+  try { await postJson(payload); await carregarDados(); } catch(e){ console.error(e); alert('Erro ao excluir tarefa'); }
+}
+
+/* Atualiza os valores do painel (cards + inputs) */
+async function atualizarStatus(){
+  const status = {
+    dinheiro: document.getElementById('dinheiro').value,
+    armas: document.getElementById('armas').value,
+    drogas: document.getElementById('drogas').value,
+    municao: document.getElementById('municao').value,
+    dinheiroSujo: document.getElementById('dinheiroSujo').value
+  };
+  try{
+    await postJson({ action:'updateStatus', status });
+    // atualiza visual imediato
+    document.getElementById('val-dinheiro').innerText = status.dinheiro || '0';
+    document.getElementById('val-armas').innerText = status.armas || '0';
+    document.getElementById('val-drogas').innerText = status.drogas || '0';
+    document.getElementById('val-municao').innerText = status.municao || '0';
+    document.getElementById('val-dinheiroSujo').innerText = status.dinheiroSujo || '0';
+    document.getElementById('lastSync').innerText = new Date().toLocaleString();
+    // opcional: feedback visual
+    flashHeader();
+  }catch(e){
+    console.error('Erro atualizarStatus', e);
+    alert('Erro ao atualizar painel.');
   }
+}
 
-  async function excluirTarefa(index) {
-    if (!confirm('Tem certeza que deseja excluir esta tarefa?')) return;
-
-    const payload = { action: 'deleteTask', index };
-
-    try {
-      const response = await fetch(ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const result = await response.json();
-      alert(result.message || 'Tarefa excluída!');
-      carregarDados();
-    } catch (error) {
-      alert('Erro ao excluir tarefa.');
-    }
+/* POST helper — envia JSON e tenta ler JSON de volta (compat com HtmlService/ContentService) */
+async function postJson(payload){
+  const res = await fetch(ENDPOINT, {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify(payload)
+  });
+  const text = await res.text();
+  try { return JSON.parse(text); }
+  catch(e){
+    const match = text.match(/\{[\s\S]*\}/);
+    if (match) return JSON.parse(match[0]);
+    throw new Error('Resposta do servidor inválida');
   }
+}
 
-  async function atualizarStatus() {
-    const status = {
-      dinheiro: document.getElementById('dinheiro').value,
-      armas: document.getElementById('armas').value,
-      drogas: document.getElementById('drogas').value,
-      municao: document.getElementById('municao').value,
-      dinheiroSujo: document.getElementById('dinheiroSujo').value
-    };
-
-    const payload = { action: 'updateStatus', status };
-
-    try {
-      const response = await fetch(ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const result = await response.json();
-      alert(result.message || 'Painel atualizado!');
-    } catch (error) {
-      alert('Erro ao atualizar valores.');
-    }
-  }
+/* feedback visual discreto */
+function flashHeader(){
+  const h = document.querySelector('header');
+  h.style.boxShadow = '0 0 0 4px rgba(195,43,43,0.08)';
+  setTimeout(()=> h.style.boxShadow = '0 6px 18px rgba(0,0,0,0.6)', 600);
+}
 </script>
 </body>
 </html>
