@@ -1,451 +1,276 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Painel Bravo13</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-  body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #0b0b0b;
-    color: #e5e5e5;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
+  :root{
+    --bg:#070707;
+    --panel:#101010;
+    --muted:#9c9c9c;
+    --accent:#c32b2b;
+    --glass: rgba(255,255,255,0.03);
+  }
+  *{box-sizing:border-box;font-family:'Poppins',sans-serif}
+  body{margin:0;background:var(--bg);color:#eaeaea;padding:18px}
+
+  /* marca d'água */
+  .watermark{
+    position:fixed;inset:0;z-index:0;display:flex;align-items:center;justify-content:center;
+    pointer-events:none;opacity:.2;transform-origin:center;animation:floatSlow 12s ease-in-out infinite;
+  }
+  .watermark img{ max-width:60vmin;width:60vmin;height:auto;filter:grayscale(20%) contrast(.9); }
+
+  @keyframes floatSlow{
+    0%{ transform: translateY(0) scale(1) }
+    50%{ transform: translateY(-8px) scale(1.02) }
+    100%{ transform: translateY(0) scale(1) }
   }
 
-  /* Marca d’água animada */
-  .marca-dagua {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('bravo13.jpg') center/contain no-repeat;
-    opacity: 0.2;
-    z-index: 0;
-    animation: flutuar 20s infinite alternate ease-in-out;
-  }
+  .wrap{position:relative;z-index:2;max-width:1100px;margin:0 auto}
 
-  @keyframes flutuar {
-    from { transform: translateY(0) scale(1); }
-    to { transform: translateY(-10px) scale(1.05); }
-  }
+  header{display:flex;align-items:center;justify-content:space-between;padding:16px;background:linear-gradient(180deg,#0f0f0f,#0b0b0b);border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo-mini{width:46px;height:46px;border-radius:8px;background:linear-gradient(135deg,#222,#111);display:flex;align-items:center;justify-content:center}
+  h1{margin:0;color:var(--accent);letter-spacing:2px;font-size:20px}
+  .subtitle{font-size:12px;color:var(--muted)}
 
-  header {
-    text-align: center;
-    background-color: #141414;
-    padding: 20px 10px;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    box-shadow: 0 0 15px rgba(0,0,0,0.6);
-  }
+  .dashboard{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:18px}
+  .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;justify-content:space-between;min-height:86px}
+  .card .label{font-size:13px;color:var(--muted)}
+  .card .value{font-size:20px;font-weight:700;margin-top:6px}
+  .card input{margin-top:8px;background:transparent;border:none;color:#fff;font-weight:700;font-size:14px;outline:none}
 
-  h1 {
-    color: #c32b2b;
-    font-size: 36px;
-    font-weight: 600;
-    letter-spacing: 3px;
-    text-shadow: 0 0 10px #c32b2b;
-  }
+  .controls{display:flex;gap:12px;align-items:center}
+  .btn-primary{background:linear-gradient(180deg,var(--accent),#ff5252);border:none;padding:9px 14px;border-radius:8px;color:#fff;font-weight:700;cursor:pointer}
 
-  main {
-    position: relative;
-    z-index: 2;
-    padding: 15px;
-  }
+  .tarefas-panel{margin-top:20px;background:rgba(26,26,26,0.9);padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+  .tarefas-header{display:flex;justify-content:space-between;align-items:center}
+  .search input{background:var(--glass);border:1px solid rgba(255,255,255,0.03);padding:8px 10px;border-radius:8px;color:#fff;outline:none}
 
-  .topo {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 15px;
-  }
+  table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+  th,td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.03);text-align:left}
+  th{font-size:13px;color:var(--muted);text-transform:uppercase}
 
-  .campo {
-    background: linear-gradient(145deg, #1a1a1a, #0e0e0e);
-    border: 2px solid #2e2e2e;
-    border-radius: 12px;
-    padding: 15px;
-    min-width: 160px;
-    text-align: center;
-    box-shadow: 0 0 15px rgba(0,0,0,0.5);
-    transition: transform 0.3s ease, border-color 0.3s;
-  }
+  .status-badge{padding:6px 10px;border-radius:8px;font-weight:700;font-size:13px;display:inline-block}
+  .status-pendente{background:rgba(195,43,43,0.12);color:var(--accent)}
+  .status-concluido{background:rgba(76,175,80,0.08);color:#6fe08a}
 
-  .campo:hover {
-    transform: scale(1.05);
-    border-color: #c32b2b;
-  }
+  .actions button{margin-right:6px;border:none;padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:700}
+  .btn-accept{background:linear-gradient(180deg,#00ff80,#00cc66);color:#000}
+  .btn-delete{background:linear-gradient(180deg,#c32b2b,#ff4d4d);color:#fff}
 
-  .campo label {
-    display: block;
-    color: #bbb;
-    margin-bottom: 8px;
-  }
+  .resumo{margin-top:12px;display:flex;justify-content:flex-end;color:var(--muted);gap:12px;font-weight:600}
 
-  .campo input {
-    width: 80%;
-    text-align: center;
-    background: transparent;
-    border: none;
-    color: #00ff80;
-    font-weight: bold;
-    font-size: 20px;
-  }
-
-  .botao-atualizar {
-    background: #c32b2b;
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s, transform 0.3s;
-    margin: 20px auto;
-    display: block;
-  }
-
-  .botao-atualizar:hover {
-    background: #ff4d4d;
-    transform: scale(1.05);
-  }
-
-  .tarefas-container {
-    margin: 20px auto;
-    max-width: 1000px;
-    background: rgba(26,26,26,0.85);
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.6);
-  }
-
-  h2 {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid #c32b2b;
-    padding-bottom: 8px;
-  }
-
-  .resumo {
-    font-size: 14px;
-    color: #00ff80;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-  }
-
-  th, td {
-    border-bottom: 1px solid #333;
-    padding: 10px;
-    text-align: left;
-  }
-
-  th {
-    background-color: #c32b2b;
-    color: #fff;
-  }
-
-  tr {
-    transition: all 0.3s ease;
-  }
-
-  tr:nth-child(even) {
-    background-color: #1a1a1a;
-  }
-
-  tr:nth-child(odd) {
-    background-color: #111;
-  }
-
-  tr:hover {
-    background: rgba(195,43,43,0.2);
-  }
-
-  .btn-adicionar {
-    background: #00ff80;
-    color: #000;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    margin-top: 10px;
-    transition: all 0.3s;
-  }
-
-  .btn-adicionar:hover {
-    background: #00cc66;
-    transform: scale(1.05);
-  }
-
-  .status {
-    padding: 5px 10px;
-    border-radius: 8px;
-    font-weight: bold;
-  }
-
-  .status.Pendente {
-    background: #c32b2b;
-    color: white;
-  }
-
-  .status.Concluído {
-    background: #00ff80;
-    color: #000;
-  }
-
-  .acoes button {
-    margin-right: 5px;
-    border: none;
-    border-radius: 6px;
-    padding: 6px 10px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-
-  .btn-concluir {
-    background: #00ff80;
-    color: #000;
-  }
-
-  .btn-concluir:hover {
-    background: #00cc66;
-  }
-
-  .btn-excluir {
-    background: #c32b2b;
-    color: white;
-  }
-
-  .btn-excluir:hover {
-    background: #ff4d4d;
-  }
-
-  footer {
-    text-align: center;
-    padding: 15px;
-    font-size: 13px;
-    color: #777;
-    margin-top: 40px;
-  }
-
-  @media (max-width: 700px) {
-    .topo {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    table, th, td {
-      font-size: 13px;
-    }
-
-    th, td {
-      padding: 8px;
-    }
-
-    .acoes button {
-      padding: 5px 8px;
-      font-size: 12px;
-    }
-  }
+  @media(max-width:1100px){.dashboard{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:760px){header{flex-direction:column;align-items:flex-start} .dashboard{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:480px){.dashboard{grid-template-columns:1fr} table{font-size:13px} th,td{padding:8px} .resumo{justify-content:center}}
 </style>
 </head>
 <body>
-  <div class="marca-dagua"></div>
+  <div class="watermark" aria-hidden="true">
+    <img src="bravo13.jpg" alt="Bravo13">
+  </div>
 
-  <header>
-    <h1>BRAVO 13</h1>
-  </header>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo-mini">BR</div>
+        <div>
+          <h1>BRAVO 13</h1>
+          <div class="subtitle">Painel Tático — Dashboard</div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="btn-primary" onclick="atualizarPainel()">Atualizar Painel</button>
+        <div style="color:var(--muted)">Última: <span id="lastSync">—</span></div>
+      </div>
+    </header>
 
-  <main>
-    <section class="topo" id="painelStatus">
-      <div class="campo">
-        <label>Dinheiro Total</label>
-        <input type="number" id="dinheiro" value="0">
+    <section class="dashboard" aria-label="Painel de status">
+      <div class="card">
+        <div class="label">Dinheiro</div>
+        <div id="val-dinheiro" class="value">0</div>
+        <input id="dinheiro" type="text" placeholder="">
       </div>
-      <div class="campo">
-        <label>Armas</label>
-        <input type="number" id="armas" value="0">
+      <div class="card">
+        <div class="label">Armas</div>
+        <div id="val-armas" class="value">0</div>
+        <input id="armas" type="text" placeholder="">
       </div>
-      <div class="campo">
-        <label>Drogas</label>
-        <input type="number" id="drogas" value="0">
+      <div class="card">
+        <div class="label">Drogas</div>
+        <div id="val-drogas" class="value">0</div>
+        <input id="drogas" type="text" placeholder="">
       </div>
-      <div class="campo">
-        <label>Munição</label>
-        <input type="number" id="municao" value="0">
+      <div class="card">
+        <div class="label">Munição</div>
+        <div id="val-municao" class="value">0</div>
+        <input id="municao" type="text" placeholder="">
       </div>
-      <div class="campo">
-        <label>Dinheiro Sujo</label>
-        <input type="number" id="dinheiroSujo" value="0">
+      <div class="card">
+        <div class="label">Dinheiro Sujo</div>
+        <div id="val-dinheiroSujo" class="value">0</div>
+        <input id="dinheiroSujo" type="text" placeholder="">
       </div>
     </section>
 
-    <button class="botao-atualizar" onclick="atualizarStatus()">Atualizar Painel</button>
+    <section class="tarefas-panel" aria-label="Tarefas">
+      <div class="tarefas-header">
+        <h2>Tarefas Bravo 13</h2>
+        <div class="search">
+          <input id="searchT" placeholder="Procurar..." oninput="filtrarTabela()">
+          <button class="btn-primary" onclick="adicionarTarefa()">+ Adicionar</button>
+        </div>
+      </div>
 
-    <section class="tarefas-container">
-      <h2>
-        Tarefas Bravo 13
-        <span class="resumo" id="resumoTarefas">Carregando...</span>
-      </h2>
-      <table id="tabelaTarefas">
+      <table id="tabela">
         <thead>
-          <tr>
-            <th>Status</th>
-            <th>Tarefa</th>
-            <th>Responsável</th>
-            <th>Observação</th>
-            <th>Ações</th>
-          </tr>
+          <tr><th>Status</th><th>Tarefa</th><th>Responsável</th><th>Observação</th><th>Ações</th></tr>
         </thead>
         <tbody></tbody>
       </table>
-      <button class="btn-adicionar" onclick="adicionarTarefa()">+ Adicionar Tarefa</button>
-    </section>
-  </main>
 
-  <footer>
-    Painel Bravo13 — Desenvolvido por Ronaldo © 2025
-  </footer>
+      <div class="resumo" id="resumo">Total: 0 • Pendentes: 0 • Concluídas: 0</div>
+    </section>
+  </div>
 
 <script>
-  const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzolqAfTkQhZq0KgNMqvIae1HyqAu9G4vYFNaACj_vnUQyW7WXiLORYFco5QVkGLf3LMA/exec';
+/* Endpoint (seu) */
+const API_URL = "https://script.google.com/macros/s/AKfycbzolqAfTkQhZq0KgNMqvIae1HyqAu9G4vYFNaACj_vnUQyW7WXiLORYFco5QVkGLf3LMA/exec";
 
-  window.onload = carregarDados;
-
-  async function carregarDados() {
-    try {
-      const response = await fetch(ENDPOINT);
-      const data = await response.json();
-
-      document.getElementById('dinheiro').value = data.status.dinheiro || 0;
-      document.getElementById('armas').value = data.status.armas || 0;
-      document.getElementById('drogas').value = data.status.drogas || 0;
-      document.getElementById('municao').value = data.status.municao || 0;
-      document.getElementById('dinheiroSujo').value = data.status.dinheiroSujo || 0;
-
-      const tbody = document.querySelector('#tabelaTarefas tbody');
-      tbody.innerHTML = '';
-
-      let pendentes = 0;
-      let concluidas = 0;
-
-      data.tarefas.forEach((t, i) => {
-        if (t.status === 'Pendente') pendentes++;
-        if (t.status === 'Concluído') concluidas++;
-
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><span class="status ${t.status}">${t.status}</span></td>
-          <td>${t.tarefa}</td>
-          <td>${t.responsavel}</td>
-          <td>${t.observacao}</td>
-          <td class="acoes">
-            <button class="btn-concluir" onclick="alterarStatus(${i}, 'Concluído')">✔</button>
-            <button class="btn-excluir" onclick="excluirTarefa(${i})">✖</button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      document.getElementById('resumoTarefas').innerText =
-        `Pendentes: ${pendentes} | Concluídas: ${concluidas}`;
-    } catch (error) {
-      console.error('Erro ao carregar dados:', error);
-      document.getElementById('resumoTarefas').innerText = 'Erro ao carregar';
-    }
+/* Extrai JSON de texto/HTML retornado pelo Apps Script */
+function extractJsonFromText(text){
+  try { return JSON.parse(text); }
+  catch(e){
+    const m = text.match(/\{[\s\S]*\}/);
+    if(m) return JSON.parse(m[0]);
+    throw new Error('Resposta inválida do servidor');
   }
+}
 
-  async function adicionarTarefa() {
-    const tarefa = prompt('Descrição da tarefa:');
-    if (!tarefa) return;
-    const responsavel = prompt('Responsável:') || '';
-    const observacao = prompt('Observação:') || '';
+/* Carregar dados no load */
+window.addEventListener('load', carregarDados);
 
-    const payload = { action: 'addTask', tarefa, responsavel, observacao, status: 'Pendente' };
+async function carregarDados(){
+  try{
+    const res = await fetch(API_URL);
+    const txt = await res.text();
+    const data = extractJsonFromText(txt);
 
-    try {
-      const response = await fetch(ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const result = await response.json();
-      alert(result.message || 'Tarefa salva!');
-      carregarDados();
-    } catch (error) {
-      alert('Erro ao salvar tarefa.');
-    }
+    const s = data.status || {};
+    document.getElementById('dinheiro').value = s.dinheiro || '';
+    document.getElementById('armas').value = s.armas || '';
+    document.getElementById('drogas').value = s.drogas || '';
+    document.getElementById('municao').value = s.municao || '';
+    document.getElementById('dinheiroSujo').value = s.dinheiroSujo || '';
+
+    document.getElementById('val-dinheiro').innerText = s.dinheiro || '0';
+    document.getElementById('val-armas').innerText = s.armas || '0';
+    document.getElementById('val-drogas').innerText = s.drogas || '0';
+    document.getElementById('val-municao').innerText = s.municao || '0';
+    document.getElementById('val-dinheiroSujo').innerText = s.dinheiroSujo || '0';
+
+    const tarefas = data.tarefas || [];
+    montarTabela(tarefas);
+    document.getElementById('lastSync').innerText = new Date().toLocaleString();
+  }catch(err){
+    console.error('Erro carregarDados:', err);
   }
+}
 
-  async function alterarStatus(index, novoStatus) {
-    const payload = { action: 'updateTaskStatus', index, status: novoStatus };
+function montarTabela(tarefas){
+  const tbody = document.querySelector('#tabela tbody');
+  tbody.innerHTML = '';
+  let pendentes = 0, concluidas = 0;
+  tarefas.forEach(t=>{
+    const tr = document.createElement('tr');
+    const status = (t.status||'Pendente').toString();
+    if(status.toLowerCase().startsWith('pend')) pendentes++;
+    if(status.toLowerCase().startsWith('concl')) concluidas++;
+    const badge = status.toLowerCase().startsWith('concl') ? 'status-concluido' : 'status-pendente';
+    tr.innerHTML = `
+      <td><span class="status-badge ${badge}">${escapeHtml(status)}</span></td>
+      <td>${escapeHtml(t.tarefa||'')}</td>
+      <td>${escapeHtml(t.responsavel||'')}</td>
+      <td>${escapeHtml(t.observacao||'')}</td>
+      <td>
+        <button class="btn-accept" onclick="concluirTarefa('${escapeJs(t.tarefa||'')}')">✔</button>
+        <button class="btn-delete" onclick="excluirTarefa('${escapeJs(t.tarefa||'')}')">✖</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('resumo').innerText = `Total: ${tarefas.length} • Pendentes: ${pendentes} • Concluídas: ${concluidas}`;
+}
 
-    try {
-      const response = await fetch(ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const result = await response.json();
-      alert(result.message || 'Status atualizado!');
-      carregarDados();
-    } catch (error) {
-      alert('Erro ao atualizar status.');
-    }
-  }
+/* escaping helpers */
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function escapeJs(s){ return String(s).replace(/'/g,"\\'").replace(/"/g,'\\"'); }
 
-  async function excluirTarefa(index) {
-    if (!confirm('Tem certeza que deseja excluir esta tarefa?')) return;
+/* filtro client-side */
+function filtrarTabela(){
+  const q = (document.getElementById('searchT').value||'').toLowerCase();
+  document.querySelectorAll('#tabela tbody tr').forEach(tr=>{
+    tr.style.display = tr.innerText.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
 
-    const payload = { action: 'deleteTask', index };
+/* Ações: usar mesmo formato que você tinha (envia 'tarefa' como identificador) */
 
-    try {
-      const response = await fetch(ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const result = await response.json();
-      alert(result.message || 'Tarefa excluída!');
-      carregarDados();
-    } catch (error) {
-      alert('Erro ao excluir tarefa.');
-    }
-  }
+async function adicionarTarefa(){
+  const tarefa = prompt('Descrição da tarefa:');
+  if(!tarefa) return;
+  const responsavel = prompt('Responsável:') || '';
+  const observacao = prompt('Observação:') || '';
 
-  async function atualizarStatus() {
-    const status = {
-      dinheiro: document.getElementById('dinheiro').value,
-      armas: document.getElementById('armas').value,
-      drogas: document.getElementById('drogas').value,
-      municao: document.getElementById('municao').value,
-      dinheiroSujo: document.getElementById('dinheiroSujo').value
-    };
+  try{
+    await fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'addTask', tarefa, responsavel, observacao, status:'Pendente' }) });
+    carregarDados();
+  }catch(e){ console.error(e); alert('Erro ao adicionar tarefa'); }
+}
 
-    const payload = { action: 'updateStatus', status };
+async function concluirTarefa(tarefa){
+  try{
+    await fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'updateTaskStatus', tarefa, novoStatus:'Concluída' }) });
+    carregarDados();
+  }catch(e){ console.error(e); alert('Erro ao concluir'); }
+}
 
-    try {
-      const response = await fetch(ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const result = await response.json();
-      alert(result.message || 'Painel atualizado!');
-    } catch (error) {
-      alert('Erro ao atualizar valores.');
-    }
-  }
+async function excluirTarefa(tarefa){
+  if(!confirm('Deseja realmente excluir esta tarefa?')) return;
+  try{
+    await fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'deleteTask', tarefa }) });
+    carregarDados();
+  }catch(e){ console.error(e); alert('Erro ao excluir'); }
+}
+
+/* atualizar painel */
+async function atualizarPainel(){
+  const status = {
+    dinheiro: document.getElementById('dinheiro').value,
+    armas: document.getElementById('armas').value,
+    drogas: document.getElementById('drogas').value,
+    municao: document.getElementById('municao').value,
+    dinheiroSujo: document.getElementById('dinheiroSujo').value
+  };
+  try{
+    await fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'updateStatus', status }) });
+    // atualiza cards
+    document.getElementById('val-dinheiro').innerText = status.dinheiro || '0';
+    document.getElementById('val-armas').innerText = status.armas || '0';
+    document.getElementById('val-drogas').innerText = status.drogas || '0';
+    document.getElementById('val-municao').innerText = status.municao || '0';
+    document.getElementById('val-dinheiroSujo').innerText = status.dinheiroSujo || '0';
+    document.getElementById('lastSync').innerText = new Date().toLocaleString();
+    flashHeader();
+  }catch(e){ console.error(e); alert('Erro ao atualizar painel'); }
+}
+
+/* feedback visual */
+function flashHeader(){ const h=document.querySelector('header'); h.style.boxShadow='0 0 0 4px rgba(195,43,43,0.08)'; setTimeout(()=>h.style.boxShadow='',600); }
 </script>
 </body>
 </html>
