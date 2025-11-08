@@ -1,276 +1,184 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Painel Bravo13</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Bravo 13</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#070707;
-    --panel:#101010;
-    --muted:#9c9c9c;
-    --accent:#c32b2b;
-    --glass: rgba(255,255,255,0.03);
+  * { box-sizing: border-box; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; }
+  body { background: #0b0b0b; color: #f1f1f1; min-height: 100vh; padding: 20px; }
+  h1 { text-align: center; color: #e50914; margin-bottom: 20px; letter-spacing: 2px; }
+  .painel {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+    margin-bottom: 30px; background: #1a1a1a; padding: 20px; border-radius: 15px;
   }
-  *{box-sizing:border-box;font-family:'Poppins',sans-serif}
-  body{margin:0;background:var(--bg);color:#eaeaea;padding:18px}
-
-  /* marca d'água */
-  .watermark{
-    position:fixed;inset:0;z-index:0;display:flex;align-items:center;justify-content:center;
-    pointer-events:none;opacity:.2;transform-origin:center;animation:floatSlow 12s ease-in-out infinite;
+  .campo { display: flex; flex-direction: column; align-items: center; }
+  .campo label { font-size: 14px; color: #ccc; }
+  .campo input {
+    width: 100px; text-align: center; margin-top: 4px; border: none; outline: none;
+    padding: 5px; border-radius: 8px; background: #2a2a2a; color: #fff;
   }
-  .watermark img{ max-width:60vmin;width:60vmin;height:auto;filter:grayscale(20%) contrast(.9); }
-
-  @keyframes floatSlow{
-    0%{ transform: translateY(0) scale(1) }
-    50%{ transform: translateY(-8px) scale(1.02) }
-    100%{ transform: translateY(0) scale(1) }
+  button {
+    background: #e50914; border: none; color: white; padding: 10px 20px;
+    border-radius: 8px; cursor: pointer; transition: 0.3s; font-weight: 600;
   }
+  button:hover { background: #ff1f2d; transform: scale(1.05); }
 
-  .wrap{position:relative;z-index:2;max-width:1100px;margin:0 auto}
+  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+  th, td { padding: 10px; border-bottom: 1px solid #333; text-align: center; }
+  th { background: #141414; }
+  tr:hover { background: #1f1f1f; transition: 0.2s; }
 
-  header{display:flex;align-items:center;justify-content:space-between;padding:16px;background:linear-gradient(180deg,#0f0f0f,#0b0b0b);border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
-  .brand{display:flex;align-items:center;gap:12px}
-  .logo-mini{width:46px;height:46px;border-radius:8px;background:linear-gradient(135deg,#222,#111);display:flex;align-items:center;justify-content:center}
-  h1{margin:0;color:var(--accent);letter-spacing:2px;font-size:20px}
-  .subtitle{font-size:12px;color:var(--muted)}
-
-  .dashboard{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:18px}
-  .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;justify-content:space-between;min-height:86px}
-  .card .label{font-size:13px;color:var(--muted)}
-  .card .value{font-size:20px;font-weight:700;margin-top:6px}
-  .card input{margin-top:8px;background:transparent;border:none;color:#fff;font-weight:700;font-size:14px;outline:none}
-
-  .controls{display:flex;gap:12px;align-items:center}
-  .btn-primary{background:linear-gradient(180deg,var(--accent),#ff5252);border:none;padding:9px 14px;border-radius:8px;color:#fff;font-weight:700;cursor:pointer}
-
-  .tarefas-panel{margin-top:20px;background:rgba(26,26,26,0.9);padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
-  .tarefas-header{display:flex;justify-content:space-between;align-items:center}
-  .search input{background:var(--glass);border:1px solid rgba(255,255,255,0.03);padding:8px 10px;border-radius:8px;color:#fff;outline:none}
-
-  table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
-  th,td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.03);text-align:left}
-  th{font-size:13px;color:var(--muted);text-transform:uppercase}
-
-  .status-badge{padding:6px 10px;border-radius:8px;font-weight:700;font-size:13px;display:inline-block}
-  .status-pendente{background:rgba(195,43,43,0.12);color:var(--accent)}
-  .status-concluido{background:rgba(76,175,80,0.08);color:#6fe08a}
-
-  .actions button{margin-right:6px;border:none;padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:700}
-  .btn-accept{background:linear-gradient(180deg,#00ff80,#00cc66);color:#000}
-  .btn-delete{background:linear-gradient(180deg,#c32b2b,#ff4d4d);color:#fff}
-
-  .resumo{margin-top:12px;display:flex;justify-content:flex-end;color:var(--muted);gap:12px;font-weight:600}
-
-  @media(max-width:1100px){.dashboard{grid-template-columns:repeat(3,1fr)}}
-  @media(max-width:760px){header{flex-direction:column;align-items:flex-start} .dashboard{grid-template-columns:repeat(2,1fr)}}
-  @media(max-width:480px){.dashboard{grid-template-columns:1fr} table{font-size:13px} th,td{padding:8px} .resumo{justify-content:center}}
+  .resumo {
+    text-align: center; background: #141414; padding: 10px;
+    border-radius: 10px; margin-top: 20px; font-weight: 600;
+  }
+  .status-concluido { color: #4caf50; font-weight: bold; }
+  .status-pendente { color: #f5c518; font-weight: bold; }
 </style>
 </head>
 <body>
-  <div class="watermark" aria-hidden="true">
-    <img src="bravo13.jpg" alt="Bravo13">
-  </div>
 
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo-mini">BR</div>
-        <div>
-          <h1>BRAVO 13</h1>
-          <div class="subtitle">Painel Tático — Dashboard</div>
-        </div>
-      </div>
-      <div class="controls">
-        <button class="btn-primary" onclick="atualizarPainel()">Atualizar Painel</button>
-        <div style="color:var(--muted)">Última: <span id="lastSync">—</span></div>
-      </div>
-    </header>
+<h1>🔴 PAINEL BRAVO 13</h1>
 
-    <section class="dashboard" aria-label="Painel de status">
-      <div class="card">
-        <div class="label">Dinheiro</div>
-        <div id="val-dinheiro" class="value">0</div>
-        <input id="dinheiro" type="text" placeholder="">
-      </div>
-      <div class="card">
-        <div class="label">Armas</div>
-        <div id="val-armas" class="value">0</div>
-        <input id="armas" type="text" placeholder="">
-      </div>
-      <div class="card">
-        <div class="label">Drogas</div>
-        <div id="val-drogas" class="value">0</div>
-        <input id="drogas" type="text" placeholder="">
-      </div>
-      <div class="card">
-        <div class="label">Munição</div>
-        <div id="val-municao" class="value">0</div>
-        <input id="municao" type="text" placeholder="">
-      </div>
-      <div class="card">
-        <div class="label">Dinheiro Sujo</div>
-        <div id="val-dinheiroSujo" class="value">0</div>
-        <input id="dinheiroSujo" type="text" placeholder="">
-      </div>
-    </section>
+<div class="painel">
+  <div class="campo"><label>Dinheiro</label><input id="dinheiro" type="text"></div>
+  <div class="campo"><label>Armas</label><input id="armas" type="text"></div>
+  <div class="campo"><label>Drogas</label><input id="drogas" type="text"></div>
+  <div class="campo"><label>Munição</label><input id="municao" type="text"></div>
+  <div class="campo"><label>Dinheiro Sujo</label><input id="dinheiroSujo" type="text"></div>
+  <button onclick="atualizarPainel()">Atualizar Painel</button>
+</div>
 
-    <section class="tarefas-panel" aria-label="Tarefas">
-      <div class="tarefas-header">
-        <h2>Tarefas Bravo 13</h2>
-        <div class="search">
-          <input id="searchT" placeholder="Procurar..." oninput="filtrarTabela()">
-          <button class="btn-primary" onclick="adicionarTarefa()">+ Adicionar</button>
-        </div>
-      </div>
+<div style="text-align:center;">
+  <button onclick="adicionarTarefa()">+ Adicionar Tarefa</button>
+</div>
 
-      <table id="tabela">
-        <thead>
-          <tr><th>Status</th><th>Tarefa</th><th>Responsável</th><th>Observação</th><th>Ações</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+<table id="tabela">
+  <thead>
+    <tr>
+      <th>Status</th>
+      <th>Tarefa</th>
+      <th>Responsável</th>
+      <th>Observação</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
 
-      <div class="resumo" id="resumo">Total: 0 • Pendentes: 0 • Concluídas: 0</div>
-    </section>
-  </div>
+<div class="resumo" id="resumo"></div>
 
 <script>
-/* Endpoint (seu) */
 const API_URL = "https://script.google.com/macros/s/AKfycbzolqAfTkQhZq0KgNMqvIae1HyqAu9G4vYFNaACj_vnUQyW7WXiLORYFco5QVkGLf3LMA/exec";
 
-/* Extrai JSON de texto/HTML retornado pelo Apps Script */
-function extractJsonFromText(text){
-  try { return JSON.parse(text); }
-  catch(e){
-    const m = text.match(/\{[\s\S]*\}/);
-    if(m) return JSON.parse(m[0]);
-    throw new Error('Resposta inválida do servidor');
-  }
-}
-
-/* Carregar dados no load */
-window.addEventListener('load', carregarDados);
-
-async function carregarDados(){
-  try{
+async function carregarDados() {
+  try {
     const res = await fetch(API_URL);
-    const txt = await res.text();
-    const data = extractJsonFromText(txt);
+    const data = await res.json();
 
-    const s = data.status || {};
-    document.getElementById('dinheiro').value = s.dinheiro || '';
-    document.getElementById('armas').value = s.armas || '';
-    document.getElementById('drogas').value = s.drogas || '';
-    document.getElementById('municao').value = s.municao || '';
-    document.getElementById('dinheiroSujo').value = s.dinheiroSujo || '';
+    if (data.status) {
+      document.getElementById("dinheiro").value = data.status.dinheiro || "";
+      document.getElementById("armas").value = data.status.armas || "";
+      document.getElementById("drogas").value = data.status.drogas || "";
+      document.getElementById("municao").value = data.status.municao || "";
+      document.getElementById("dinheiroSujo").value = data.status.dinheiroSujo || "";
+    }
 
-    document.getElementById('val-dinheiro').innerText = s.dinheiro || '0';
-    document.getElementById('val-armas').innerText = s.armas || '0';
-    document.getElementById('val-drogas').innerText = s.drogas || '0';
-    document.getElementById('val-municao').innerText = s.municao || '0';
-    document.getElementById('val-dinheiroSujo').innerText = s.dinheiroSujo || '0';
-
-    const tarefas = data.tarefas || [];
-    montarTabela(tarefas);
-    document.getElementById('lastSync').innerText = new Date().toLocaleString();
-  }catch(err){
-    console.error('Erro carregarDados:', err);
+    if (data.tarefas) atualizarTabela(data.tarefas);
+  } catch (err) {
+    console.error("Erro ao carregar dados:", err);
   }
 }
 
-function montarTabela(tarefas){
-  const tbody = document.querySelector('#tabela tbody');
-  tbody.innerHTML = '';
+function atualizarTabela(tarefas) {
+  const tbody = document.querySelector("#tabela tbody");
+  tbody.innerHTML = "";
   let pendentes = 0, concluidas = 0;
-  tarefas.forEach(t=>{
-    const tr = document.createElement('tr');
-    const status = (t.status||'Pendente').toString();
-    if(status.toLowerCase().startsWith('pend')) pendentes++;
-    if(status.toLowerCase().startsWith('concl')) concluidas++;
-    const badge = status.toLowerCase().startsWith('concl') ? 'status-concluido' : 'status-pendente';
+
+  tarefas.forEach(t => {
+    const tr = document.createElement("tr");
+    const statusClass = t.status.toLowerCase() === "concluída" ? "status-concluido" : "status-pendente";
+    if (t.status.toLowerCase() === "pendente") pendentes++;
+    if (t.status.toLowerCase() === "concluída") concluidas++;
+
     tr.innerHTML = `
-      <td><span class="status-badge ${badge}">${escapeHtml(status)}</span></td>
-      <td>${escapeHtml(t.tarefa||'')}</td>
-      <td>${escapeHtml(t.responsavel||'')}</td>
-      <td>${escapeHtml(t.observacao||'')}</td>
+      <td class="${statusClass}">${t.status}</td>
+      <td>${t.tarefa}</td>
+      <td>${t.responsavel}</td>
+      <td>${t.observacao}</td>
       <td>
-        <button class="btn-accept" onclick="concluirTarefa('${escapeJs(t.tarefa||'')}')">✔</button>
-        <button class="btn-delete" onclick="excluirTarefa('${escapeJs(t.tarefa||'')}')">✖</button>
+        <button onclick="concluirTarefa('${t.tarefa}')">✅</button>
+        <button onclick="excluirTarefa('${t.tarefa}')">❌</button>
       </td>
     `;
     tbody.appendChild(tr);
   });
-  document.getElementById('resumo').innerText = `Total: ${tarefas.length} • Pendentes: ${pendentes} • Concluídas: ${concluidas}`;
+
+  const total = tarefas.length;
+  document.getElementById("resumo").innerText =
+    `Total: ${total} | Pendentes: ${pendentes} | Concluídas: ${concluidas}`;
 }
 
-/* escaping helpers */
-function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
-function escapeJs(s){ return String(s).replace(/'/g,"\\'").replace(/"/g,'\\"'); }
+async function adicionarTarefa() {
+  const tarefa = prompt("Descrição da tarefa:");
+  if (!tarefa) return;
+  const responsavel = prompt("Responsável:");
+  const observacao = prompt("Observação:");
 
-/* filtro client-side */
-function filtrarTabela(){
-  const q = (document.getElementById('searchT').value||'').toLowerCase();
-  document.querySelectorAll('#tabela tbody tr').forEach(tr=>{
-    tr.style.display = tr.innerText.toLowerCase().includes(q) ? '' : 'none';
+  await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "addTask",
+      tarefa, responsavel, observacao, status: "Pendente"
+    })
   });
+
+  carregarDados();
 }
 
-/* Ações: usar mesmo formato que você tinha (envia 'tarefa' como identificador) */
-
-async function adicionarTarefa(){
-  const tarefa = prompt('Descrição da tarefa:');
-  if(!tarefa) return;
-  const responsavel = prompt('Responsável:') || '';
-  const observacao = prompt('Observação:') || '';
-
-  try{
-    await fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'addTask', tarefa, responsavel, observacao, status:'Pendente' }) });
-    carregarDados();
-  }catch(e){ console.error(e); alert('Erro ao adicionar tarefa'); }
+async function concluirTarefa(tarefa) {
+  await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "updateTaskStatus",
+      tarefa, novoStatus: "Concluída"
+    })
+  });
+  carregarDados();
 }
 
-async function concluirTarefa(tarefa){
-  try{
-    await fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'updateTaskStatus', tarefa, novoStatus:'Concluída' }) });
-    carregarDados();
-  }catch(e){ console.error(e); alert('Erro ao concluir'); }
+async function excluirTarefa(tarefa) {
+  if (!confirm("Tem certeza que deseja excluir esta tarefa?")) return;
+  await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "deleteTask",
+      tarefa
+    })
+  });
+  carregarDados();
 }
 
-async function excluirTarefa(tarefa){
-  if(!confirm('Deseja realmente excluir esta tarefa?')) return;
-  try{
-    await fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'deleteTask', tarefa }) });
-    carregarDados();
-  }catch(e){ console.error(e); alert('Erro ao excluir'); }
-}
-
-/* atualizar painel */
-async function atualizarPainel(){
+async function atualizarPainel() {
   const status = {
-    dinheiro: document.getElementById('dinheiro').value,
-    armas: document.getElementById('armas').value,
-    drogas: document.getElementById('drogas').value,
-    municao: document.getElementById('municao').value,
-    dinheiroSujo: document.getElementById('dinheiroSujo').value
+    dinheiro: document.getElementById("dinheiro").value,
+    armas: document.getElementById("armas").value,
+    drogas: document.getElementById("drogas").value,
+    municao: document.getElementById("municao").value,
+    dinheiroSujo: document.getElementById("dinheiroSujo").value
   };
-  try{
-    await fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'updateStatus', status }) });
-    // atualiza cards
-    document.getElementById('val-dinheiro').innerText = status.dinheiro || '0';
-    document.getElementById('val-armas').innerText = status.armas || '0';
-    document.getElementById('val-drogas').innerText = status.drogas || '0';
-    document.getElementById('val-municao').innerText = status.municao || '0';
-    document.getElementById('val-dinheiroSujo').innerText = status.dinheiroSujo || '0';
-    document.getElementById('lastSync').innerText = new Date().toLocaleString();
-    flashHeader();
-  }catch(e){ console.error(e); alert('Erro ao atualizar painel'); }
+
+  await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({ action: "updateStatus", status })
+  });
+
+  alert("Painel atualizado com sucesso!");
 }
 
-/* feedback visual */
-function flashHeader(){ const h=document.querySelector('header'); h.style.boxShadow='0 0 0 4px rgba(195,43,43,0.08)'; setTimeout(()=>h.style.boxShadow='',600); }
+carregarDados();
 </script>
 </body>
 </html>
