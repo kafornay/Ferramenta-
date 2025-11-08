@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Bravo 13</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; }
+  body { background: #0b0b0b; color: #f1f1f1; min-height: 100vh; padding: 20px; }
+  h1 { text-align: center; color: #e50914; margin-bottom: 20px; letter-spacing: 2px; }
+  .painel {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+    margin-bottom: 30px; background: #1a1a1a; padding: 20px; border-radius: 15px;
+  }
+  .campo { display: flex; flex-direction: column; align-items: center; }
+  .campo label { font-size: 14px; color: #ccc; }
+  .campo input {
+    width: 100px; text-align: center; margin-top: 4px; border: none; outline: none;
+    padding: 5px; border-radius: 8px; background: #2a2a2a; color: #fff;
+  }
+  button {
+    background: #e50914; border: none; color: white; padding: 10px 20px;
+    border-radius: 8px; cursor: pointer; transition: 0.3s; font-weight: 600;
+  }
+  button:hover { background: #ff1f2d; transform: scale(1.05); }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+  th, td { padding: 10px; border-bottom: 1px solid #333; text-align: center; }
+  th { background: #141414; }
+  tr:hover { background: #1f1f1f; transition: 0.2s; }
+
+  .resumo {
+    text-align: center; background: #141414; padding: 10px;
+    border-radius: 10px; margin-top: 20px; font-weight: 600;
+  }
+  .status-concluido { color: #4caf50; font-weight: bold; }
+  .status-pendente { color: #f5c518; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<h1>🔴 PAINEL BRAVO 13</h1>
+
+<div class="painel">
+  <div class="campo"><label>Dinheiro</label><input id="dinheiro" type="text"></div>
+  <div class="campo"><label>Armas</label><input id="armas" type="text"></div>
+  <div class="campo"><label>Drogas</label><input id="drogas" type="text"></div>
+  <div class="campo"><label>Munição</label><input id="municao" type="text"></div>
+  <div class="campo"><label>Dinheiro Sujo</label><input id="dinheiroSujo" type="text"></div>
+  <button onclick="atualizarPainel()">Atualizar Painel</button>
+</div>
+
+<div style="text-align:center;">
+  <button onclick="adicionarTarefa()">+ Adicionar Tarefa</button>
+</div>
+
+<table id="tabela">
+  <thead>
+    <tr>
+      <th>Status</th>
+      <th>Tarefa</th>
+      <th>Responsável</th>
+      <th>Observação</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<div class="resumo" id="resumo"></div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbzolqAfTkQhZq0KgNMqvIae1HyqAu9G4vYFNaACj_vnUQyW7WXiLORYFco5QVkGLf3LMA/exec";
+
+async function carregarDados() {
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+
+    if (data.status) {
+      document.getElementById("dinheiro").value = data.status.dinheiro || "";
+      document.getElementById("armas").value = data.status.armas || "";
+      document.getElementById("drogas").value = data.status.drogas || "";
+      document.getElementById("municao").value = data.status.municao || "";
+      document.getElementById("dinheiroSujo").value = data.status.dinheiroSujo || "";
+    }
+
+    if (data.tarefas) atualizarTabela(data.tarefas);
+  } catch (err) {
+    console.error("Erro ao carregar dados:", err);
+  }
+}
+
+function atualizarTabela(tarefas) {
+  const tbody = document.querySelector("#tabela tbody");
+  tbody.innerHTML = "";
+  let pendentes = 0, concluidas = 0;
+
+  tarefas.forEach(t => {
+    const tr = document.createElement("tr");
+    const statusClass = t.status.toLowerCase() === "concluída" ? "status-concluido" : "status-pendente";
+    if (t.status.toLowerCase() === "pendente") pendentes++;
+    if (t.status.toLowerCase() === "concluída") concluidas++;
+
+    tr.innerHTML = `
+      <td class="${statusClass}">${t.status}</td>
+      <td>${t.tarefa}</td>
+      <td>${t.responsavel}</td>
+      <td>${t.observacao}</td>
+      <td>
+        <button onclick="concluirTarefa('${t.tarefa}')">✅</button>
+        <button onclick="excluirTarefa('${t.tarefa}')">❌</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const total = tarefas.length;
+  document.getElementById("resumo").innerText =
+    `Total: ${total} | Pendentes: ${pendentes} | Concluídas: ${concluidas}`;
+}
+
+async function adicionarTarefa() {
+  const tarefa = prompt("Descrição da tarefa:");
+  if (!tarefa) return;
+  const responsavel = prompt("Responsável:");
+  const observacao = prompt("Observação:");
+
+  await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "addTask",
+      tarefa, responsavel, observacao, status: "Pendente"
+    })
+  });
+
+  carregarDados();
+}
+
+async function concluirTarefa(tarefa) {
+  await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "updateTaskStatus",
+      tarefa, novoStatus: "Concluída"
+    })
+  });
+  carregarDados();
+}
+
+async function excluirTarefa(tarefa) {
+  if (!confirm("Tem certeza que deseja excluir esta tarefa?")) return;
+  await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "deleteTask",
+      tarefa
+    })
+  });
+  carregarDados();
+}
+
+async function atualizarPainel() {
+  const status = {
+    dinheiro: document.getElementById("dinheiro").value,
+    armas: document.getElementById("armas").value,
+    drogas: document.getElementById("drogas").value,
+    municao: document.getElementById("municao").value,
+    dinheiroSujo: document.getElementById("dinheiroSujo").value
+  };
+
+  await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({ action: "updateStatus", status })
+  });
+
+  alert("Painel atualizado com sucesso!");
+}
+
+carregarDados();
+</script>
+</body>
+</html>
