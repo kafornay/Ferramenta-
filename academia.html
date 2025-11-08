@@ -2,196 +2,353 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Login & Cadastro - Dark Mode</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Academia Online 🏋️</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
+    :root {
+      --primary: #00ffae;
+      --secondary: #181c24;
+      --bg: #10131a;
+      --card: #181c24;
+      --accent: #00bfff;
+      --danger: #e53935;
+      --radius: 12px;
+      --shadow: 0 2px 8px rgba(0,0,0,0.18);
+    }
     body {
-      background: #181a1b;
-      color: #f1f1f1;
+      background: var(--bg);
       font-family: 'Segoe UI', Arial, sans-serif;
-      min-height: 100vh;
       margin: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      min-height: 100vh;
+      color: #fff;
     }
     .container {
-      background: #23272a;
-      padding: 2rem 2.5rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 24px #0008;
-      width: 100%;
-      max-width: 350px;
+      max-width: 420px;
+      margin: 40px auto;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 32px 24px;
     }
-    h2 {
+    h2, h3 {
       text-align: center;
-      margin-bottom: 1.5rem;
-      color: #00bfae;
+      color: var(--primary);
+      margin-bottom: 16px;
     }
     label {
+      font-weight: bold;
+      margin-top: 12px;
       display: block;
-      margin-bottom: .5rem;
-      color: #bdbdbd;
     }
-    input[type="text"], input[type="password"] {
+    input[type="text"], input[type="password"], select {
       width: 100%;
-      padding: .7rem;
-      margin-bottom: 1.2rem;
-      border-radius: 6px;
-      border: none;
-      background: #2c2f33;
+      padding: 10px;
+      border-radius: var(--radius);
+      border: 1px solid #222;
+      margin-bottom: 16px;
+      font-size: 1em;
+      box-sizing: border-box;
+      background: #23283a;
       color: #fff;
-      font-size: 1rem;
     }
     button {
       width: 100%;
-      padding: .8rem;
-      border-radius: 6px;
+      background: var(--primary);
+      color: #181c24;
       border: none;
-      background: #00bfae;
-      color: #fff;
-      font-size: 1.1rem;
-      font-weight: bold;
+      border-radius: var(--radius);
+      padding: 12px;
+      font-size: 1.1em;
       cursor: pointer;
-      transition: background .2s;
+      transition: background .2s, color .2s;
+      margin-bottom: 8px;
     }
     button:hover {
-      background: #009e8e;
+      background: var(--accent);
+      color:#fff;
     }
-    .switch {
-      text-align: center;
-      margin-top: 1rem;
+    .painel { display:none; }
+    .boas-vindas { text-align:center; font-size:1.2em; margin-bottom:18px; }
+    #progressoDiv { margin-bottom:24px; }
+    #barraProgresso {
+      background:#23283a; border-radius:8px; height:28px; width:100%; margin:auto; box-shadow:var(--shadow);
     }
-    .switch a {
-      color: #00bfae;
-      cursor: pointer;
-      text-decoration: underline;
+    #progresso {
+      background:linear-gradient(90deg, var(--primary), var(--accent));
+      height:100%; width:0%; border-radius:8px; color:#181c24; text-align:center; line-height:28px; font-weight:bold; transition:.5s width;
     }
-    .msg {
-      text-align: center;
-      margin-bottom: 1rem;
-      min-height: 24px;
+    #faltouDias { text-align:center; color:#aaa; margin-top:8px;}
+    .treino-form select { margin-bottom:10px;}
+    .treino-box {
+      background:#23283a; border-radius:var(--radius); box-shadow:0 1px 4px rgba(0,0,0,.10);
+      padding:12px; margin-bottom:10px; display:flex; flex-direction:column; gap:6px;
     }
+    .treino-box strong { color:#00ffae;}
+    #statusMsg { text-align:center; margin-top:10px;}
+    @media (max-width:600px) { .container { padding:18px 6px;} }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2 id="form-title">Login</h2>
-    <div class="msg" id="msg"></div>
-    <form id="login-form">
-      <label for="login-nome">Usuário</label>
-      <input type="text" id="login-nome" required autocomplete="username">
-      
-      <label for="login-senha">Senha</label>
-      <input type="password" id="login-senha" required autocomplete="current-password">
-      
-      <button type="submit">Entrar</button>
-    </form>
-    
-    <form id="cadastro-form" style="display:none;">
-      <label for="cadastro-nome">Usuário</label>
-      <input type="text" id="cadastro-nome" required autocomplete="username">
-      
-      <label for="cadastro-senha">Senha</label>
-      <input type="password" id="cadastro-senha" required autocomplete="new-password">
-      
-      <button type="submit">Cadastrar</button>
-    </form>
-    
-    <div class="switch">
-      <span id="switch-text">Não tem conta? <a id="switch-link">Cadastre-se</a></span>
-    </div>
+  <div class="container" id="loginDiv">
+    <h2>🏋️ Academia Online</h2>
+    <input id="nome" placeholder="Nome do aluno"><br>
+    <button onclick="registrar()">Registrar</button>
+    <button onclick="login()">Entrar</button>
+    <p id="senhaMsg"></p>
   </div>
 
-  <!-- SCRIPT ABAIXO -->
-  <script>
-    // URL do seu Google Apps Script
-    const API_URL = "https://script.google.com/macros/s/AKfycbyUFFwmr6R1435ZH4Z3rGk3KUC-VaA_Cg64JDlAF0Z43kX-2_h5DK-KUVA96eNJaMe8HQ/exec";
+  <div class="container painel" id="painelDiv">
+    <div class="boas-vindas" id="boasVindas"></div>
 
-    // Elementos
-    const loginForm = document.getElementById('login-form');
-    const cadastroForm = document.getElementById('cadastro-form');
-    const switchLink = document.getElementById('switch-link');
-    const switchText = document.getElementById('switch-text');
-    const formTitle = document.getElementById('form-title');
-    const msg = document.getElementById('msg');
+    <!-- Barra de progresso -->
+    <div id="progressoDiv" style="display:none;">
+      <h3>Progresso da Semana</h3>
+      <div id="barraProgresso">
+        <div id="progresso">0%</div>
+      </div>
+      <p id="faltouDias"></p>
+    </div>
 
-    // Alternar entre login e cadastro
-    let isLogin = true;
+    <!-- Formulário de treino -->
+    <form class="treino-form" onsubmit="event.preventDefault();salvarTreino();">
+      <label for="dia">Dia da semana:</label>
+      <select id="dia" onchange="atualizaTipoTreino();montarTreino();">
+        <option value="">Selecione o dia</option>
+        <option value="Segunda" disabled>Segunda</option>
+        <option value="Terça" disabled>Terça</option>
+        <option value="Quarta" disabled>Quarta</option>
+        <option value="Quinta" disabled>Quinta</option>
+        <option value="Sexta" disabled>Sexta</option>
+        <option value="Sábado" disabled>Sábado (Cardio)</option>
+      </select>
 
-    switchLink.onclick = () => {
-      isLogin = !isLogin;
-      if (isLogin) {
-        loginForm.style.display = '';
-        cadastroForm.style.display = 'none';
-        formTitle.textContent = 'Login';
-        switchText.innerHTML = 'Não tem conta? <a id="switch-link">Cadastre-se</a>';
-        document.getElementById('switch-link').onclick = switchLink.onclick; // reatribui evento
-        msg.textContent = '';
-      } else {
-        loginForm.style.display = 'none';
-        cadastroForm.style.display = '';
-        formTitle.textContent = 'Cadastro';
-        switchText.innerHTML = 'Já tem conta? <a id="switch-link">Entrar</a>';
-        document.getElementById('switch-link').onclick = switchLink.onclick; // reatribui evento
-        msg.textContent = '';
-      }
-    };
+      <label for="tipo" id="labelTipo">Tipo de treino:</label>
+      <select id="tipo" onchange="montarTreino()">
+        <option value="">Selecione</option>
+        <option value="Peito">Peito</option>
+        <option value="Costas">Costas</option>
+        <option value="Perna">Perna</option>
+        <option value="Ombro">Ombro</option>
+        <option value="Bíceps/Tríceps">Bíceps/Tríceps</option>
+        <!-- Não mostra tipo no sábado -->
+      </select>
 
-    // Função para exibir mensagem
-    function showMsg(text, ok=false) {
-      msg.textContent = text;
-      msg.style.color = ok ? "#00bfae" : "#ff5252";
+      <div id="listaTreinos"></div>
+
+      <button type="submit">Salvar Treino</button>
+      <div id="statusMsg"></div>
+    </form>
+  </div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyUFFwmr6R1435ZH4Z3rGk3KUC-VaA_Cg64JDlAF0Z43kX-2_h5DK-KUVA96eNJaMe8HQ/exec";
+
+// Registrar
+function registrar() {
+  const nome = document.getElementById("nome").value.trim();
+  fetch(API_URL, {
+    method: "POST",
+    body: new URLSearchParams({ acao: "registrar", nome })
+  })
+  .then(r => r.json())
+  .then(d => {
+    document.getElementById("senhaMsg").innerText =
+      d.status === "ok" ? `✅ Sua senha é: ${d.senha}` : "Erro ao registrar.";
+  });
+}
+
+// Login
+function login() {
+  const nome = document.getElementById("nome").value.trim();
+  const senha = prompt("Digite sua senha:");
+  fetch(API_URL, {
+    method: "POST",
+    body: new URLSearchParams({ acao: "login", nome, senha })
+  })
+  .then(r => r.json())
+  .then(d => {
+    if (d.status === "ok") {
+      localStorage.setItem("aluno", nome);
+      document.getElementById("loginDiv").style.display = "none";
+      document.getElementById("painelDiv").style.display = "block";
+      document.getElementById("boasVindas").innerText = `Bem-vindo(a), ${nome}!`;
+      habilitarDiaAtual();
+      carregarProgresso(nome);
+    } else {
+      alert("Nome ou senha incorretos.");
     }
+  });
+}
 
-    // Login
-    loginForm.onsubmit = async (e) => {
-      e.preventDefault();
-      showMsg("Entrando...");
-      const nome = document.getElementById('login-nome').value.trim();
-      const senha = document.getElementById('login-senha').value.trim();
-      
-      try {
-        const res = await fetch(API_URL, {
-          method: "POST",
-          body: new URLSearchParams({ acao: "login", nome, senha })
-        });
-        const data = await res.json();
-        if (data.sucesso) {
-          showMsg("Login realizado com sucesso!", true);
-          // Redirecione ou faça algo após login
-          // window.location.href = "pagina.html";
-        } else {
-          showMsg(data.mensagem || "Usuário ou senha inválidos.");
-        }
-      } catch (err) {
-        showMsg("Erro ao conectar ao servidor.");
-      }
-    };
+// Habilita só o dia atual
+function habilitarDiaAtual() {
+  const dias = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
+  const hoje = new Date();
+  const diaSemana = dias[hoje.getDay()];
+  const options = document.querySelectorAll("#dia option");
+  options.forEach(opt => {
+    if (opt.value && opt.value !== diaSemana) opt.disabled = true;
+    else if (opt.value === diaSemana) opt.disabled = false;
+  });
+  atualizaTipoTreino();
+}
 
-    // Cadastro
-    cadastroForm.onsubmit = async (e) => {
-      e.preventDefault();
-      showMsg("Cadastrando...");
-      const nome = document.getElementById('cadastro-nome').value.trim();
-      const senha = document.getElementById('cadastro-senha').value.trim();
-      
-      try {
-        const res = await fetch(API_URL, {
-          method: "POST",
-          body: new URLSearchParams({ acao: "cadastrar", nome, senha })
-        });
-        const data = await res.json();
-        if (data.sucesso) {
-          showMsg("Cadastro realizado! Faça login.", true);
-          setTimeout(() => switchLink.onclick(), 1200);
-        } else {
-          showMsg(data.mensagem || "Erro ao cadastrar.");
-        }
-      } catch (err) {
-        showMsg("Erro ao conectar ao servidor.");
-      }
-    };
-  </script>
+// Esconde tipo de treino se sábado
+function atualizaTipoTreino() {
+  const diaSelecionado = document.getElementById("dia").value;
+  if (diaSelecionado === "Sábado") {
+    document.getElementById("tipo").style.display = "none";
+    document.getElementById("labelTipo").style.display = "none";
+  } else {
+    document.getElementById("tipo").style.display = "";
+    document.getElementById("labelTipo").style.display = "";
+  }
+}
+
+// Monta lista de exercícios
+function montarTreino() {
+  const tipo = document.getElementById("tipo").value;
+  const diaSelecionado = document.getElementById("dia").value;
+  const lista = document.getElementById("listaTreinos");
+  lista.innerHTML = "";
+
+  // Cardio para sábado
+  const cardio = [
+    "Corrida na esteira", "Bicicleta ergométrica", "Elíptico", "Pular corda", "HIIT (20min)"
+  ];
+  if (diaSelecionado === "Sábado") {
+    lista.innerHTML = "<h4>Treino Cardio</h4>";
+    cardio.forEach(ex => {
+      lista.innerHTML += `
+        <div class="treino-box">
+          <strong>${ex}</strong><br>
+          <label>Duração:</label>
+          <select>
+            <option>10min</option><option>20min</option><option>30min</option><option>40min</option><option>60min</option>
+          </select>
+        </div>`;
+    });
+    return;
+  }
+
+  // Treinos normais nos outros dias
+  if (!tipo) return;
+
+  const exercicios = {
+    "Peito": ["Supino reto", "Supino inclinado", "Crucifixo", "Crossover", "Flexão"],
+    "Costas": ["Puxada frente", "Remada curvada", "Remada baixa", "Puxada inversa", "Levantamento terra"],
+    "Perna": ["Agachamento", "Leg press", "Cadeira extensora", "Mesa flexora", "Panturrilha"],
+    "Ombro": ["Desenvolvimento", "Elevação lateral", "Elevação frontal", "Remada alta", "Crucifixo invertido"],
+    "Bíceps/Tríceps": ["Rosca direta", "Rosca martelo", "Tríceps corda", "Tríceps francês", "Tríceps banco"]
+  };
+
+  exercicios[tipo].forEach(ex => {
+    lista.innerHTML += `
+      <div class="treino-box">
+        <strong>${ex}</strong><br>
+        <label>Séries:</label>
+        <select>
+          <option>4s</option><option>3s</option><option>2s</option><option>1s</option>
+        </select>
+        <label>Repetições:</label>
+        <select>
+          <option>12rp</option><option>10rp</option><option>8rp</option>
+        </select>
+      </div>`;
+  });
+}
+
+// Salva treino
+function salvarTreino() {
+  const nome = localStorage.getItem("aluno");
+  const dia = document.getElementById("dia").value;
+  const tipo = document.getElementById("tipo").value;
+
+  // Verifica se o dia selecionado é o dia atual
+  const diasSemana = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
+  const hoje = new Date();
+  const diaAtual = diasSemana[hoje.getDay()];
+  if (dia !== diaAtual) return alert(`Só é possível marcar treino para hoje (${diaAtual})!`);
+
+  const boxes = document.querySelectorAll(".treino-box");
+  const exercicios = [];
+  
+  // Se for sábado, pega duração ao invés de séries/repetições
+  if (dia === "Sábado") {
+    boxes.forEach(box => {
+      const nomeEx = box.querySelector("strong").innerText;
+      const duracao = box.querySelector("select").value;
+      exercicios.push({ nome:nomeEx, series:duracao, repeticoes:"" });
+    });
+  } else {
+    if (!tipo) return alert("Selecione o tipo de treino!");
+    boxes.forEach(box => {
+      const nomeEx = box.querySelector("strong").innerText;
+      const series = box.querySelectorAll("select")[0].value;
+      const repeticoes = box.querySelectorAll("select")[1].value;
+      exercicios.push({ nome:nomeEx, series, repeticoes });
+    });
+  }
+
+  fetch(API_URL, {
+    method:"POST",
+    body:new URLSearchParams({
+      acao:"salvarTreino",
+      nome,
+      dia,
+      tipo,
+      exercicios:JSON.stringify(exercicios)
+    })
+  })
+  .then(r=>r.json())
+  .then(d=>{
+    document.getElementById("statusMsg").innerText =
+     d.status==="ok" ? "✅ Treino salvo com sucesso!" : "❌ Erro ao salvar treino.";
+     carregarProgresso(nome); // Atualiza barra de progresso após salvar
+     setTimeout(()=>{document.getElementById("statusMsg").innerText=""},3000);
+   })
+   .catch(err=>{
+     console.error(err);
+     document.getElementById("statusMsg").innerText = "❌ Falha de conexão com servidor.";
+   });
+}
+
+// Barra de progresso semanal
+function carregarProgresso(nome) {
+  fetch(API_URL, {
+    method:"POST",
+    body:new URLSearchParams({ acao:"historico", nome })
+  })
+   .then(r=>r.json())
+   .then(d=>{
+     if (d.status==="ok") {
+       document.getElementById("progressoDiv").style.display = "block";
+       const dias = ["Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
+       let feitos=0, total=dias.length, faltou=[];
+       dias.forEach(dia=>{
+         if (d.treinos && d.treinos[dia]) feitos++;
+         else faltou.push(dia);
+       });
+       const percent = Math.round((feitos/total)*100);
+       document.getElementById("progresso").style.width=percent+"%";
+       document.getElementById("progresso").innerText=percent+"%";
+       document.getElementById("faltouDias").innerText =
+         faltou.length ? `Você não treinou em: ${faltou.join(", ")}` : "Parabéns! Treinou todos os dias!";
+     }
+   });
+}
+
+// Autologin se já logado
+window.onload=function(){
+ let aluno=localStorage.getItem("aluno");
+ if(aluno){
+   document.getElementById("loginDiv").style.display="none";
+   document.getElementById("painelDiv").style.display="block";
+   document.getElementById("boasVindas").innerText=`Bem-vindo(a), ${aluno}!`;
+   habilitarDiaAtual();
+   carregarProgresso(aluno);
+ }
+};
+</script>
 </body>
 </html>
