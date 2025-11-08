@@ -7,38 +7,111 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; }
-  body { background: #0b0b0b; color: #f1f1f1; min-height: 100vh; padding: 20px; }
-  h1 { text-align: center; color: #e50914; margin-bottom: 20px; letter-spacing: 2px; }
+  body {
+    background: #0b0b0b;
+    color: #f1f1f1;
+    min-height: 100vh;
+    padding: 20px;
+    position: relative;
+  }
+  /* Marca d'água da logo */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 0;
+    background: url('https://977099015297-genai-file-ingestor-v2-bucket.s3.amazonaws.com/01K9GM8XFKT0K7J575WF39H6Y0/CONTEXT/01K9GMAP002WDVR7KKXD9GKK2W/bravo13.jpg') no-repeat center center;
+    background-size: 45vw auto;
+    opacity: 0.18;
+    pointer-events: none;
+    filter: grayscale(30%);
+  }
+  body > * { position: relative; z-index: 1; }
+
+  /* Logo no topo */
+  .logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+  .logo-img {
+    max-width: 120px;
+    height: auto;
+    border-radius: 50%;
+    box-shadow: 0 0 30px #e50914, 0 0 10px #000 inset;
+    background: #181818;
+    padding: 8px;
+    border: 2.5px solid #e50914;
+    transition: transform .2s;
+  }
+  .logo-img:hover { transform: scale(1.07) rotate(-2deg); }
+
+  h1 {
+    text-align: center;
+    color: #e50914;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 12px #000a, 0 1px #e50914a0;
+    font-size: 2.1em;
+  }
   .painel {
     display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
-    margin-bottom: 30px; background: #1a1a1a; padding: 20px; border-radius: 15px;
+    margin-bottom: 30px; background: #1a1a1aee; padding: 20px; border-radius: 15px;
+    box-shadow: 0 4px 24px #000a, 0 1.5px 0 #e50914 inset;
+    border: 1.5px solid #e50914;
+    max-width: 700px; margin-left:auto; margin-right:auto;
   }
   .campo { display: flex; flex-direction: column; align-items: center; }
   .campo label { font-size: 14px; color: #ccc; }
   .campo input {
     width: 100px; text-align: center; margin-top: 4px; border: none; outline: none;
     padding: 5px; border-radius: 8px; background: #2a2a2a; color: #fff;
+    font-size:1em;
+    box-shadow:0 1.5px #e50914 inset;
+    transition:.15s;
   }
+  .campo input:focus { background:#222; border-bottom:2px solid #e50914;}
+  
   button {
     background: #e50914; border: none; color: white; padding: 10px 20px;
-    border-radius: 8px; cursor: pointer; transition: 0.3s; font-weight: 600;
+    border-radius: 8px; cursor: pointer; transition: .3s; font-weight:600;
+    letter-spacing:.5px; box-shadow:0 .5px #0004 inset;
+    margin-top:.5em
   }
-  button:hover { background: #ff1f2d; transform: scale(1.05); }
+  button:hover { background:#ff1f2d; transform:scale(1.05); }
 
-  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-  th, td { padding: 10px; border-bottom: 1px solid #333; text-align: center; }
-  th { background: #141414; }
-  tr:hover { background: #1f1f1f; transition: 0.2s; }
-
+  table { width:100%; border-collapse:collapse; margin-top:20px;}
+  th, td { padding:10px; border-bottom:1px solid #333;text-align:center;}
+  th { background:#141414;}
+  tr:hover { background:#1f1f1f; transition:.2s;}
+  
   .resumo {
-    text-align: center; background: #141414; padding: 10px;
-    border-radius: 10px; margin-top: 20px; font-weight: 600;
+    text-align:center;background:#141414;padding:10px;border-radius:10px;margin-top:20px;font-weight:600;
+    box-shadow:0 .5px #e50914 inset;
+    max-width:400px;margin-left:auto;margin-right:auto
   }
-  .status-concluido { color: #4caf50; font-weight: bold; }
-  .status-pendente { color: #f5c518; font-weight: bold; }
+  
+  .status-concluido { color:#4caf50;font-weight:bold;}
+  .status-pendente { color:#f5c518;font-weight:bold;}
+
+  /* Responsivo */
+  @media (max-width:700px) {
+      .painel { max-width:none;}
+      .logo-img { max-width:80px;}
+      h1{font-size:1.3em;}
+      table th, table td{padding:.5em;}
+      .resumo{font-size:.95em;}
+      body{padding:.7em;}
+   }
 </style>
 </head>
 <body>
+
+<div class="logo-container">
+   <img src="https://977099015297-genai-file-ingestor-v2-bucket.s3.amazonaws.com/01K9GM8XFKT0K7J575WF39H6Y0/CONTEXT/01K9GMAP002WDVR7KKXD9GKK2W/bravo13.jpg" alt="Bravo13 Logo" class="logo-img">
+</div>
 
 <h1>🔴 PAINEL BRAVO 13</h1>
 
@@ -56,21 +129,22 @@
 </div>
 
 <table id="tabela">
-  <thead>
-    <tr>
-      <th>Status</th>
-      <th>Tarefa</th>
-      <th>Responsável</th>
-      <th>Observação</th>
-      <th>Ações</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
+<thead>
+<tr>
+<th>Status</th>
+<th>Tarefa</th>
+<th>Responsável</th>
+<th>Observação</th>
+<th>Ações</th>
+</tr>
+</thead>
+<tbody></tbody>
 </table>
 
 <div class="resumo" id="resumo"></div>
 
 <script>
+// ... Seu JS permanece igual ...
 const API_URL = "https://script.google.com/macros/s/AKfycbzolqAfTkQhZq0KgNMqvIae1HyqAu9G4vYFNaACj_vnUQyW7WXiLORYFco5QVkGLf3LMA/exec"; // <-- substitua pela URL do seu deploy
 
 async function carregarDados() {
