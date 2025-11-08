@@ -6,51 +6,54 @@
   <style>
     body { font-family: Arial; background: #111; color: #fff; text-align: center; }
     .container { margin-top: 50px; }
-    input, select, button {
-      padding: 8px; margin: 5px; border-radius: 5px; border: none;
-    }
+    input, select, button { padding: 8px; margin: 5px; border-radius: 5px; border: none; }
     input, select { width: 200px; }
     button { background: #e53935; color: white; cursor: pointer; }
     button:hover { background: #c62828; }
-    .treino-box {
-      background: #222; padding: 10px; margin: 10px; border-radius: 8px;
-    }
+    .treino-box { background: #222; padding: 10px; margin: 10px; border-radius: 8px; }
+    #barraProgresso { background:#444; border-radius:8px; height:30px; width:300px; margin:auto;}
+    #progresso { background:#4caf50; height:100%; width:0%; border-radius:8px;}
   </style>
 </head>
 <body>
-  <div class="container" id="loginDiv">
-    <h2>🏋️ Academia Online</h2>
-    <input id="nome" placeholder="Nome do aluno"><br>
-    <button onclick="registrar()">Registrar</button>
-    <button onclick="login()">Entrar</button>
-    <p id="senhaMsg"></p>
+<div class="container" id="loginDiv">
+  <h2>🏋️ Academia Online</h2>
+  <input id="nome" placeholder="Nome do aluno"><br>
+  <button onclick="registrar()">Registrar</button>
+  <button onclick="login()">Entrar</button>
+  <p id="senhaMsg"></p>
+</div>
+
+<div class="container" id="progressoDiv" style="display:none;">
+  <h3>Progresso da semana</h3>
+  <div id="barraProgresso">
+    <div id="progresso">0%</div>
   </div>
+  <p id="faltouDias"></p>
+</div>
 
-  <div class="container" id="painelDiv" style="display:none;">
-    <h2 id="boasVindas"></h2>
-    <select id="dia">
-      <option value="">Dia da semana</option>
-      <option>Segunda</option>
-      <option>Terça</option>
-      <option>Quarta</option>
-      <option>Quinta</option>
-      <option>Sexta</option>
-    </select><br>
-
-    <select id="tipo" onchange="montarTreino()">
-      <option value="">Tipo de treino</option>
-      <option value="Peito">Peito</option>
-      <option value="Costas">Costas</option>
-      <option value="Perna">Perna</option>
-      <option value="Ombro">Ombro</option>
-      <option value="Bíceps/Tríceps">Bíceps/Tríceps</option>
-    </select>
-
-    <div id="listaTreinos"></div>
-
-    <button onclick="salvarTreino()">Salvar Treino</button>
-    <p id="statusMsg"></p>
-  </div>
+<div class="container" id="painelDiv" style="display:none;">
+  <h2 id="boasVindas"></h2>
+  <select id="dia">
+    <option value="">Dia da semana</option>
+    <option value="Segunda" disabled>Segunda</option>
+    <option value="Terça" disabled>Terça</option>
+    <option value="Quarta" disabled>Quarta</option>
+    <option value="Quinta" disabled>Quinta</option>
+    <option value="Sexta" disabled>Sexta</option>
+  </select><br>
+  <select id="tipo" onchange="montarTreino()">
+    <option value="">Tipo de treino</option>
+    <option value="Peito">Peito</option>
+    <option value="Costas">Costas</option>
+    <option value="Perna">Perna</option>
+    <option value="Ombro">Ombro</option>
+    <option value="Bíceps/Tríceps">Bíceps/Tríceps</option>
+  </select>
+  <div id="listaTreinos"></div>
+  <button onclick="salvarTreino()">Salvar Treino</button>
+  <p id="statusMsg"></p>
+</div>
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyUFFwmr6R1435ZH4Z3rGk3KUC-VaA_Cg64JDlAF0Z43kX-2_h5DK-KUVA96eNJaMe8HQ/exec";
@@ -63,8 +66,7 @@ function registrar() {
   })
   .then(r => r.json())
   .then(d => {
-    document.getElementById("senhaMsg").innerText =
-      d.status === "ok" ? `✅ Sua senha é: ${d.senha}` : "Erro ao registrar.";
+    document.getElementById("senhaMsg").innerText = d.status === "ok" ? `✅ Sua senha é: ${d.senha}` : "Erro ao registrar.";
   });
 }
 
@@ -82,8 +84,42 @@ function login() {
       document.getElementById("loginDiv").style.display = "none";
       document.getElementById("painelDiv").style.display = "block";
       document.getElementById("boasVindas").innerText = `Bem-vindo, ${nome}!`;
+      habilitarDiaAtual();
+      carregarProgresso(nome);
     } else {
       alert("Nome ou senha incorretos.");
+    }
+  });
+}
+
+function habilitarDiaAtual() {
+  const dias = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
+  const hoje = new Date();
+  const diaSemana = dias[hoje.getDay()];
+  const options = document.querySelectorAll("#dia option");
+  options.forEach(opt => {
+    if (opt.value && opt.value !== diaSemana) opt.disabled = true;
+    else if (opt.value === diaSemana) opt.disabled = false;
+  });
+}
+
+function carregarProgresso(nome) {
+  fetch(API_URL, {
+    method: "POST",
+    body: new URLSearchParams({ acao: "historico", nome })
+  })
+  .then(r => r.json())
+  .then(d => {
+    if (d.status === "ok") {
+      document.getElementById("progressoDiv").style.display = "block";
+      const dias = Object.keys(d.treinos);
+      const feitos = dias.filter(dia => d.treinos[dia]).length;
+      const total = dias.length;
+      const percent = Math.round((feitos/total)*100);
+      document.getElementById("progresso").style.width = percent + "%";
+      document.getElementById("progresso").innerText = percent + "%";
+      const faltou = dias.filter(dia => !d.treinos[dia]);
+      document.getElementById("faltouDias").innerText = faltou.length ? "Você não treinou: " + faltou.join(", ") : "Parabéns! Treinou todos os dias!";
     }
   });
 }
@@ -92,9 +128,7 @@ function montarTreino() {
   const tipo = document.getElementById("tipo").value;
   const lista = document.getElementById("listaTreinos");
   lista.innerHTML = "";
-
   if (!tipo) return;
-
   const exercicios = {
     "Peito": ["Supino reto", "Supino inclinado", "Crucifixo", "Crossover", "Flexão"],
     "Costas": ["Puxada frente", "Remada curvada", "Remada baixa", "Puxada inversa", "Levantamento terra"],
@@ -102,7 +136,6 @@ function montarTreino() {
     "Ombro": ["Desenvolvimento", "Elevação lateral", "Elevação frontal", "Remada alta", "Crucifixo invertido"],
     "Bíceps/Tríceps": ["Rosca direta", "Rosca martelo", "Tríceps corda", "Tríceps francês", "Tríceps banco"]
   };
-
   exercicios[tipo].forEach(ex => {
     lista.innerHTML += `
       <div class="treino-box">
@@ -124,16 +157,24 @@ function salvarTreino() {
   const dia = document.getElementById("dia").value;
   const tipo = document.getElementById("tipo").value;
   if (!tipo) return alert("Selecione o tipo de treino!");
-
+  
+  // Verifica se o dia selecionado é o dia atual
+  const diasSemana = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
+  const hoje = new Date();
+  const diaAtual = diasSemana[hoje.getDay()];
+  
+  if (dia !== diaAtual) return alert(`Só é possível marcar treino para hoje (${diaAtual})!`);
+  
   const boxes = document.querySelectorAll(".treino-box");
   const exercicios = [];
+  
   boxes.forEach(box => {
     const nomeEx = box.querySelector("strong").innerText;
     const series = box.querySelectorAll("select")[0].value;
     const repeticoes = box.querySelectorAll("select")[1].value;
     exercicios.push({ nome: nomeEx, series, repeticoes });
   });
-
+  
   fetch(API_URL, {
     method: "POST",
     body: new URLSearchParams({
@@ -148,10 +189,12 @@ function salvarTreino() {
   .then(d => {
     document.getElementById("statusMsg").innerText =
       d.status === "ok" ? "✅ Treino salvo com sucesso!" : "❌ Erro ao salvar treino.";
+    carregarProgresso(nome); // Atualiza barra de progresso após salvar
   })
   .catch(err => {
     console.error(err);
-    document.getElementById("statusMsg").innerText = "❌ Falha de conexão com servidor.";
+    document.getElementById("statusMsg").innerText =
+      "❌ Falha de conexão com servidor.";
   });
 }
 </script>
