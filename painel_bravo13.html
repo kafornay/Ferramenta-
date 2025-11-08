@@ -71,7 +71,7 @@
 <div class="resumo" id="resumo"></div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbzolqAfTkQhZq0KgNMqvIae1HyqAu9G4vYFNaACj_vnUQyW7WXiLORYFco5QVkGLf3LMA/exec";
+const API_URL = https://script.google.com/macros/s/AKfycbzolqAfTkQhZq0KgNMqvIae1HyqAu9G4vYFNaACj_vnUQyW7WXiLORYFco5QVkGLf3LMA/exec; // <-- substitua pela URL do seu deploy
 
 async function carregarDados() {
   try {
@@ -89,6 +89,7 @@ async function carregarDados() {
     if (data.tarefas) atualizarTabela(data.tarefas);
   } catch (err) {
     console.error("Erro ao carregar dados:", err);
+    document.getElementById("resumo").innerText = "Erro ao carregar dados.";
   }
 }
 
@@ -99,18 +100,18 @@ function atualizarTabela(tarefas) {
 
   tarefas.forEach(t => {
     const tr = document.createElement("tr");
-    const statusClass = t.status.toLowerCase() === "concluída" ? "status-concluido" : "status-pendente";
-    if (t.status.toLowerCase() === "pendente") pendentes++;
-    if (t.status.toLowerCase() === "concluída") concluidas++;
+    const statusClass = t.status && t.status.toLowerCase() === "concluída" ? "status-concluido" : "status-pendente";
+    if (t.status && t.status.toLowerCase() === "pendente") pendentes++;
+    if (t.status && t.status.toLowerCase() === "concluída") concluidas++;
 
     tr.innerHTML = `
       <td class="${statusClass}">${t.status}</td>
-      <td>${t.tarefa}</td>
-      <td>${t.responsavel}</td>
-      <td>${t.observacao}</td>
+      <td>${escapeHtml(t.tarefa)}</td>
+      <td>${escapeHtml(t.responsavel)}</td>
+      <td>${escapeHtml(t.observacao)}</td>
       <td>
-        <button onclick="concluirTarefa('${t.tarefa}')">✅</button>
-        <button onclick="excluirTarefa('${t.tarefa}')">❌</button>
+        <button onclick="concluirTarefa(${t.row})">✅</button>
+        <button onclick="excluirTarefa(${t.row})">❌</button>
       </td>
     `;
     tbody.appendChild(tr);
@@ -121,6 +122,7 @@ function atualizarTabela(tarefas) {
     `Total: ${total} | Pendentes: ${pendentes} | Concluídas: ${concluidas}`;
 }
 
+// funções para adicionar/concluir/excluir usando `row` (linha real da planilha)
 async function adicionarTarefa() {
   const tarefa = prompt("Descrição da tarefa:");
   if (!tarefa) return;
@@ -138,37 +140,49 @@ async function adicionarTarefa() {
   carregarDados();
 }
 
-async function concluirTarefa(tarefa) {
+async function concluirTarefa(row) {
   await fetch(API_URL, {
     method: "POST",
     body: JSON.stringify({
       action: "updateTaskStatus",
-      tarefa, novoStatus: "Concluída"
+      row: row,
+      status: "Concluída"
     })
   });
   carregarDados();
 }
 
-async function excluirTarefa(tarefa) {
+async function excluirTarefa(row) {
   if (!confirm("Tem certeza que deseja excluir esta tarefa?")) return;
   await fetch(API_URL, {
     method: "POST",
     body: JSON.stringify({
       action: "deleteTask",
-      tarefa
+      row: row
     })
   });
   carregarDados();
 }
 
+// Atualizar apenas os campos preenchidos (não sobrescreve vazios)
 async function atualizarPainel() {
-  const status = {
-    dinheiro: document.getElementById("dinheiro").value,
-    armas: document.getElementById("armas").value,
-    drogas: document.getElementById("drogas").value,
-    municao: document.getElementById("municao").value,
-    dinheiroSujo: document.getElementById("dinheiroSujo").value
-  };
+  const status = {};
+  const dinheiro = document.getElementById("dinheiro").value.trim();
+  const armas = document.getElementById("armas").value.trim();
+  const drogas = document.getElementById("drogas").value.trim();
+  const municao = document.getElementById("municao").value.trim();
+  const dinheiroSujo = document.getElementById("dinheiroSujo").value.trim();
+
+  if (dinheiro !== "") status.dinheiro = dinheiro;
+  if (armas !== "") status.armas = armas;
+  if (drogas !== "") status.drogas = drogas;
+  if (municao !== "") status.municao = municao;
+  if (dinheiroSujo !== "") status.dinheiroSujo = dinheiroSujo;
+
+  if (Object.keys(status).length === 0) {
+    alert("Preencha ao menos um campo para atualizar.");
+    return;
+  }
 
   await fetch(API_URL, {
     method: "POST",
@@ -176,6 +190,15 @@ async function atualizarPainel() {
   });
 
   alert("Painel atualizado com sucesso!");
+  carregarDados();
+}
+
+// pequena função para evitar injeção de HTML ao mostrar tarefas
+function escapeHtml(str) {
+  if (!str) return "";
+  return str.replace(/[&<>"'`=\/]/g, function(s) {
+    return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#x2F;','`':'&#x60;','=':'&#x3D;'})[s];
+  });
 }
 
 carregarDados();
