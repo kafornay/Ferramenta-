@@ -2,210 +2,152 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🏋 Academia Couto</title>
+<title>Painel Academia</title>
 <style>
-  :root {
-    --vermelho: #c32b2b;
-    --preto: #111;
-    --cinza: #2b2b2b;
-    --verde: #28a745;
-  }
   body {
-    margin: 0;
-    font-family: "Poppins", sans-serif;
-    background: var(--preto);
+    font-family: Arial, sans-serif;
+    background-color: #0d0d0d;
     color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
+    text-align: center;
   }
-  h1 {
-    margin-top: 40px;
-    letter-spacing: 2px;
-    color: var(--vermelho);
-    text-shadow: 0 0 8px #000;
-  }
-  .box {
-    background: var(--cinza);
+  .caixa {
+    background: #1e1e1e;
     padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 0 10px #000;
-    width: 90%;
-    max-width: 400px;
-    margin-top: 30px;
-    transition: all 0.3s ease;
+    border-radius: 12px;
+    width: 320px;
+    margin: 30px auto;
+    box-shadow: 0 0 10px #c32b2b;
   }
   input, select, button {
     width: 90%;
     padding: 10px;
     margin: 8px 0;
     border: none;
-    border-radius: 10px;
-    font-size: 16px;
-  }
-  input, select {
-    background: #1a1a1a;
-    color: white;
+    border-radius: 8px;
   }
   button {
-    background: var(--vermelho);
-    color: white;
-    cursor: pointer;
+    background: #c32b2b;
+    color: #fff;
     font-weight: bold;
-    transition: 0.3s;
+    cursor: pointer;
   }
   button:hover {
-    background: #a32323;
-  }
-  #painel { display: none; }
-  #mensagem {
-    margin-top: 15px;
-    font-size: 15px;
-    color: var(--verde);
-  }
-  footer {
-    position: absolute;
-    bottom: 10px;
-    font-size: 12px;
-    color: #777;
+    background: #e64242;
   }
 </style>
 </head>
 <body>
 
-<h1>🏋 Academia Couto</h1>
+<h2>🏋️ Painel Academia Bravo13</h2>
 
-<!-- LOGIN -->
-<div id="loginBox" class="box">
-  <h2>Login do Aluno</h2>
-  <input id="nome" placeholder="Seu nome completo">
-  <input id="senha" placeholder="Senha (se já tiver)">
-  <button onclick="fazerLogin()">Entrar</button>
-  <p id="mensagem"></p>
+<div id="cadastro" class="caixa">
+  <h3>Cadastro</h3>
+  <input type="text" id="nome" placeholder="Seu nome"><br>
+  <button onclick="registrar()">Gerar minha senha 🔑</button>
+  <p id="resultado"></p>
 </div>
 
-<!-- PAINEL -->
-<div id="painel" class="box">
-  <h3>Bem-vindo, <span id="alunoNome"></span>!</h3>
-  <form id="formTreino">
-    <label>Dia da semana:</label><br>
-    <select id="dia" required>
-      <option value="">Selecione</option>
-      <option>Segunda</option>
-      <option>Terça</option>
-      <option>Quarta</option>
-      <option>Quinta</option>
-      <option>Sexta</option>
-      <option>Sábado</option>
-      <option>Domingo</option>
-    </select><br>
-
-    <label>Tipo de treino:</label><br>
-    <select id="tipo" required>
-      <option value="">Selecione</option>
-      <option>Peito</option>
-      <option>Costas</option>
-      <option>Perna</option>
-      <option>Ombro</option>
-      <option>Bíceps</option>
-      <option>Tríceps</option>
-    </select><br>
-
-    <label>Fez o treino?</label><br>
-    <select id="feito" required>
-      <option value="">Selecione</option>
-      <option>Sim</option>
-      <option>Não</option>
-    </select><br>
-
-    <button type="submit">Salvar treino</button>
-  </form>
-  <p id="mensagemTreino"></p>
+<div id="login" class="caixa">
+  <h3>Login</h3>
+  <input type="text" id="loginNome" placeholder="Nome"><br>
+  <input type="text" id="loginSenha" placeholder="Senha"><br>
+  <button onclick="login()">Entrar</button>
+  <p id="loginResultado"></p>
 </div>
 
-<footer>© 2025 Academia Couto</footer>
+<div id="painel" class="caixa" style="display:none;">
+  <h3>Registro de Treino</h3>
+  <label>Dia da Semana:</label><br>
+  <select id="dia">
+    <option value="">Selecione</option>
+    <option>Segunda</option>
+    <option>Terça</option>
+    <option>Quarta</option>
+    <option>Quinta</option>
+    <option>Sexta</option>
+    <option>Sábado</option>
+    <option>Domingo</option>
+  </select><br>
+
+  <label>Tipo de Treino:</label><br>
+  <select id="tipo">
+    <option value="">Selecione</option>
+    <option>Peito</option>
+    <option>Costas</option>
+    <option>Pernas</option>
+    <option>Ombros</option>
+    <option>Bíceps</option>
+    <option>Tríceps</option>
+  </select><br>
+
+  <label>Feito?</label><br>
+  <select id="feito">
+    <option value="">Selecione</option>
+    <option>Sim</option>
+    <option>Não</option>
+  </select><br>
+
+  <button onclick="salvarTreino()">Salvar Treino ✅</button>
+  <p id="salvarResultado"></p>
+</div>
 
 <script>
-// 🔗 Cole aqui o link do seu WebApp do Google Apps Script
-const scriptURL = "https://script.google.com/macros/s/AKfycbyUFFwmr6R1435ZH4Z3rGk3KUC-VaA_Cg64JDlAF0Z43kX-2_h5DK-KUVA96eNJaMe8HQ/exec";
+const scriptUrl = "https://script.google.com/macros/s/AKfycbyUFFwmr6R1435ZH4Z3rGk3KUC-VaA_Cg64JDlAF0Z43kX-2_h5DK-KUVA96eNJaMe8HQ/exec";
+let usuarioLogado = "";
 
-// ----------------------------- LOGIN -----------------------------
-function fazerLogin() {
-  const nome = document.getElementById('nome').value.trim();
-  const senha = document.getElementById('senha').value.trim();
-  const msg = document.getElementById('mensagem');
+async function registrar() {
+  const nome = document.getElementById("nome").value.trim();
+  if (!nome) return alert("Digite seu nome!");
 
-  if (!nome) {
-    msg.textContent = "Digite seu nome completo!";
-    msg.style.color = "orange";
-    return;
-  }
-
-  msg.textContent = "Verificando...";
-  msg.style.color = "#aaa";
-
-  fetch(${scriptURL}?acao=login&nome=${encodeURIComponent(nome)}&senha=${encodeURIComponent(senha)})
-  .then(r => r.json())
-  .then(res => {
-    if (res.status === "novo") {
-      msg.textContent = Senha gerada: ${res.senha} (anote!);
-      msg.style.color = "#0f0";
-      mostrarPainel(nome);
-    } else if (res.status === "ok") {
-      msg.textContent = "Login realizado com sucesso!";
-      msg.style.color = "#0f0";
-      mostrarPainel(nome);
-    } else {
-      msg.textContent = "Senha incorreta!";
-      msg.style.color = "red";
-    }
-  })
-  .catch(() => {
-    msg.textContent = "Erro ao conectar com o servidor.";
-    msg.style.color = "red";
-  });
-}
-
-function mostrarPainel(nome) {
-  document.getElementById('loginBox').style.display = 'none';
-  document.getElementById('painel').style.display = 'block';
-  document.getElementById('alunoNome').textContent = nome;
-}
-
-// ----------------------------- SALVAR TREINO -----------------------------
-document.getElementById('formTreino').addEventListener('submit', e => {
-  e.preventDefault();
-  const msgTreino = document.getElementById('mensagemTreino');
-
-  const dados = {
-    acao: "salvar",
-    nome: document.getElementById('alunoNome').textContent,
-    dia: document.getElementById('dia').value,
-    tipo: document.getElementById('tipo').value,
-    feito: document.getElementById('feito').value
-  };
-
-  msgTreino.textContent = "Salvando treino...";
-  msgTreino.style.color = "#aaa";
-
-  fetch(scriptURL, {
+  const resp = await fetch(scriptUrl, {
     method: "POST",
-    body: JSON.stringify(dados)
-  })
-  .then(r => r.text())
-  .then(() => {
-    msgTreino.textContent = "✅ Treino salvo com sucesso!";
-    msgTreino.style.color = "#0f0";
-    document.getElementById('formTreino').reset();
-    setTimeout(() => { msgTreino.textContent = ""; }, 3000);
-  })
-  .catch(() => {
-    msgTreino.textContent = "Erro ao salvar treino!";
-    msgTreino.style.color = "red";
+    body: new URLSearchParams({ nome, acao: "registrar" })
   });
-});
+  const data = await resp.json();
+  if (data.status === "ok") {
+    document.getElementById("resultado").innerText = `Sua senha: ${data.senha}`;
+  }
+}
+
+async function login() {
+  const nome = document.getElementById("loginNome").value.trim();
+  const senha = document.getElementById("loginSenha").value.trim();
+  if (!nome || !senha) return alert("Preencha nome e senha!");
+
+  const resp = await fetch(scriptUrl, {
+    method: "POST",
+    body: new URLSearchParams({ nome, senha, acao: "login" })
+  });
+  const data = await resp.json();
+
+  if (data.status === "ok") {
+    usuarioLogado = nome;
+    document.getElementById("loginResultado").innerText = "Login realizado! ✅";
+    document.getElementById("login").style.display = "none";
+    document.getElementById("cadastro").style.display = "none";
+    document.getElementById("painel").style.display = "block";
+  } else {
+    document.getElementById("loginResultado").innerText = "Nome ou senha incorretos ❌";
+  }
+}
+
+async function salvarTreino() {
+  const dia = document.getElementById("dia").value;
+  const tipo = document.getElementById("tipo").value;
+  const feito = document.getElementById("feito").value;
+
+  if (!dia || !tipo || !feito) return alert("Preencha todos os campos!");
+
+  const resp = await fetch(scriptUrl, {
+    method: "POST",
+    body: new URLSearchParams({ nome: usuarioLogado, dia, tipo, feito, acao: "salvarTreino" })
+  });
+
+  const data = await resp.json();
+  if (data.status === "ok") {
+    document.getElementById("salvarResultado").innerText = "Treino salvo com sucesso! 💪";
+  }
+}
 </script>
 
 </body>
