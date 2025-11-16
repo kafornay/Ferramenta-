@@ -3,92 +3,135 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora de Itens com Som</title>
+<title>Capital City – Calculadora CUS</title>
 
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: Arial, sans-serif;
-    background: #1e1e1e;
+    background: #0a1c2e;
     color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 10px;
+    padding: 15px;
+    background-image: radial-gradient(circle at top, #0e3a58 0%, #051622 80%);
   }
+
   .container {
-    background: #2d2d2d;
-    padding: 20px;
-    border-radius: 12px;
     width: 100%;
     max-width: 420px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.45);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 25px;
+    border-radius: 16px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
   }
-  h2 { text-align: center; margin-bottom: 20px; font-size: 1.6rem; }
-  .item { display: flex; flex-direction: column; margin-bottom: 20px; }
-  .item label { margin-bottom: 8px; font-size: 1rem; }
+
+  .logo-box {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .logo-box img {
+    width: 120px;
+    filter: drop-shadow(0 0 8px #00aaff);
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 1.6rem;
+    color: #5cd1ff;
+    text-shadow: 0 0 6px #0088cc;
+  }
+
+  .item {
+    margin-bottom: 22px;
+  }
+
+  .item label {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    display: block;
+  }
+
   .controls {
     display: flex;
-    justify-content: flex-start;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
   }
+
   button {
-    width: 50px;
-    height: 50px;
-    font-size: 22px;
+    width: 55px;
+    height: 55px;
+    font-size: 26px;
     border: none;
-    background: #444;
+    border-radius: 10px;
+    background: #093655;
     color: #fff;
     cursor: pointer;
-    border-radius: 8px;
-    transition: background 0.2s;
+    transition: 0.2s;
+    box-shadow: 0 0 8px rgba(0,153,255,0.4);
   }
-  button:active { background: #666; }
+  button:active { background: #0d4d78; }
+
   input {
-    width: 60px;
+    width: 70px;
+    height: 50px;
     text-align: center;
     background: #000;
-    color: #fff;
-    font-size: 20px;
-    border: none;
-    border-radius: 6px;
+    color: #00c3ff;
+    font-size: 22px;
+    border: 1px solid #00c3ff;
+    border-radius: 10px;
   }
+
   .cost-option {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 20px;
+    margin: 15px 0 25px 0;
     font-size: 1rem;
-    flex-wrap: wrap;
   }
+
   .total {
     text-align: center;
     font-weight: bold;
-    font-size: 1.5rem;
-    padding: 15px;
-    border-radius: 12px;
-    background: #4CAF50;
+    font-size: 1.7rem;
+    padding: 18px;
+    border-radius: 14px;
+    background: #0088cc;
     color: #fff;
     word-break: break-word;
+    box-shadow: 0 0 12px #00aaff;
   }
+
   .reset-btn {
     width: 100%;
-    margin-top: 15px;
+    margin-top: 20px;
     background: #b90000;
-    font-size: 1.1rem;
-    padding: 12px;
-    border-radius: 10px;
+    font-size: 1.2rem;
+    padding: 14px;
+    border-radius: 12px;
     cursor: pointer;
+    border: none;
+    box-shadow: 0 0 10px rgba(255,0,0,0.4);
   }
-  .reset-btn:active { background: #e60000; }
+  .reset-btn:active { background: #ff0000; }
+
 </style>
 </head>
 <body>
 
 <div class="container">
-  <h2>CAPITAL HP CUS CALCULADORA</h2>
+
+  <div class="logo-box">
+    <img src="logocus.png" alt="Logo CUS">
+  </div>
+
+  <h2>Capital City – Calculadora CUS</h2>
 
   <div class="item">
     <label id="labelKit">KIT CUS (R$ 700,00)</label>
@@ -100,7 +143,7 @@
   </div>
 
   <div class="item">
-    <label id="labelBand">BANDAGEM CUS(R$ 400,00)</label>
+    <label id="labelBand">BANDAGEM CUS (R$ 400,00)</label>
     <div class="controls">
       <button onclick="update('bandagem', -1)">-</button>
       <input type="text" id="bandagem" value="0" disabled>
@@ -125,10 +168,10 @@
   <div class="total" id="total">Total: R$ 0,00</div>
 
   <button class="reset-btn" onclick="limpar()">Limpar</button>
+
 </div>
 
 <script>
-  // Áudios configurados
   const somPlus = new Audio("som_plus.mp3");
   const somMinus = new Audio("som_minus.mp3");
   const somReset = new Audio("som_reset.mp3");
@@ -157,9 +200,10 @@
 
     value += change;
     if (value < 0) value = 0;
-    if (value > 4) value = 4;
 
+    // sem limite de 4 itens → removido
     input.value = value;
+
     calcular();
   }
 
@@ -168,11 +212,11 @@
     const preco = isCusto ? precoCusto : precoNormal;
 
     document.getElementById('labelKit').textContent = 
-      `Kit (R$ ${preco.kit.toLocaleString('pt-BR')},00)`;
-    document.getElementById('labelBand').textContent = 
-      `Bandagem (R$ ${preco.bandagem.toLocaleString('pt-BR')},00)`;
-    document.getElementById('labelCalm').textContent = 
-      `Calmante (R$ ${preco.calmante.toLocaleString('pt-BR')},00)`;
+      `KIT CUS (R$ ${preco.kit.toLocaleString('pt-BR')},00)`;
+    document.getElementById('labelBand').textContent =
+      `BANDAGEM CUS (R$ ${preco.bandagem.toLocaleString('pt-BR')},00)`;
+    document.getElementById('labelCalm').textContent =
+      `CALMANTE CUS (R$ ${preco.calmante.toLocaleString('pt-BR')},00)`;
 
     const kit = parseInt(document.getElementById('kit').value);
     const bandagem = parseInt(document.getElementById('bandagem').value);
@@ -180,8 +224,11 @@
 
     const total = (kit * preco.kit) + (bandagem * preco.bandagem) + (calmante * preco.calmante);
 
-    document.getElementById('total').textContent = 
-      "Total: R$ " + total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('total').textContent =
+      "Total: R$ " + total.toLocaleString('pt-BR', {
+        minimumFractionDigits: 2, 
+        maximumFractionDigits: 2
+      });
   }
 
   function limpar() {
