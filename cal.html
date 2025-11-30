@@ -138,7 +138,7 @@
             <img src="ferro.png">
             <h3>Minério de Ferro</h3>
             <input id="ferroInput" type="number" placeholder="Quantidade">
-            <input id="precoFerro" type="number" placeholder="R$ 30,00" class="valor-unitario" style="width:90%;padding:8px;border-radius:8px;">
+            <input id="precoFerro" type="number" placeholder="R$ 30,00" class="valor-unitario">
             <div id="ferroResultado" class="resultado">0 → R$ 0,00</div>
         </div>
 
@@ -146,7 +146,7 @@
             <img src="bauxita.png">
             <h3>Bauxita (Alumínio)</h3>
             <input id="aluminioInput" type="number" placeholder="Quantidade">
-            <input id="precoAluminio" type="number" placeholder="R$ 30,00" class="valor-unitario" style="width:90%;padding:8px;border-radius:8px;">
+            <input id="precoAluminio" type="number" placeholder="R$ 30,00" class="valor-unitario">
             <div id="aluminioResultado" class="resultado">0 → R$ 0,00</div>
         </div>
 
@@ -154,7 +154,7 @@
             <img src="calcosita.png">
             <h3>Calcosita (Cobre)</h3>
             <input id="cobreInput" type="number" placeholder="Quantidade">
-            <input id="precoCobre" type="number" placeholder="R$ 18,00" class="valor-unitario" style="width:90%;padding:8px;border-radius:8px;">
+            <input id="precoCobre" type="number" placeholder="R$ 18,00" class="valor-unitario">
             <div id="cobreResultado" class="resultado">0 → R$ 0,00</div>
         </div>
     </div>
@@ -179,8 +179,8 @@
 
     <button class="btn" onclick="calcularMinerios()">CALCULAR MINÉRIOS</button>
 
-
     <hr>
+
     <h2 class="section-title">FAMÍLIA NORTE</h2>
 
     <div class="box-row">
@@ -207,33 +207,57 @@
 
 <script>
 function calcularMinerios(){
- let ferro = Number(document.getElementById('ferroInput').value)||0;
- let alu = Number(document.getElementById('aluminioInput').value)||0;
- let cob = Number(document.getElementById('cobreInput').value)||0;
- let luva = Number(document.getElementById('luvaInput').value)||0;
- let gar = Number(document.getElementById('garrafaInput').value)||0;
+    let ferro = Number(document.getElementById('ferroInput').value) || 0;
+    let alu = Number(document.getElementById('aluminioInput').value) || 0;
+    let cob = Number(document.getElementById('cobreInput').value) || 0;
+    let luva = Number(document.getElementById('luvaInput').value) || 0;
+    let gar = Number(document.getElementById('garrafaInput').value) || 0;
 
- let ferroU = ferro*5;
- let aluU = alu*5;
- let cobU = cob*5;
- let bor = luva*3;
- let pla = gar*3;
+    let ferroU = ferro * 5;
+    let aluU   = alu * 5;
+    let cobU   = cob * 5;
+    let bor    = luva * 3;
+    let pla    = gar * 3;
 
- document.getElementById('ferroResultado').innerHTML = `${ferroU} → R$ ${(ferroU*30).toFixed(2)}`;
- document.getElementById('aluminioResultado').innerHTML = `${aluU} → R$ ${(aluU*30).toFixed(2)}`;
- document.getElementById('cobreResultado').innerHTML = `${cobU} → R$ ${(cobU*18).toFixed(2)}`;
- document.getElementById('luvaResultado').innerHTML = `${bor} → R$ ${(bor*50).toFixed(2)}`;
- document.getElementById('garrafaResultado').innerHTML = `${pla} → R$ ${(pla*50).toFixed(2)}`;
+    // PREÇOS EDITÁVEIS
+    let precoFerro = Number(document.getElementById('precoFerro').value) || 30;
+    let precoAlu   = Number(document.getElementById('precoAluminio').value) || 30;
+    let precoCobre = Number(document.getElementById('precoCobre').value) || 18;
+
+    // SAÍDAS
+    document.getElementById('ferroResultado').innerHTML =
+        `${ferroU} → R$ ${(ferroU * precoFerro).toFixed(2)}`;
+
+    document.getElementById('aluminioResultado').innerHTML =
+        `${aluU} → R$ ${(aluU * precoAlu).toFixed(2)}`;
+
+    document.getElementById('cobreResultado').innerHTML =
+        `${cobU} → R$ ${(cobU * precoCobre).toFixed(2)}`;
+
+    document.getElementById('luvaResultado').innerHTML =
+        `${bor} → R$ ${(bor * 50).toFixed(2)}`;
+
+    document.getElementById('garrafaResultado').innerHTML =
+        `${pla} → R$ ${(pla * 50).toFixed(2)}`;
 }
 
 function calcularFamilia(){
- let dro = Number(document.getElementById('drogaInput').value)||0;
- let cam = Number(document.getElementById('camisaInput').value)||0;
+    let dro = Number(document.getElementById('drogaInput').value) || 0;
+    let cam = Number(document.getElementById('camisaInput').value) || 0;
 
- let totalDro = dro*120;
- let descDro = Number(document.getElementById('descontoDroga').value)||0;
- let totalCam = cam*6300;
- let descCam = Number(document.getElementById('descontoCamisa').value)||0;
+    let totalDro = dro * 120;
+    let descDro = Number(document.getElementById('descontoDroga').value) || 0;
 
- document.getElementById('drogaResultado').innerHTML = `R$ ${(totalDro * (1 - descDro/100)).toFixed(2)}`;
- document.getElement
+    let totalCam = cam * 6300;
+    let descCam = Number(document.getElementById('descontoCamisa').value) || 0;
+
+    document.getElementById('drogaResultado').innerHTML =
+        `R$ ${(totalDro * (1 - descDro/100)).toFixed(2)}`;
+
+    document.getElementById('camisaResultado').innerHTML =
+        `R$ ${(totalCam * (1 - descCam/100)).toFixed(2)}`;
+}
+</script>
+
+</body>
+</html>
