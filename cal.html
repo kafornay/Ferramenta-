@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora Yakuza</title>
+<style>
+    body {
+        background: #0a0a0a;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
+
+    .container {
+        width: 90%;
+        margin: auto;
+    }
+
+    h2 {
+        margin-top: 40px;
+        color: #ff2a2a;
+        letter-spacing: 1px;
+        font-size: 26px;
+    }
+
+    .box-row {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+        margin: 30px 0;
+        flex-wrap: wrap;
+    }
+
+    .box {
+        background: #111;
+        border: 2px solid #8b0000;
+        padding: 20px;
+        border-radius: 12px;
+        width: 280px;
+        box-shadow: 0 0 12px #560000;
+    }
+
+    .box img {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 10px;
+    }
+
+    input {
+        width: 90%;
+        padding: 10px;
+        font-size: 16px;
+        margin-top: 8px;
+        border-radius: 6px;
+        border: none;
+        background: #222;
+        color: #fff;
+        text-align: center;
+    }
+
+    .valor-unitario {
+        margin-top: 10px;
+        font-size: 13px;
+        opacity: 0.7;
+    }
+
+    .resultado {
+        margin-top: 12px;
+        font-size: 15px;
+    }
+
+    hr {
+        margin: 40px auto;
+        width: 80%;
+        border: 1px solid #631515;
+    }
+@media(max-width: 600px){
+  .box-row{flex-direction:column;align-items:center;}
+  .box{width:95%;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+    <h2>Calculadora de Minérios</h2>
+
+    <!-- Linha 1 Minérios -->
+    <div class="box-row">
+        <div class="box">
+            <img src="URL_FERRO" alt="Ferro">
+            <h3>Minério de Ferro</h3>
+            <input id="ferroInput" type="number" placeholder="Quantos minérios?" />
+            <div class="valor-unitario">Valor por ferro: R$ 30,00</div>
+            <div id="ferroResultado" class="resultado">Ferro: 0 unidades → R$ 0,00</div>
+        </div>
+
+        <div class="box">
+            <img src="URL_BAUXITA" alt="Bauxita">
+            <h3>Bauxita (Alumínio)</h3>
+            <input id="aluminioInput" type="number" placeholder="Quantos minérios?" />
+            <div class="valor-unitario">Valor por alumínio: R$ 30,00</div>
+            <div id="aluminioResultado" class="resultado">Alumínio: 0 unidades → R$ 0,00</div>
+        </div>
+
+        <div class="box">
+            <img src="URL_CALCOSITA" alt="Calcosita">
+            <h3>Calcosita (Cobre)</h3>
+            <input id="cobreInput" type="number" placeholder="Quantos minérios?" />
+            <div class="valor-unitario">Valor por cobre: R$ 18,00</div>
+            <div id="cobreResultado" class="resultado">Cobre: 0 unidades → R$ 0,00</div>
+        </div>
+    </div>
+
+    <!-- Linha 2 Luva e Garrafa -->
+    <div class="box-row">
+        <div class="box">
+            <img src="URL_LUVA" alt="Luva">
+            <h3>Luva</h3>
+            <input id="luvaInput" type="number" placeholder="Quantas luvas?" />
+            <div class="valor-unitario">Cada luva gera 3 borrachas (R$ 50 cada)</div>
+            <div id="luvaResultado" class="resultado">Borracha: 0 unidades → R$ 0,00</div>
+        </div>
+
+        <div class="box">
+            <img src="URL_GARRAFA" alt="Garrafa">
+            <h3>Garrafa</h3>
+            <input id="garrafaInput" type="number" placeholder="Quantas garrafas?" />
+            <div class="valor-unitario">Cada garrafa gera 3 plásticos (R$ 50 cada)</div>
+            <div id="garrafaResultado" class="resultado">Plástico: 0 unidades → R$ 0,00</div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- FAMIA NORTE -->
+    <h2>==== FAMIA NORTE ====</h2>
+
+    <div class="box-row">
+        <div class="box">
+            <img src="URL_DROGAS" alt="Drogas">
+            <h3>Drogas</h3>
+            <div class="valor-unitario">Valor unitário: R$ 120,00 — Desconto: <input id="descontoDroga" type="number" value="20" style="width:60px;"> %</div>
+            <input id="drogaInput" type="number" placeholder="Quantidade" />
+            <div id="drogaResultado" class="resultado">Total: R$ 0,00</div>
+        </div>
+
+        <div class="box">
+            <img src="URL_CAMISA_FORCA" alt="Camisa de Força">
+            <h3>Camisa de Força</h3>
+            <div class="valor-unitario">Valor unitário: R$ 6.300,00 — Desconto: <input id="descontoCamisa" type="number" value="30" style="width:60px;"> %</div>
+            <input id="camisaInput" type="number" placeholder="Quantidade" />
+            <div id="camisaResultado" class="resultado">Total: R$ 0,00</div>
+        </div>
+    </div>
+
+<!-- Botão calcular Família Norte -->
+<button onclick="calcularFamilia()" style="margin:20px;padding:12px 25px;font-size:18px;border:none;border-radius:8px;background:#8b0000;color:#fff;cursor:pointer;">CALCULAR FAMÍLIA NORTE</button>
+
+<!-- Botão calcular parte superior -->
+    <button onclick="calcularMinerios()" style="margin:20px;padding:12px 25px;font-size:18px;border:none;border-radius:8px;background:#8b0000;color:#fff;cursor:pointer;">CALCULAR MINÉRIOS</button>
+
+</div>
+<script>
+function calcularMinerios(){
+ let ferro = Number(document.getElementById('ferroInput').value)||0;
+ let alu = Number(document.getElementById('aluminioInput').value)||0;
+ let cob = Number(document.getElementById('cobreInput').value)||0;
+ let luva = Number(document.getElementById('luvaInput').value)||0;
+ let gar = Number(document.getElementById('garrafaInput').value)||0;
+ 
+ let ferroU = ferro*5;
+ let aluU = alu*5;
+ let cobU = cob*5;
+ let bor = luva*3;
+ let pla = gar*3;
+ 
+ document.getElementById('ferroResultado').innerHTML = `Ferro: ${ferroU} unidades → R$ ${(ferroU*30).toFixed(2)}`;
+ document.getElementById('aluminioResultado').innerHTML = `Alumínio: ${aluU} unidades → R$ ${(aluU*30).toFixed(2)}`;
+ document.getElementById('cobreResultado').innerHTML = `Cobre: ${cobU} unidades → R$ ${(cobU*18).toFixed(2)}`;
+ document.getElementById('luvaResultado').innerHTML = `Borracha: ${bor} unidades → R$ ${(bor*50).toFixed(2)}`;
+ document.getElementById('garrafaResultado').innerHTML = `Plástico: ${pla} unidades → R$ ${(pla*50).toFixed(2)}`;
+}
+
+function calcularFamilia(){
+ let dro = Number(document.getElementById('drogaInput').value)||0;
+ let cam = Number(document.getElementById('camisaInput').value)||0;
+ 
+ let totalDro = dro*120;
+ let descDro = Number(document.getElementById('descontoDroga').value)||0;
+ let totalCam = cam*6300;
+ let descCam = Number(document.getElementById('descontoCamisa').value)||0;
+ 
+ document.getElementById('drogaResultado').innerHTML = `Total: R$ ${(totalDro * (1 - descDro/100)).toFixed(2)}`;
+ document.getElementById('camisaResultado').innerHTML = `Total: R$ ${(totalCam * (1 - descCam/100)).toFixed(2)}`;
+}
+</script>
+
+</body>
+</html>
