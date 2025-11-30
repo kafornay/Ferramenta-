@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculadora Yakuza</title>
+
+<!-- Manifest para virar APP -->
+<link rel="manifest" href="manifest.json">
+
+<!-- Cor da barra do app -->
+<meta name="theme-color" content="#8b0000">
+
 <style>
     body {
         background: #0a0a0a;
@@ -82,11 +89,11 @@
 </style>
 </head>
 <body>
+
 <div class="container">
 
     <h2>Calculadora de Minérios</h2>
 
-    <!-- Linha 1 Minérios -->
     <div class="box-row">
         <div class="box">
             <img src="ferro.png" alt="Ferro">
@@ -113,10 +120,9 @@
         </div>
     </div>
 
-    <!-- Linha 2 Luva e Garrafa -->
     <div class="box-row">
         <div class="box">
-            <img src="URL_LUVA" alt="Luva">
+            <img src="luva.png" alt="Luva">
             <h3>Luva</h3>
             <input id="luvaInput" type="number" placeholder="Quantas luvas?" />
             <div class="valor-unitario">Cada luva gera 3 borrachas (R$ 50 cada)</div>
@@ -124,7 +130,7 @@
         </div>
 
         <div class="box">
-            <img src="URL_GARRAFA" alt="Garrafa">
+            <img src="garrafa.png" alt="Garrafa">
             <h3>Garrafa</h3>
             <input id="garrafaInput" type="number" placeholder="Quantas garrafas?" />
             <div class="valor-unitario">Cada garrafa gera 3 plásticos (R$ 50 cada)</div>
@@ -134,12 +140,11 @@
 
     <hr>
 
-    <!-- FAMIA NORTE -->
     <h2>==== FAMIA NORTE ====</h2>
 
     <div class="box-row">
         <div class="box">
-            <img src="URL_DROGAS" alt="Drogas">
+            <img src="droga.png" alt="Drogas">
             <h3>Drogas</h3>
             <div class="valor-unitario">Valor unitário: R$ 120,00 — Desconto: <input id="descontoDroga" type="number" value="20" style="width:60px;"> %</div>
             <input id="drogaInput" type="number" placeholder="Quantidade" />
@@ -147,7 +152,7 @@
         </div>
 
         <div class="box">
-            <img src="URL_CAMISA_FORCA" alt="Camisa de Força">
+            <img src="camisa.png" alt="Camisa de Força">
             <h3>Camisa de Força</h3>
             <div class="valor-unitario">Valor unitário: R$ 6.300,00 — Desconto: <input id="descontoCamisa" type="number" value="30" style="width:60px;"> %</div>
             <input id="camisaInput" type="number" placeholder="Quantidade" />
@@ -155,20 +160,20 @@
         </div>
     </div>
 
-<!-- Botão calcular Família Norte -->
 <button onclick="calcularFamilia()" style="margin:20px;padding:12px 25px;font-size:18px;border:none;border-radius:8px;background:#8b0000;color:#fff;cursor:pointer;">CALCULAR FAMÍLIA NORTE</button>
 
-<!-- Botão calcular parte superior -->
-    <button onclick="calcularMinerios()" style="margin:20px;padding:12px 25px;font-size:18px;border:none;border-radius:8px;background:#8b0000;color:#fff;cursor:pointer;">CALCULAR MINÉRIOS</button>
+<button onclick="calcularMinerios()" style="margin:20px;padding:12px 25px;font-size:18px;border:none;border-radius:8px;background:#8b0000;color:#fff;cursor:pointer;">CALCULAR MINÉRIOS</button>
 
 </div>
+
 <script>
+// MINÉRIOS
 function calcularMinerios(){
- let ferro = Number(document.getElementById('ferroInput').value)||0;
- let alu = Number(document.getElementById('aluminioInput').value)||0;
- let cob = Number(document.getElementById('cobreInput').value)||0;
- let luva = Number(document.getElementById('luvaInput').value)||0;
- let gar = Number(document.getElementById('garrafaInput').value)||0;
+ let ferro = Number(ferroInput.value)||0;
+ let alu = Number(aluminioInput.value)||0;
+ let cob = Number(cobreInput.value)||0;
+ let luva = Number(luvaInput.value)||0;
+ let gar = Number(garrafaInput.value)||0;
  
  let ferroU = ferro*5;
  let aluU = alu*5;
@@ -176,24 +181,31 @@ function calcularMinerios(){
  let bor = luva*3;
  let pla = gar*3;
  
- document.getElementById('ferroResultado').innerHTML = `Ferro: ${ferroU} unidades → R$ ${(ferroU*30).toFixed(2)}`;
- document.getElementById('aluminioResultado').innerHTML = `Alumínio: ${aluU} unidades → R$ ${(aluU*30).toFixed(2)}`;
- document.getElementById('cobreResultado').innerHTML = `Cobre: ${cobU} unidades → R$ ${(cobU*18).toFixed(2)}`;
- document.getElementById('luvaResultado').innerHTML = `Borracha: ${bor} unidades → R$ ${(bor*50).toFixed(2)}`;
- document.getElementById('garrafaResultado').innerHTML = `Plástico: ${pla} unidades → R$ ${(pla*50).toFixed(2)}`;
+ ferroResultado.innerHTML = `Ferro: ${ferroU} unidades → R$ ${(ferroU*30).toFixed(2)}`;
+ aluminioResultado.innerHTML = `Alumínio: ${aluU} unidades → R$ ${(aluU*30).toFixed(2)}`;
+ cobreResultado.innerHTML = `Cobre: ${cobU} unidades → R$ ${(cobU*18).toFixed(2)}`;
+ luvaResultado.innerHTML = `Borracha: ${bor} unidades → R$ ${(bor*50).toFixed(2)}`;
+ garrafaResultado.innerHTML = `Plástico: ${pla} unidades → R$ ${(pla*50).toFixed(2)}`;
 }
 
+// FAMÍLIA NORTE
 function calcularFamilia(){
- let dro = Number(document.getElementById('drogaInput').value)||0;
- let cam = Number(document.getElementById('camisaInput').value)||0;
- 
+ let dro = Number(drogaInput.value)||0;
+ let cam = Number(camisaInput.value)||0;
+
  let totalDro = dro*120;
- let descDro = Number(document.getElementById('descontoDroga').value)||0;
  let totalCam = cam*6300;
- let descCam = Number(document.getElementById('descontoCamisa').value)||0;
- 
- document.getElementById('drogaResultado').innerHTML = `Total: R$ ${(totalDro * (1 - descDro/100)).toFixed(2)}`;
- document.getElementById('camisaResultado').innerHTML = `Total: R$ ${(totalCam * (1 - descCam/100)).toFixed(2)}`;
+
+ let descDro = Number(descontoDroga.value)||0;
+ let descCam = Number(descontoCamisa.value)||0;
+
+ drogaResultado.innerHTML = `Total: R$ ${(totalDro * (1 - descDro/100)).toFixed(2)}`;
+ camisaResultado.innerHTML = `Total: R$ ${(totalCam * (1 - descCam/100)).toFixed(2)}`;
+}
+
+// PWA – registrar service worker
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js");
 }
 </script>
 
