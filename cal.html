@@ -4,210 +4,236 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculadora Yakuza</title>
-
-<!-- Manifest para virar APP -->
-<link rel="manifest" href="manifest.json">
-
-<!-- Cor da barra do app -->
-<meta name="theme-color" content="#8b0000">
-
 <style>
     body {
         background: #0a0a0a;
         color: #fff;
-        font-family: Arial, sans-serif;
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .app-header {
+        background: #8b0000;
+        padding: 18px;
         text-align: center;
+        font-size: 22px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        box-shadow: 0 2px 10px #000;
+        position: sticky;
+        top: 0;
+        z-index: 10;
     }
 
     .container {
-        width: 90%;
+        width: 92%;
         margin: auto;
+        padding-bottom: 40px;
     }
 
-    h2 {
-        margin-top: 40px;
+    h2.section-title {
+        margin-top: 35px;
         color: #ff2a2a;
-        letter-spacing: 1px;
-        font-size: 26px;
+        font-size: 22px;
+        text-align: left;
+        padding-left: 5px;
     }
 
     .box-row {
-        display: flex;
-        justify-content: center;
-        gap: 25px;
-        margin: 30px 0;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 18px;
+        margin-top: 20px;
     }
 
     .box {
-        background: #111;
-        border: 2px solid #8b0000;
-        padding: 20px;
-        border-radius: 12px;
-        width: 280px;
-        box-shadow: 0 0 12px #560000;
+        background: #141414;
+        border: 1px solid #6d0000;
+        padding: 18px;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: 0 0 12px rgba(255,0,0,0.15);
+        transition: transform 0.2s;
+    }
+
+    .box:hover {
+        transform: scale(1.02);
     }
 
     .box img {
-        width: 70px;
-        height: 70px;
-        margin-bottom: 10px;
+        width: 60px;
+        height: 60px;
+        margin-bottom: 8px;
+        filter: drop-shadow(0 0 6px #700);
+    }
+
+    .box h3 {
+        margin: 8px 0;
+        font-size: 16px;
+        color: #ff4d4d;
     }
 
     input {
         width: 90%;
         padding: 10px;
-        font-size: 16px;
-        margin-top: 8px;
-        border-radius: 6px;
+        margin-top: 6px;
+        border-radius: 10px;
         border: none;
-        background: #222;
+        background: #1f1f1f;
         color: #fff;
+        font-size: 15px;
         text-align: center;
+        outline: none;
     }
 
     .valor-unitario {
-        margin-top: 10px;
-        font-size: 13px;
+        margin-top: 8px;
+        font-size: 12px;
         opacity: 0.7;
     }
 
     .resultado {
-        margin-top: 12px;
-        font-size: 15px;
+        margin-top: 10px;
+        font-size: 14px;
+        color: #ffb3b3;
+    }
+
+    .btn {
+        width: 90%;
+        margin: 22px auto;
+        display: block;
+        padding: 14px;
+        background: #9b0000;
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #fff;
+        cursor: pointer;
+        transition: 0.2s;
+        box-shadow: 0 0 12px #300;
+    }
+
+    .btn:hover {
+        background: #b30000;
     }
 
     hr {
-        margin: 40px auto;
-        width: 80%;
-        border: 1px solid #631515;
+        margin: 35px 0;
+        border: 1px solid #330000;
     }
-@media(max-width: 600px){
-  .box-row{flex-direction:column;align-items:center;}
-  .box{width:95%;}
-}
 </style>
 </head>
 <body>
 
+<div class="app-header">CALCULADORA YAKUZA</div>
+
 <div class="container">
 
-    <h2>Calculadora de Minérios</h2>
+    <h2 class="section-title">MINÉRIOS</h2>
 
     <div class="box-row">
         <div class="box">
-            <img src="ferro.png" alt="Ferro">
+            <img src="ferro.png">
             <h3>Minério de Ferro</h3>
-            <input id="ferroInput" type="number" placeholder="Quantos minérios?" />
-            <div class="valor-unitario">Valor por ferro: R$ 30,00</div>
-            <div id="ferroResultado" class="resultado">Ferro: 0 unidades → R$ 0,00</div>
+            <input id="ferroInput" type="number" placeholder="Quantidade">
+            <input id="precoFerro" type="number" placeholder="R$ 30,00" class="valor-unitario" style="width:90%;padding:8px;border-radius:8px;">
+            <div id="ferroResultado" class="resultado">0 → R$ 0,00</div>
         </div>
 
         <div class="box">
-            <img src="bauxita.png" alt="Bauxita">
+            <img src="bauxita.png">
             <h3>Bauxita (Alumínio)</h3>
-            <input id="aluminioInput" type="number" placeholder="Quantos minérios?" />
-            <div class="valor-unitario">Valor por alumínio: R$ 30,00</div>
-            <div id="aluminioResultado" class="resultado">Alumínio: 0 unidades → R$ 0,00</div>
+            <input id="aluminioInput" type="number" placeholder="Quantidade">
+            <input id="precoAluminio" type="number" placeholder="R$ 30,00" class="valor-unitario" style="width:90%;padding:8px;border-radius:8px;">
+            <div id="aluminioResultado" class="resultado">0 → R$ 0,00</div>
         </div>
 
         <div class="box">
-            <img src="calcosita.png" alt="Calcosita">
+            <img src="calcosita.png">
             <h3>Calcosita (Cobre)</h3>
-            <input id="cobreInput" type="number" placeholder="Quantos minérios?" />
-            <div class="valor-unitario">Valor por cobre: R$ 18,00</div>
-            <div id="cobreResultado" class="resultado">Cobre: 0 unidades → R$ 0,00</div>
+            <input id="cobreInput" type="number" placeholder="Quantidade">
+            <input id="precoCobre" type="number" placeholder="R$ 18,00" class="valor-unitario" style="width:90%;padding:8px;border-radius:8px;">
+            <div id="cobreResultado" class="resultado">0 → R$ 0,00</div>
         </div>
     </div>
 
     <div class="box-row">
         <div class="box">
-            <img src="luva.png" alt="Luva">
+            <img src="luva.png">
             <h3>Luva</h3>
-            <input id="luvaInput" type="number" placeholder="Quantas luvas?" />
-            <div class="valor-unitario">Cada luva gera 3 borrachas (R$ 50 cada)</div>
-            <div id="luvaResultado" class="resultado">Borracha: 0 unidades → R$ 0,00</div>
+            <input id="luvaInput" type="number" placeholder="Quantidade">
+            <div class="valor-unitario">3 borrachas por luva</div>
+            <div id="luvaResultado" class="resultado">0 → R$ 0,00</div>
         </div>
 
         <div class="box">
-            <img src="garrafa.png" alt="Garrafa">
+            <img src="garrafa.png">
             <h3>Garrafa</h3>
-            <input id="garrafaInput" type="number" placeholder="Quantas garrafas?" />
-            <div class="valor-unitario">Cada garrafa gera 3 plásticos (R$ 50 cada)</div>
-            <div id="garrafaResultado" class="resultado">Plástico: 0 unidades → R$ 0,00</div>
+            <input id="garrafaInput" type="number" placeholder="Quantidade">
+            <div class="valor-unitario">3 plásticos por garrafa</div>
+            <div id="garrafaResultado" class="resultado">0 → R$ 0,00</div>
         </div>
     </div>
+
+    <button class="btn" onclick="calcularMinerios()">CALCULAR MINÉRIOS</button>
+
 
     <hr>
-
-    <h2>==== FAMIA NORTE ====</h2>
+    <h2 class="section-title">FAMÍLIA NORTE</h2>
 
     <div class="box-row">
         <div class="box">
-            <img src="viagra.png" alt="Drogas">
+            <img src="droga.png">
             <h3>Drogas</h3>
-            <div class="valor-unitario">Valor unitário: R$ 120,00 — Desconto: <input id="descontoDroga" type="number" value="20" style="width:60px;"> %</div>
-            <input id="drogaInput" type="number" placeholder="Quantidade" />
-            <div id="drogaResultado" class="resultado">Total: R$ 0,00</div>
+            <div class="valor-unitario">R$ 120,00 — Desconto <input id="descontoDroga" value="20" style="width:55px;border-radius:6px;">%</div>
+            <input id="drogaInput" type="number" placeholder="Quantidade">
+            <div id="drogaResultado" class="resultado">R$ 0,00</div>
         </div>
 
         <div class="box">
-            <img src="camisa.png" alt="Camisa de Força">
+            <img src="camisa.png">
             <h3>Camisa de Força</h3>
-            <div class="valor-unitario">Valor unitário: R$ 6.300,00 — Desconto: <input id="descontoCamisa" type="number" value="30" style="width:60px;"> %</div>
-            <input id="camisaInput" type="number" placeholder="Quantidade" />
-            <div id="camisaResultado" class="resultado">Total: R$ 0,00</div>
+            <div class="valor-unitario">R$ 6300 — Desconto <input id="descontoCamisa" value="30" style="width:55px;border-radius:6px;">%</div>
+            <input id="camisaInput" type="number" placeholder="Quantidade">
+            <div id="camisaResultado" class="resultado">R$ 0,00</div>
         </div>
     </div>
 
-<button onclick="calcularFamilia()" style="margin:20px;padding:12px 25px;font-size:18px;border:none;border-radius:8px;background:#8b0000;color:#fff;cursor:pointer;">CALCULAR FAMÍLIA NORTE</button>
-
-<button onclick="calcularMinerios()" style="margin:20px;padding:12px 25px;font-size:18px;border:none;border-radius:8px;background:#8b0000;color:#fff;cursor:pointer;">CALCULAR MINÉRIOS</button>
+    <button class="btn" onclick="calcularFamilia()">CALCULAR FAMÍLIA NORTE</button>
 
 </div>
 
 <script>
-// MINÉRIOS
 function calcularMinerios(){
- let ferro = Number(ferroInput.value)||0;
- let alu = Number(aluminioInput.value)||0;
- let cob = Number(cobreInput.value)||0;
- let luva = Number(luvaInput.value)||0;
- let gar = Number(garrafaInput.value)||0;
- 
+ let ferro = Number(document.getElementById('ferroInput').value)||0;
+ let alu = Number(document.getElementById('aluminioInput').value)||0;
+ let cob = Number(document.getElementById('cobreInput').value)||0;
+ let luva = Number(document.getElementById('luvaInput').value)||0;
+ let gar = Number(document.getElementById('garrafaInput').value)||0;
+
  let ferroU = ferro*5;
  let aluU = alu*5;
  let cobU = cob*5;
  let bor = luva*3;
  let pla = gar*3;
- 
- ferroResultado.innerHTML = `Ferro: ${ferroU} unidades → R$ ${(ferroU*30).toFixed(2)}`;
- aluminioResultado.innerHTML = `Alumínio: ${aluU} unidades → R$ ${(aluU*30).toFixed(2)}`;
- cobreResultado.innerHTML = `Cobre: ${cobU} unidades → R$ ${(cobU*18).toFixed(2)}`;
- luvaResultado.innerHTML = `Borracha: ${bor} unidades → R$ ${(bor*50).toFixed(2)}`;
- garrafaResultado.innerHTML = `Plástico: ${pla} unidades → R$ ${(pla*50).toFixed(2)}`;
+
+ document.getElementById('ferroResultado').innerHTML = `${ferroU} → R$ ${(ferroU*30).toFixed(2)}`;
+ document.getElementById('aluminioResultado').innerHTML = `${aluU} → R$ ${(aluU*30).toFixed(2)}`;
+ document.getElementById('cobreResultado').innerHTML = `${cobU} → R$ ${(cobU*18).toFixed(2)}`;
+ document.getElementById('luvaResultado').innerHTML = `${bor} → R$ ${(bor*50).toFixed(2)}`;
+ document.getElementById('garrafaResultado').innerHTML = `${pla} → R$ ${(pla*50).toFixed(2)}`;
 }
 
-// FAMÍLIA NORTE
 function calcularFamilia(){
- let dro = Number(drogaInput.value)||0;
- let cam = Number(camisaInput.value)||0;
+ let dro = Number(document.getElementById('drogaInput').value)||0;
+ let cam = Number(document.getElementById('camisaInput').value)||0;
 
  let totalDro = dro*120;
+ let descDro = Number(document.getElementById('descontoDroga').value)||0;
  let totalCam = cam*6300;
+ let descCam = Number(document.getElementById('descontoCamisa').value)||0;
 
- let descDro = Number(descontoDroga.value)||0;
- let descCam = Number(descontoCamisa.value)||0;
-
- drogaResultado.innerHTML = `Total: R$ ${(totalDro * (1 - descDro/100)).toFixed(2)}`;
- camisaResultado.innerHTML = `Total: R$ ${(totalCam * (1 - descCam/100)).toFixed(2)}`;
-}
-
-// PWA – registrar service worker
-if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js");
-}
-</script>
-
-</body>
-</html>
+ document.getElementById('drogaResultado').innerHTML = `R$ ${(totalDro * (1 - descDro/100)).toFixed(2)}`;
+ document.getElement
