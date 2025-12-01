@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Calculadora de Produção — GTA RP (Genérica)</title>
+<style>
+  :root{font-family:Inter,Roboto,system-ui,-apple-system,"Segoe UI",Arial;}
+  body{background:#0f1724;color:#e6eef8;margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;}
+  .card{background:linear-gradient(180deg,#0b1220,#0a1626);border:1px solid rgba(255,255,255,0.04);padding:20px;border-radius:12px;width:100%;max-width:760px;box-shadow:0 8px 30px rgba(2,6,23,0.6)}
+  h1{margin:0 0 10px;font-size:20px}
+  p{margin:0 0 14px;color:#9fb0cc}
+  .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;}
+  label{font-size:12px;color:#9fb0cc}
+  input[type="text"], input[type="number"]{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#e6eef8;box-sizing:border-box}
+  .row{display:flex;gap:10px;margin-bottom:10px}
+  .btn{padding:10px 14px;border-radius:10px;border:0;background:#0ea5a1;color:#042022;cursor:pointer;font-weight:600}
+  .muted{font-size:13px;color:#7e99b8;margin-bottom:8px}
+  .result{background:rgba(255,255,255,0.02);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);margin-top:12px}
+  table{width:100%;border-collapse:collapse}
+  td,th{padding:8px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.03);font-size:14px}
+  @media(max-width:720px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Calculadora de Produção (genérica) — GTA RP</h1>
+    <p>Informe um lote base (ex.: 1000 unidades) e as quantidades usadas nesse lote base. Depois informe quanto você tem agora — a calculadora dirá quantas unidades completas dá para fazer.</p>
+
+    <div class="muted">Configuração do lote base</div>
+    <div class="row">
+      <div style="flex:1">
+        <label>Quantidade de unidades no lote base</label>
+        <input id="batchSize" type="number" min="1" value="1000" />
+      </div>
+      <div style="flex:1">
+        <label>Nome do item final (opcional)</label>
+        <input id="productName" type="text" value="Unidade (genérica)" />
+      </div>
+      <div style="flex:1">
+        <label>&nbsp;</label>
+        <div style="display:flex;gap:8px">
+          <button class="btn" id="calcBtn">Calcular</button>
+          <button class="btn" id="resetBtn" style="background:#f97316;color:white">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="muted">Informações do lote base (quantidade usada para produzir o lote base)</div>
+    <div class="grid" id="baseGrid">
+      <div>
+        <label>Ingrediente 1 (nome)</label>
+        <input id="iname1" type="text" value="Embalagem" />
+      </div>
+      <div>
+        <label>Quantidade no lote base</label>
+        <input id="iqty1" type="number" min="0" value="200" />
+      </div>
+      <div>
+        <label>Você tem agora</label>
+        <input id="cur1" type="number" min="0" value="0" />
+      </div>
+
+      <div>
+        <label>Ingrediente 2 (nome)</label>
+        <input id="iname2" type="text" value="Farinha" />
+      </div>
+      <div>
+        <label>Quantidade no lote base</label>
+        <input id="iqty2" type="number" min="0" value="500" />
+      </div>
+      <div>
+        <label>Você tem agora</label>
+        <input id="cur2" type="number" min="0" value="0" />
+      </div>
+
+      <div>
+        <label>Ingrediente 3 (nome)</label>
+        <input id="iname3" type="text" value="Éter" />
+      </div>
+      <div>
+        <label>Quantidade no lote base</label>
+        <input id="iqty3" type="number" min="0" value="400" />
+      </div>
+      <div>
+        <label>Você tem agora</label>
+        <input id="cur3" type="number" min="0" value="0" />
+      </div>
+
+      <div>
+        <label>Ingrediente 4 (nome)</label>
+        <input id="iname4" type="text" value="Ingrediente 4" />
+      </div>
+      <div>
+        <label>Quantidade no lote base</label>
+        <input id="iqty4" type="number" min="0" value="400" />
+      </div>
+      <div>
+        <label>Você tem agora</label>
+        <input id="cur4" type="number" min="0" value="0" />
+      </div>
+    </div>
+
+    <div class="result" id="result">
+      <strong>Resultado:</strong>
+      <div id="outText" style="margin-top:8px;color:#dff3f0">Preencha os valores e clique em "Calcular".</div>
+    </div>
+    <div style="margin-top:10px;color:#7e99b8;font-size:13px">
+      Observação: esta é uma calculadora **genérica** de produção/crafting para jogos — os nomes dos ingredientes são editáveis.
+    </div>
+  </div>
+
+<script>
+  function compute() {
+    const batch = Number(document.getElementById('batchSize').value) || 1;
+    const pname = document.getElementById('productName').value || 'Unidade';
+
+    // ler ingredientes
+    const ingredients = [];
+    for (let i=1;i<=4;i++){
+      const name = document.getElementById('iname'+i).value || ('Ingrediente '+i);
+      const baseQty = Number(document.getElementById('iqty'+i).value) || 0;
+      const curQty = Number(document.getElementById('cur'+i).value) || 0;
+      ingredients.push({name, baseQty, curQty});
+    }
+
+    // calcular consumo por unidade e quantas unidades cada ingrediente permite
+    const rows = [];
+    let possibleArr = [];
+    for (const ing of ingredients) {
+      let perUnit = 0;
+      if (batch > 0) perUnit = ing.baseQty / batch;
+      // se perUnit == 0 -> ingrediente não necessário (permite infinito)
+      let possible;
+      if (perUnit === 0) possible = Infinity;
+      else possible = Math.floor(ing.curQty / perUnit);
+      possibleArr.push(possible);
+      rows.push({
+        name: ing.name,
+        baseQty: ing.baseQty,
+        curQty: ing.curQty,
+        perUnit: perUnit,
+        possible: possible
+      });
+    }
+
+    // número total de unidades possíveis é o mínimo dos possíveis (ignorando Infinity)
+    let minPossible = Infinity;
+    for (const v of possibleArr) {
+      if (v === Infinity) continue;
+      if (v < minPossible) minPossible = v;
+    }
+    if (minPossible === Infinity) minPossible = 0; // todos ingredientes perUnit 0? então 0
+
+    // montar saída
+    let html = `<div style="margin-bottom:8px">Com base no lote de <strong>${batch}</strong> unidades, as necessidades por unidade são calculadas automaticamente.</div>`;
+    html += `<table><thead><tr><th>Ingrediente</th><th>Usado no lote base</th><th>Você tem agora</th><th>Por unidade</th><th>Unidades possíveis</th></tr></thead><tbody>`;
+    for (const r of rows) {
+      const per = Number.isFinite(r.perUnit) ? (Math.round(r.perUnit*10000)/10000) : '0';
+      const poss = r.possible === Infinity ? 'Não necessário' : r.possible;
+      html += `<tr><td>${escapeHtml(r.name)}</td><td>${r.baseQty}</td><td>${r.curQty}</td><td>${per}</td><td>${poss}</td></tr>`;
+    }
+    html += `</tbody></table>`;
+
+    html += `<div style="margin-top:10px"><strong>Você consegue produzir até <span style="font-size:18px;color:#b8f0e6">${minPossible}</span> ${escapeHtml(pname)}</strong>.</div>`;
+
+    // mostrar também quantidades sobrando após produzir minPossible unidades
+    html += `<div style="margin-top:8px"><em>Sobra após produzir ${minPossible} unidades:</em><ul>`;
+    for (const r of rows) {
+      const used = r.perUnit * minPossible;
+      const sobra = Math.max(0, r.curQty - used);
+      html += `<li>${escapeHtml(r.name)}: ${Math.round(sobra*10000)/10000}</li>`;
+    }
+    html += `</ul></div>`;
+
+    document.getElementById('outText').innerHTML = html;
+  }
+
+  function escapeHtml(text) {
+    return String(text).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; });
+  }
+
+  document.getElementById('calcBtn').addEventListener('click', compute);
+  document.getElementById('resetBtn').addEventListener('click', ()=>{
+    document.getElementById('batchSize').value = 1000;
+    document.getElementById('productName').value = 'Unidade (genérica)';
+    document.getElementById('iname1').value='Embalagem'; document.getElementById('iqty1').value=200; document.getElementById('cur1').value=0;
+    document.getElementById('iname2').value='Farinha'; document.getElementById('iqty2').value=500; document.getElementById('cur2').value=0;
+    document.getElementById('iname3').value='Éter'; document.getElementById('iqty3').value=400; document.getElementById('cur3').value=0;
+    document.getElementById('iname4').value='Ingrediente 4'; document.getElementById('iqty4').value=400; document.getElementById('cur4').value=0;
+    document.getElementById('outText').innerHTML = 'Preencha os valores e clique em "Calcular".';
+  });
+
+  // cálculo automático ao carregar (opcional)
+  // compute();
+</script>
+</body>
+</html>
