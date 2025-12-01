@@ -6,167 +6,169 @@
 <title>App Produção RP</title>
 
 <style>
-    * {
+    body {
         margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Poppins", sans-serif;
+        background: #0d0d0d;
+        font-family: Poppins, sans-serif;
+        color: #fff;
     }
 
-    body {
-        background: #0c0c0c;
-        color: white;
-        height: 100vh;
+    header {
+        text-align: center;
+        padding: 15px;
+        background: #111;
+        font-size: 20px;
+        border-bottom: 2px solid #0ea5a1;
+    }
+
+    .container {
+        padding: 10px;
+        max-width: 450px;
+        margin: auto;
+    }
+
+    .itemBox {
+        background: #1a1a1a;
+        padding: 12px;
+        border-radius: 14px;
+        margin-bottom: 12px;
         display: flex;
         flex-direction: column;
     }
 
-    /* Cabeçalho estilo aplicativo */
-    header {
-        background: #111;
-        padding: 18px;
-        text-align: center;
-        font-size: 22px;
-        font-weight: 600;
-        letter-spacing: .5px;
-        border-bottom: 2px solid #0ea5a1;
-    }
-
-    /* Área de conteúdo estilo APP */
-    .content {
-        flex: 1;
-        overflow-y: auto;
-        padding: 20px;
-    }
-
-    .card {
-        background: #181818;
-        padding: 20px;
-        border-radius: 18px;
-        margin-bottom: 18px;
-        box-shadow: 0 0 10px #000;
-    }
-
-    .card h3 {
-        margin-bottom: 10px;
-        font-size: 18px;
+    .row {
+        display: flex;
+        gap: 10px;
+        margin-top: 8px;
     }
 
     input {
+        flex: 1;
+        padding: 10px;
+        border-radius: 10px;
+        background: #262626;
+        border: none;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .btnAdd {
+        padding: 10px;
+        border: none;
+        background: #0ea5a1;
+        color: #000;
+        border-radius: 10px;
+        font-weight: bold;
+        width: 80px;
+    }
+
+    .bigBtn {
         width: 100%;
         padding: 14px;
-        border-radius: 12px;
-        border: none;
-        margin-top: 8px;
-        font-size: 16px;
-        background: #252525;
-        color: white;
-    }
-
-    button {
-        width: 100%;
-        padding: 16px;
         border: none;
         border-radius: 14px;
-        margin-top: 15px;
         font-size: 17px;
         font-weight: bold;
+        margin-top: 12px;
         background: #0ea5a1;
         color: black;
-        cursor: pointer;
     }
 
-    button:active {
-        transform: scale(.97);
+    .resetBtn {
+        background: #e11d48 !important;
+        color: white !important;
     }
 
-    /* Barra fixa inferior — estilo APP */
-    .bottomBar {
+    .resultBox {
+        margin-top: 20px;
         background: #111;
-        padding: 20px;
+        padding: 15px;
         text-align: center;
+        border-radius: 12px;
         border-top: 2px solid #0ea5a1;
-    }
-
-    .total {
-        font-size: 26px;
+        font-size: 22px;
         font-weight: bold;
         color: #0ea5a1;
     }
-
 </style>
 </head>
+
 <body>
 
-<header>APP DE PRODUÇÃO RP</header>
+<header>APP PRODUÇÃO RP</header>
 
-<div class="content">
+<div class="container">
 
-    <div class="card">
-        <h3>Embalagem</h3>
-        <input type="number" id="emb" placeholder="Ex: 200">
+    <div class="itemBox">
+        <span>Embalagem</span>
+        <div class="row">
+            <input type="number" id="embInput" placeholder="Qtd">
+            <button class="btnAdd" onclick="addItem('emb')">ADD +</button>
+        </div>
     </div>
 
-    <div class="card">
-        <h3>Farinha</h3>
-        <input type="number" id="far" placeholder="Ex: 500">
+    <div class="itemBox">
+        <span>Farinha</span>
+        <div class="row">
+            <input type="number" id="farInput" placeholder="Qtd">
+            <button class="btnAdd" onclick="addItem('far')">ADD +</button>
+        </div>
     </div>
 
-    <div class="card">
-        <h3>Éter</h3>
-        <input type="number" id="eter" placeholder="Ex: 400">
+    <div class="itemBox">
+        <span>Éter</span>
+        <div class="row">
+            <input type="number" id="eterInput" placeholder="Qtd">
+            <button class="btnAdd" onclick="addItem('eter')">ADD +</button>
+        </div>
     </div>
 
-    <div class="card">
-        <h3>Ingrediente X</h3>
-        <input type="number" id="ing" placeholder="Ex: 400">
+    <div class="itemBox">
+        <span>Sildenafila</span>
+        <div class="row">
+            <input type="number" id="ingInput" placeholder="Qtd">
+            <button class="btnAdd" onclick="addItem('ing')">ADD +</button>
+        </div>
     </div>
 
-    <button onclick="addValores()">ADICIONAR AO TOTAL</button>
-    <button style="background:#e11d48;color:white" onclick="resetar()">ZERAR TUDO</button>
+    <button class="bigBtn" onclick="calcular()">CALCULAR TUDO</button>
+    <button class="bigBtn resetBtn" onclick="resetar()">ZERAR</button>
 
-</div>
+    <div class="resultBox" id="resultado">0 UNIDADES</div>
 
-<!-- Barra estilo APP mostrando resultado -->
-<div class="bottomBar">
-    <div>Produção possível:</div>
-    <div class="total" id="saida">0 UNIDADES</div>
 </div>
 
 <script>
-let totalEmb = 0;
-let totalFar = 0;
-let totalEter = 0;
-let totalIng = 0;
+let emb = 0, far = 0, eter = 0, ing = 0;
 
-function addValores() {
-    totalEmb += Number(document.getElementById("emb").value);
-    totalFar += Number(document.getElementById("far").value);
-    totalEter += Number(document.getElementById("eter").value);
-    totalIng += Number(document.getElementById("ing").value);
+function addItem(tipo) {
+    let input = document.getElementById(tipo + "Input");
+    let valor = Number(input.value);
 
-    const kitsEmb = Math.floor(totalEmb / 200);
-    const kitsFar = Math.floor(totalFar / 500);
-    const kitsEter = Math.floor(totalEter / 400);
-    const kitsIng = Math.floor(totalIng / 400);
+    if (valor > 0) {
+        if (tipo === "emb") emb += valor;
+        if (tipo === "far") far += valor;
+        if (tipo === "eter") eter += valor;
+        if (tipo === "ing") ing += valor;
+    }
 
-    const kitsFinais = Math.min(kitsEmb, kitsFar, kitsEter, kitsIng);
-    const totalFinal = kitsFinais * 1000;
+    input.value = "";
+}
 
-    document.getElementById("saida").innerHTML = totalFinal + " UNIDADES";
+function calcular() {
+    let kits = Math.min(
+        Math.floor(emb / 200),
+        Math.floor(far / 500),
+        Math.floor(eter / 400),
+        Math.floor(ing / 400)
+    );
 
-    document.getElementById("emb").value = "";
-    document.getElementById("far").value = "";
-    document.getElementById("eter").value = "";
-    document.getElementById("ing").value = "";
+    document.getElementById("resultado").innerHTML = (kits * 1000) + " UNIDADES";
 }
 
 function resetar() {
-    totalEmb = 0;
-    totalFar = 0;
-    totalEter = 0;
-    totalIng = 0;
-    document.getElementById("saida").innerHTML = "0 UNIDADES";
+    emb = 0; far = 0; eter = 0; ing = 0;
+    document.getElementById("resultado").innerHTML = "0 UNIDADES";
 }
 </script>
 
