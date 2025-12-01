@@ -3,172 +3,153 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>App Produção RP</title>
+<title>App Produção</title>
 
 <style>
     body {
-        margin: 0;
         background: #0d0d0d;
+        margin: 0;
+        padding: 20px;
         font-family: Poppins, sans-serif;
-        color: #fff;
+        color: white;
     }
 
-    header {
+    h2 {
         text-align: center;
-        padding: 15px;
-        background: #111;
-        font-size: 20px;
-        border-bottom: 2px solid #0ea5a1;
+        margin-bottom: 15px;
+        font-size: 22px;
     }
 
-    .container {
-        padding: 10px;
-        max-width: 450px;
-        margin: auto;
-    }
-
-    .itemBox {
+    .card {
         background: #1a1a1a;
-        padding: 12px;
-        border-radius: 14px;
-        margin-bottom: 12px;
-        display: flex;
-        flex-direction: column;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 12px;
+        border: 1px solid #333;
+    }
+
+    .label {
+        font-size: 16px;
+        margin-bottom: 8px;
+        font-weight: 500;
     }
 
     .row {
         display: flex;
         gap: 10px;
-        margin-top: 8px;
     }
 
     input {
-        flex: 1;
-        padding: 10px;
-        border-radius: 10px;
-        background: #262626;
-        border: none;
-        color: #fff;
-        font-size: 16px;
-    }
-
-    .btnAdd {
-        padding: 10px;
-        border: none;
-        background: #0ea5a1;
-        color: #000;
-        border-radius: 10px;
-        font-weight: bold;
-        width: 80px;
-    }
-
-    .bigBtn {
         width: 100%;
-        padding: 14px;
+        padding: 12px;
+        border-radius: 8px;
         border: none;
-        border-radius: 14px;
-        font-size: 17px;
-        font-weight: bold;
-        margin-top: 12px;
-        background: #0ea5a1;
-        color: black;
-    }
-
-    .resetBtn {
-        background: #e11d48 !important;
-        color: white !important;
-    }
-
-    .resultBox {
-        margin-top: 20px;
+        font-size: 16px;
         background: #111;
-        padding: 15px;
+        color: white;
+        outline: none;
+    }
+
+    button {
+        padding: 12px;
+        width: 100%;
+        margin-top: 10px;
+        border: none;
+        border-radius: 8px;
+        background: #ff0077;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    #resultado {
+        margin-top: 20px;
         text-align: center;
-        border-radius: 12px;
-        border-top: 2px solid #0ea5a1;
         font-size: 22px;
         font-weight: bold;
-        color: #0ea5a1;
+        color: #00ff88;
     }
 </style>
 </head>
-
 <body>
 
-<header>APP PRODUÇÃO RP</header>
+<h2>CALCULADORA DE PRODUÇÃO</h2>
 
-<div class="container">
-
-    <div class="itemBox">
-        <span>Embalagem</span>
-        <div class="row">
-            <input type="number" id="embInput" placeholder="Qtd">
-            <button class="btnAdd" onclick="addItem('emb')">ADD +</button>
-        </div>
+<!-- EMBALAGEM -->
+<div class="card">
+    <div class="label">Embalagem</div>
+    <div class="row">
+        <input type="number" id="embalagemInput" placeholder="Quantidade">
+        <button onclick="addItem('embalagem')">ADD +</button>
     </div>
-
-    <div class="itemBox">
-        <span>Farinha</span>
-        <div class="row">
-            <input type="number" id="farInput" placeholder="Qtd">
-            <button class="btnAdd" onclick="addItem('far')">ADD +</button>
-        </div>
-    </div>
-
-    <div class="itemBox">
-        <span>Éter</span>
-        <div class="row">
-            <input type="number" id="eterInput" placeholder="Qtd">
-            <button class="btnAdd" onclick="addItem('eter')">ADD +</button>
-        </div>
-    </div>
-
-    <div class="itemBox">
-        <span>Sildenafila</span>
-        <div class="row">
-            <input type="number" id="ingInput" placeholder="Qtd">
-            <button class="btnAdd" onclick="addItem('ing')">ADD +</button>
-        </div>
-    </div>
-
-    <button class="bigBtn" onclick="calcular()">CALCULAR TUDO</button>
-    <button class="bigBtn resetBtn" onclick="resetar()">ZERAR</button>
-
-    <div class="resultBox" id="resultado">0 UNIDADES</div>
-
+    <div id="embalagemTotal">Total: 0</div>
 </div>
 
-<script>
-let emb = 0, far = 0, eter = 0, ing = 0;
+<!-- FARINHA -->
+<div class="card">
+    <div class="label">Farinha</div>
+    <div class="row">
+        <input type="number" id="farinhaInput" placeholder="Quantidade">
+        <button onclick="addItem('farinha')">ADD +</button>
+    </div>
+    <div id="farinhaTotal">Total: 0</div>
+</div>
 
-function addItem(tipo) {
-    let input = document.getElementById(tipo + "Input");
-    let valor = Number(input.value);
+<!-- ÉTER -->
+<div class="card">
+    <div class="label">Éter</div>
+    <div class="row">
+        <input type="number" id="eterInput" placeholder="Quantidade">
+        <button onclick="addItem('eter')">ADD +</button>
+    </div>
+    <div id="eterTotal">Total: 0</div>
+</div>
+
+<!-- SILDENAFILA -->
+<div class="card">
+    <div class="label">Sildenafila</div>
+    <div class="row">
+        <input type="number" id="sildenafilaInput" placeholder="Quantidade">
+        <button onclick="addItem('sildenafila')">ADD +</button>
+    </div>
+    <div id="sildenafilaTotal">Total: 0</div>
+</div>
+
+<button onclick="calcular()">CALCULAR TOTAL</button>
+
+<div id="resultado"></div>
+
+<script>
+let itens = {
+    embalagem: 0,
+    farinha: 0,
+    eter: 0,
+    sildenafila: 0
+};
+
+function addItem(item) {
+    const input = document.getElementById(item + "Input");
+    const valor = Number(input.value);
 
     if (valor > 0) {
-        if (tipo === "emb") emb += valor;
-        if (tipo === "far") far += valor;
-        if (tipo === "eter") eter += valor;
-        if (tipo === "ing") ing += valor;
+        itens[item] += valor; // SOMA COM O QUE JÁ TEM
+        document.getElementById(item + "Total").innerText = "Total: " + itens[item];
+        input.value = "";
     }
-
-    input.value = "";
 }
 
 function calcular() {
-    let kits = Math.min(
-        Math.floor(emb / 200),
-        Math.floor(far / 500),
-        Math.floor(eter / 400),
-        Math.floor(ing / 400)
-    );
+    const totalMateriais = 
+        itens.embalagem + 
+        itens.farinha + 
+        itens.eter + 
+        itens.sildenafila;
 
-    document.getElementById("resultado").innerHTML = (kits * 1000) + " UNIDADES";
-}
+    // Cada 1000 produz 1000 viagras
+    const drogas = Math.floor(totalMateriais / 1000);
 
-function resetar() {
-    emb = 0; far = 0; eter = 0; ing = 0;
-    document.getElementById("resultado").innerHTML = "0 UNIDADES";
+    document.getElementById("resultado").innerText =
+        "Produção total: " + drogas + " drogas";
 }
 </script>
 
