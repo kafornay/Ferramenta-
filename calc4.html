@@ -104,7 +104,7 @@
 <script>
 function calcular() {
 
-    // Preços
+    // Preços unitários
     let plastico = Number(document.getElementById("plastico").value);
     let borracha = Number(document.getElementById("borracha").value);
     let cobre = Number(document.getElementById("cobre").value);
@@ -116,42 +116,42 @@ function calcular() {
     let qtdC4 = Number(document.getElementById("qtdC4").value);
     if (qtdC4 <= 0) qtdC4 = 1;
 
-    // Materiais por C4
+    // Materiais gastos POR C4
     let plasticoPorC4 = 5;
     let borrachaPorC4 = 5;
     let cobrePorC4 = 5;
     let ferroPorC4 = 10;
     let aluminioPorC4 = 10;
 
-    // Materiais totais necessários
-    let totalPlastico = plasticoPorC4 * qtdC4;
-    let totalBorracha = borrachaPorC4 * qtdC4;
-    let totalCobre = cobrePorC4 * qtdC4;
-    let totalFerro = ferroPorC4 * qtdC4;
-    let totalAluminio = aluminioPorC4 * qtdC4;
+    // Custo TOTAL de cada material (material_por_C4 × quantidade × preço)
+    let totalPlastico = plasticoPorC4 * qtdC4 * plastico;
+    let totalBorracha = borrachaPorC4 * qtdC4 * borracha;
+    let totalCobre = cobrePorC4 * qtdC4 * cobre;
+    let totalFerro = ferroPorC4 * qtdC4 * ferro;
+    let totalAluminio = aluminioPorC4 * qtdC4 * aluminio;
 
-    // Custo total dos materiais
+    // Soma total dos materiais
     let totalMateriais =
-        (totalPlastico * plastico) +
-        (totalBorracha * borracha) +
-        (totalCobre * cobre) +
-        (totalFerro * ferro) +
-        (totalAluminio * aluminio);
+        totalPlastico +
+        totalBorracha +
+        totalCobre +
+        totalFerro +
+        totalAluminio;
 
-    // Total final
+    // Total geral com gringo
     let totalFinal = totalMateriais + gringo;
 
-    // Preço por unidade
+    // Preço por C4
     let precoPorC4 = totalFinal / qtdC4;
 
     document.getElementById("resultado").style.display = "block";
     document.getElementById("resultado").innerHTML = `
         🔧 <b>Materiais Necessários (${qtdC4} C4):</b><br>
-        - Plástico: ${totalPlastico} un<br>
-        - Borracha: ${totalBorracha} un<br>
-        - Cobre: ${totalCobre} un<br>
-        - Ferro: ${totalFerro} un<br>
-        - Alumínio: ${totalAluminio} un<br><br>
+        - Plástico: ${plasticoPorC4 * qtdC4} un<br>
+        - Borracha: ${borrachaPorC4 * qtdC4} un<br>
+        - Cobre: ${cobrePorC4 * qtdC4} un<br>
+        - Ferro: ${ferroPorC4 * qtdC4} un<br>
+        - Alumínio: ${aluminioPorC4 * qtdC4} un<br><br>
 
         💣 <b>Total de Materiais:</b> R$ ${totalMateriais.toLocaleString("pt-BR")} <br><br>
         👤 <b>Custo do Gringo:</b> R$ ${gringo.toLocaleString("pt-BR")} <br><br>
