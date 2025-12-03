@@ -7,7 +7,7 @@
 
 <style>
     body {
-        background: #0d0d0d;
+        background: #0a0a0a;
         color: #fff;
         font-family: 'Poppins', sans-serif;
         margin: 0;
@@ -18,53 +18,74 @@
         text-align: center;
         margin-bottom: 20px;
         color: #00eaff;
+        text-shadow: 0 0 10px #00eaff;
+        font-size: 28px;
     }
 
     .box {
         background: #111;
-        padding: 15px;
-        border-radius: 10px;
-        margin-bottom: 20px;
+        padding: 20px;
+        border-radius: 15px;
         border: 1px solid #222;
+        max-width: 600px;
+        margin: auto;
+        box-shadow: 0 0 12px #000;
     }
 
     label {
         display: block;
-        margin-top: 10px;
-        font-size: 14px;
+        margin-top: 12px;
+        font-size: 15px;
+        color: #cccccc;
     }
 
     input {
         width: 100%;
-        padding: 10px;
+        padding: 12px;
         margin-top: 5px;
-        border-radius: 8px;
+        border-radius: 10px;
         border: none;
         background: #1a1a1a;
         color: #fff;
-        font-size: 15px;
+        font-size: 16px;
     }
 
     button {
         width: 100%;
         padding: 15px;
-        margin-top: 20px;
+        margin-top: 25px;
         background: #00c3ff;
         border: none;
-        border-radius: 10px;
-        font-size: 18px;
+        border-radius: 12px;
+        font-size: 19px;
         font-weight: bold;
         cursor: pointer;
         color: #000;
+        transition: 0.2s;
+    }
+
+    button:hover {
+        background: #0ae2ff;
+        transform: scale(1.03);
     }
 
     .resultado {
         background: #0f0f0f;
-        padding: 15px;
-        border-radius: 10px;
-        margin-top: 20px;
+        padding: 20px;
+        border-radius: 12px;
+        margin-top: 25px;
         border: 1px solid #333;
         font-size: 18px;
+        display: none;
+    }
+
+    @media (max-width: 480px) {
+        h1 {
+            font-size: 22px;
+        }
+        button {
+            font-size: 17px;
+        }
     }
 </style>
 </head>
@@ -91,11 +112,15 @@
 
     <label>Custo do Gringo</label>
     <input type="number" id="gringo" value="16500">
+
+    <!-- NOVO CAMPO DA QUANTIDADE -->
+    <label>Quantidade de C4 para fabricar</label>
+    <input type="number" id="qtdC4" value="50">
     
     <button onclick="calcular()">CALCULAR</button>
 </div>
 
-<div id="resultado" class="resultado" style="display:none;"></div>
+<div id="resultado" class="resultado"></div>
 
 <script>
 function calcular() {
@@ -106,6 +131,9 @@ function calcular() {
     let aluminio = Number(document.getElementById("aluminio").value);
     let gringo = Number(document.getElementById("gringo").value);
 
+    let qtdC4 = Number(document.getElementById("qtdC4").value);
+    if (qtdC4 <= 0) qtdC4 = 1;
+
     let totalMateriais =
         (plastico * 250) +
         (borracha * 250) +
@@ -114,13 +142,14 @@ function calcular() {
         (aluminio * 500);
 
     let totalFinal = totalMateriais + gringo;
-    let precoPorC4 = totalFinal / 50;
+    let precoPorC4 = totalFinal / qtdC4;
 
     document.getElementById("resultado").style.display = "block";
     document.getElementById("resultado").innerHTML = `
         💣 <b>Total de Materiais:</b> R$ ${totalMateriais.toLocaleString("pt-BR")} <br><br>
         👤 <b>Custo do Gringo:</b> R$ ${gringo.toLocaleString("pt-BR")} <br><br>
-        💰 <b>Total Geral para Produzir 50 C4:</b> R$ ${totalFinal.toLocaleString("pt-BR")} <br><br>
+        💼 <b>Quantidade de C4:</b> ${qtdC4} un<br><br>
+        💰 <b>Total Geral:</b> R$ ${totalFinal.toLocaleString("pt-BR")} <br><br>
         🔥 <b>Preço por C4:</b> R$ ${precoPorC4.toLocaleString("pt-BR")}
     `;
 }
