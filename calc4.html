@@ -3,127 +3,126 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora C4</title>
+<title>Calculadora de C4 - GTA RP</title>
 
 <style>
     body {
-        background: #0a0a0a;
+        background: #0d0d0d;
         color: #fff;
         font-family: 'Poppins', sans-serif;
         margin: 0;
         padding: 20px;
-        text-align: center;
     }
 
-    .top-box {
-        background: #1d1d1d;
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #00eaff;
+    }
+
+    .box {
+        background: #111;
         padding: 15px;
         border-radius: 10px;
         margin-bottom: 20px;
-        border: 2px solid #ff4444;
-        font-size: 20px;
-        font-weight: bold;
+        border: 1px solid #222;
     }
 
-    .container {
-        background: #1a1a1a;
-        padding: 20px;
-        border-radius: 10px;
-        max-width: 450px;
-        margin: auto;
-        border: 1px solid #444;
+    label {
+        display: block;
+        margin-top: 10px;
+        font-size: 14px;
     }
 
     input {
         width: 100%;
-        padding: 12px;
+        padding: 10px;
+        margin-top: 5px;
         border-radius: 8px;
         border: none;
-        margin-bottom: 15px;
-        font-size: 16px;
+        background: #1a1a1a;
+        color: #fff;
+        font-size: 15px;
     }
 
     button {
         width: 100%;
-        padding: 14px;
-        background: #ff4444;
-        color: #fff;
+        padding: 15px;
+        margin-top: 20px;
+        background: #00c3ff;
         border: none;
-        font-size: 18px;
         border-radius: 10px;
-        cursor: pointer;
+        font-size: 18px;
         font-weight: bold;
+        cursor: pointer;
+        color: #000;
     }
 
-    button:hover {
-        background: #ff2222;
-    }
-
-    .result {
-        background: #222;
-        padding: 12px;
+    .resultado {
+        background: #0f0f0f;
+        padding: 15px;
         border-radius: 10px;
-        margin-top: 15px;
-        display: none;
+        margin-top: 20px;
+        border: 1px solid #333;
         font-size: 18px;
-        border: 1px solid #555;
     }
 </style>
 </head>
 
 <body>
 
-<div class="top-box" id="custoUnitarioTopo">
-    💥 Custo por unidade de C4: —
-</div>
+<h1>Calculadora de C4 - GTA RP</h1>
 
-<div class="container">
-    <h2>Calculadora de Materiais C4</h2>
+<div class="box">
+    <label>Preço do Plástico (250 un)</label>
+    <input type="number" id="plastico" placeholder="Ex: 30">
 
-    <input type="number" id="ferro" placeholder="Ferro (R$)" />
-    <input type="number" id="pólvora" placeholder="Pólvora (R$)" />
-    <input type="number" id="plastico" placeholder="Plástico (R$)" />
-    <input type="number" id="qtd" placeholder="Quantidade de C4" />
+    <label>Preço da Borracha (250 un)</label>
+    <input type="number" id="borracha" placeholder="Ex: 35">
 
+    <label>Preço do Cobre (250 un)</label>
+    <input type="number" id="cobre" placeholder="Ex: 40">
+
+    <label>Preço do Ferro (500 un)</label>
+    <input type="number" id="ferro" placeholder="Ex: 25">
+
+    <label>Preço do Alumínio (500 un)</label>
+    <input type="number" id="aluminio" placeholder="Ex: 25">
+
+    <label>Custo do Gringo</label>
+    <input type="number" id="gringo" value="16500">
+    
     <button onclick="calcular()">CALCULAR</button>
-
-    <div id="resultado" class="result"></div>
-    <div id="custoUnitario" class="result"></div>
 </div>
 
+<div id="resultado" class="resultado" style="display:none;"></div>
 
 <script>
 function calcular() {
-
-    // PEGANDO VALORES
-    let ferro = Number(document.getElementById("ferro").value);
-    let polvora = Number(document.getElementById("pólvora").value);
     let plastico = Number(document.getElementById("plastico").value);
-    let qtd = Number(document.getElementById("qtd").value);
+    let borracha = Number(document.getElementById("borracha").value);
+    let cobre = Number(document.getElementById("cobre").value);
+    let ferro = Number(document.getElementById("ferro").value);
+    let aluminio = Number(document.getElementById("aluminio").value);
+    let gringo = Number(document.getElementById("gringo").value);
 
-    if (!ferro || !polvora || !plastico || !qtd) {
-        alert("Preencha todos os campos!");
-        return;
-    }
+    let totalMateriais =
+        (plastico * 250) +
+        (borracha * 250) +
+        (cobre * 250) +
+        (ferro * 500) +
+        (aluminio * 500);
 
-    // SOMA DOS MATERIAIS
-    let totalMateriais = ferro + polvora + plastico;
+    let totalFinal = totalMateriais + gringo;
+    let precoPorC4 = totalFinal / 50;
 
-    // CUSTO UNITÁRIO POR C4
-    let precoPorC4 = totalMateriais / qtd;
-
-    // MOSTRAR RESULTADOS (CAIXA INFERIOR)
     document.getElementById("resultado").style.display = "block";
-    document.getElementById("resultado").innerHTML =
-        `💣 Total de Materiais: R$ ${totalMateriais.toLocaleString("pt-BR")}`;
-
-    document.getElementById("custoUnitario").style.display = "block";
-    document.getElementById("custoUnitario").innerHTML =
-        `💥 Custo por unidade de C4: R$ ${precoPorC4.toLocaleString("pt-BR")}`;
-
-    // MOSTRAR NO CAMPO EM DESTAQUE (TOPO)
-    document.getElementById("custoUnitarioTopo").innerHTML =
-        `💥 Custo por unidade de C4: R$ ${precoPorC4.toLocaleString("pt-BR")}`;
+    document.getElementById("resultado").innerHTML = `
+        💣 <b>Total de Materiais:</b> R$ ${totalMateriais.toLocaleString("pt-BR")} <br><br>
+        👤 <b>Custo do Gringo:</b> R$ ${gringo.toLocaleString("pt-BR")} <br><br>
+        💰 <b>Total Geral para Produzir 50 C4:</b> R$ ${totalFinal.toLocaleString("pt-BR")} <br><br>
+        🔥 <b>Preço por C4:</b> R$ ${precoPorC4.toLocaleString("pt-BR")}
+    `;
 }
 </script>
 
