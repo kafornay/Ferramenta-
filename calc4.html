@@ -78,15 +78,6 @@
         font-size: 18px;
         display: none;
     }
-
-    @media (max-width: 480px) {
-        h1 {
-            font-size: 22px;
-        }
-        button {
-            font-size: 17px;
-        }
-    }
 </style>
 </head>
 
@@ -95,25 +86,24 @@
 <h1>Calculadora de C4 - GTA RP</h1>
 
 <div class="box">
-    <label>Preço do Plástico (250 un)</label>
+    <label>Preço do Plástico (250 un para 50 C4)</label>
     <input type="number" id="plastico" placeholder="Ex: 30">
 
-    <label>Preço da Borracha (250 un)</label>
+    <label>Preço da Borracha (250 un para 50 C4)</label>
     <input type="number" id="borracha" placeholder="Ex: 35">
 
-    <label>Preço do Cobre (250 un)</label>
+    <label>Preço do Cobre (250 un para 50 C4)</label>
     <input type="number" id="cobre" placeholder="Ex: 40">
 
-    <label>Preço do Ferro (500 un)</label>
+    <label>Preço do Ferro (500 un para 50 C4)</label>
     <input type="number" id="ferro" placeholder="Ex: 25">
 
-    <label>Preço do Alumínio (500 un)</label>
+    <label>Preço do Alumínio (500 un para 50 C4)</label>
     <input type="number" id="aluminio" placeholder="Ex: 25">
 
     <label>Custo do Gringo</label>
     <input type="number" id="gringo" value="16500">
 
-    <!-- NOVO CAMPO DA QUANTIDADE -->
     <label>Quantidade de C4 para fabricar</label>
     <input type="number" id="qtdC4" value="50">
     
@@ -134,22 +124,47 @@ function calcular() {
     let qtdC4 = Number(document.getElementById("qtdC4").value);
     if (qtdC4 <= 0) qtdC4 = 1;
 
-    let totalMateriais =
-        (plastico * 250) +
-        (borracha * 250) +
-        (cobre * 250) +
-        (ferro * 500) +
-        (aluminio * 500);
+    // Proporção exata por unidade
+    let plasticoPorC4 = 250 / 50;
+    let borrachaPorC4 = 250 / 50;
+    let cobrePorC4 = 250 / 50;
+    let ferroPorC4 = 500 / 50;
+    let aluminioPorC4 = 500 / 50;
+
+    // Quantidade proporcional de materiais
+    let totalPlastico = plasticoPorC4 * qtdC4 * plastico;
+    let totalBorracha = borrachaPorC4 * qtdC4 * borracha;
+    let totalCobre = cobrePorC4 * qtdC4 * cobre;
+    let totalFerro = ferroPorC4 * qtdC4 * ferro;
+    let totalAluminio = aluminioPorC4 * qtdC4 * aluminio;
+
+    let totalMateriais = 
+        totalPlastico + 
+        totalBorracha + 
+        totalCobre + 
+        totalFerro + 
+        totalAluminio;
 
     let totalFinal = totalMateriais + gringo;
     let precoPorC4 = totalFinal / qtdC4;
 
     document.getElementById("resultado").style.display = "block";
     document.getElementById("resultado").innerHTML = `
+        💼 <b>Quantidade de C4:</b> ${qtdC4} unidades<br><br>
+
+        📦 <b>Custo dos Materiais:</b><br>
+        • Plástico: R$ ${totalPlastico.toLocaleString("pt-BR")}<br>
+        • Borracha: R$ ${totalBorracha.toLocaleString("pt-BR")}<br>
+        • Cobre: R$ ${totalCobre.toLocaleString("pt-BR")}<br>
+        • Ferro: R$ ${totalFerro.toLocaleString("pt-BR")}<br>
+        • Alumínio: R$ ${totalAluminio.toLocaleString("pt-BR")}<br><br>
+
         💣 <b>Total de Materiais:</b> R$ ${totalMateriais.toLocaleString("pt-BR")} <br><br>
+        
         👤 <b>Custo do Gringo:</b> R$ ${gringo.toLocaleString("pt-BR")} <br><br>
-        💼 <b>Quantidade de C4:</b> ${qtdC4} un<br><br>
+
         💰 <b>Total Geral:</b> R$ ${totalFinal.toLocaleString("pt-BR")} <br><br>
+
         🔥 <b>Preço por C4:</b> R$ ${precoPorC4.toLocaleString("pt-BR")}
     `;
 }
