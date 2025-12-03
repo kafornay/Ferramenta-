@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora C4</title>
+
+<style>
+    body {
+        background: #0a0a0a;
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .top-box {
+        background: #1d1d1d;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border: 2px solid #ff4444;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .container {
+        background: #1a1a1a;
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 450px;
+        margin: auto;
+        border: 1px solid #444;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: none;
+        margin-bottom: 15px;
+        font-size: 16px;
+    }
+
+    button {
+        width: 100%;
+        padding: 14px;
+        background: #ff4444;
+        color: #fff;
+        border: none;
+        font-size: 18px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    button:hover {
+        background: #ff2222;
+    }
+
+    .result {
+        background: #222;
+        padding: 12px;
+        border-radius: 10px;
+        margin-top: 15px;
+        display: none;
+        font-size: 18px;
+        border: 1px solid #555;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="top-box" id="custoUnitarioTopo">
+    💥 Custo por unidade de C4: —
+</div>
+
+<div class="container">
+    <h2>Calculadora de Materiais C4</h2>
+
+    <input type="number" id="ferro" placeholder="Ferro (R$)" />
+    <input type="number" id="pólvora" placeholder="Pólvora (R$)" />
+    <input type="number" id="plastico" placeholder="Plástico (R$)" />
+    <input type="number" id="qtd" placeholder="Quantidade de C4" />
+
+    <button onclick="calcular()">CALCULAR</button>
+
+    <div id="resultado" class="result"></div>
+    <div id="custoUnitario" class="result"></div>
+</div>
+
+
+<script>
+function calcular() {
+
+    // PEGANDO VALORES
+    let ferro = Number(document.getElementById("ferro").value);
+    let polvora = Number(document.getElementById("pólvora").value);
+    let plastico = Number(document.getElementById("plastico").value);
+    let qtd = Number(document.getElementById("qtd").value);
+
+    if (!ferro || !polvora || !plastico || !qtd) {
+        alert("Preencha todos os campos!");
+        return;
+    }
+
+    // SOMA DOS MATERIAIS
+    let totalMateriais = ferro + polvora + plastico;
+
+    // CUSTO UNITÁRIO POR C4
+    let precoPorC4 = totalMateriais / qtd;
+
+    // MOSTRAR RESULTADOS (CAIXA INFERIOR)
+    document.getElementById("resultado").style.display = "block";
+    document.getElementById("resultado").innerHTML =
+        `💣 Total de Materiais: R$ ${totalMateriais.toLocaleString("pt-BR")}`;
+
+    document.getElementById("custoUnitario").style.display = "block";
+    document.getElementById("custoUnitario").innerHTML =
+        `💥 Custo por unidade de C4: R$ ${precoPorC4.toLocaleString("pt-BR")}`;
+
+    // MOSTRAR NO CAMPO EM DESTAQUE (TOPO)
+    document.getElementById("custoUnitarioTopo").innerHTML =
+        `💥 Custo por unidade de C4: R$ ${precoPorC4.toLocaleString("pt-BR")}`;
+}
+</script>
+
+</body>
+</html>
