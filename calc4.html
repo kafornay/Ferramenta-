@@ -1,174 +1,173 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Calculadora de C4 - GTA RP</title>
-
 <style>
-    body {
-        background: #0a0a0a;
-        color: #fff;
-        font-family: 'Poppins', sans-serif;
-        margin: 0;
-        padding: 20px;
-    }
-
-    h1 {
-        text-align: center;
-        margin-bottom: 20px;
-        color: #00eaff;
-        text-shadow: 0 0 10px #00eaff;
-        font-size: 28px;
-    }
-
-    .box {
-        background: #111;
-        padding: 20px;
-        border-radius: 15px;
-        border: 1px solid #222;
-        max-width: 600px;
-        margin: auto;
-        box-shadow: 0 0 12px #000;
-    }
-
-    label {
-        display: block;
-        margin-top: 12px;
-        font-size: 15px;
-        color: #cccccc;
-    }
-
-    input {
-        width: 100%;
-        padding: 12px;
-        margin-top: 5px;
-        border-radius: 10px;
-        border: none;
-        background: #1a1a1a;
-        color: #fff;
-        font-size: 16px;
-    }
-
-    button {
-        width: 100%;
-        padding: 15px;
-        margin-top: 25px;
-        background: #00c3ff;
-        border: none;
-        border-radius: 12px;
-        font-size: 19px;
-        font-weight: bold;
-        cursor: pointer;
-        color: #000;
-        transition: 0.2s;
-    }
-
-    button:hover {
-        background: #0ae2ff;
-        transform: scale(1.03);
-    }
-
-    .resultado {
-        background: #0f0f0f;
-        padding: 20px;
-        border-radius: 12px;
-        margin-top: 25px;
-        border: 1px solid #333;
-        font-size: 18px;
-        display: none;
-    }
+  body{background:#0a0a0a;color:#fff;font-family:'Poppins',sans-serif;margin:0;padding:20px}
+  h1{text-align:center;margin-bottom:18px;color:#00eaff;text-shadow:0 0 10px #00eaff;font-size:26px}
+  .box{background:#111;padding:18px;border-radius:12px;border:1px solid #222;max-width:720px;margin:auto;box-shadow:0 0 12px #000}
+  label{display:block;margin-top:12px;font-size:14px;color:#ccc}
+  input[type=number]{width:100%;padding:10px;margin-top:6px;border-radius:8px;border:none;background:#1a1a1a;color:#fff;font-size:15px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  button{width:100%;padding:14px;margin-top:18px;background:#00c3ff;border:none;border-radius:10px;font-size:17px;font-weight:700;cursor:pointer;color:#000}
+  button:hover{transform:scale(1.02)}
+  .resultado{background:#0f0f0f;padding:16px;border-radius:10px;margin-top:18px;border:1px solid #333;font-size:16px;display:none}
+  @media(max-width:600px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
-
 <body>
 
 <h1>Calculadora de C4 - GTA RP</h1>
 
 <div class="box">
-    <label>Preço do Plástico (250 un para 50 C4)</label>
-    <input type="number" id="plastico" placeholder="Ex: 30">
+  <div class="grid">
+    <div>
+      <label>Preço do Plástico (por 250 un)</label>
+      <input id="plastico" type="number" min="0" step="0.01" placeholder="Ex: 30">
+    </div>
+    <div>
+      <label>Preço da Borracha (por 250 un)</label>
+      <input id="borracha" type="number" min="0" step="0.01" placeholder="Ex: 35">
+    </div>
 
-    <label>Preço da Borracha (250 un para 50 C4)</label>
-    <input type="number" id="borracha" placeholder="Ex: 35">
+    <div>
+      <label>Preço do Cobre (por 250 un)</label>
+      <input id="cobre" type="number" min="0" step="0.01" placeholder="Ex: 40">
+    </div>
+    <div>
+      <label>Preço do Ferro (por 500 un)</label>
+      <input id="ferro" type="number" min="0" step="0.01" placeholder="Ex: 25">
+    </div>
 
-    <label>Preço do Cobre (250 un para 50 C4)</label>
-    <input type="number" id="cobre" placeholder="Ex: 40">
+    <div>
+      <label>Preço do Alumínio (por 500 un)</label>
+      <input id="aluminio" type="number" min="0" step="0.01" placeholder="Ex: 25">
+    </div>
+    <div>
+      <label>Custo do Gringo (valor fixo)</label>
+      <input id="gringo" type="number" min="0" step="0.01" value="16500">
+    </div>
 
-    <label>Preço do Ferro (500 un para 50 C4)</label>
-    <input type="number" id="ferro" placeholder="Ex: 25">
+    <div style="grid-column:1 / -1">
+      <label>Quantidade de C4 para fabricar</label>
+      <input id="qtdC4" type="number" min="1" step="1" value="50">
+    </div>
+  </div>
 
-    <label>Preço do Alumínio (500 un para 50 C4)</label>
-    <input type="number" id="aluminio" placeholder="Ex: 25">
+  <button id="btnCalc">CALCULAR</button>
 
-    <label>Custo do Gringo</label>
-    <input type="number" id="gringo" value="16500">
-
-    <label>Quantidade de C4 para fabricar</label>
-    <input type="number" id="qtdC4" value="50">
-    
-    <button onclick="calcular()">CALCULAR</button>
+  <div id="resultado" class="resultado"></div>
 </div>
 
-<div id="resultado" class="resultado"></div>
-
 <script>
-function calcular() {
-    let plastico = Number(document.getElementById("plastico").value);
-    let borracha = Number(document.getElementById("borracha").value);
-    let cobre = Number(document.getElementById("cobre").value);
-    let ferro = Number(document.getElementById("ferro").value);
-    let aluminio = Number(document.getElementById("aluminio").value);
-    let gringo = Number(document.getElementById("gringo").value);
+  // receita base (unidades por 50 C4)
+  const recipeFor50 = {
+    plastico: 250, // unidades (pack = 250)
+    borracha: 250, // unidades (pack = 250)
+    cobre: 250,    // unidades (pack = 250)
+    ferro: 500,    // unidades (pack = 500)
+    aluminio: 500  // unidades (pack = 500)
+  };
 
-    let qtdC4 = Number(document.getElementById("qtdC4").value);
-    if (qtdC4 <= 0) qtdC4 = 1;
+  // pacotes correspondentes (tamanho do pacote usado para o preço)
+  const packSize = {
+    plastico: 250,
+    borracha: 250,
+    cobre: 250,
+    ferro: 500,
+    aluminio: 500
+  };
 
-    // Proporção exata por unidade
-    let plasticoPorC4 = 250 / 50;
-    let borrachaPorC4 = 250 / 50;
-    let cobrePorC4 = 250 / 50;
-    let ferroPorC4 = 500 / 50;
-    let aluminioPorC4 = 500 / 50;
+  function calcularCustoMaterial(unitsNeeded, pricePerPack, packSize) {
+    // quantos pacotes (pode ser fração) = unitsNeeded / packSize
+    // custo = (unitsNeeded / packSize) * pricePerPack
+    return (unitsNeeded / packSize) * pricePerPack;
+  }
 
-    // Quantidade proporcional de materiais
-    let totalPlastico = plasticoPorC4 * qtdC4 * plastico;
-    let totalBorracha = borrachaPorC4 * qtdC4 * borracha;
-    let totalCobre = cobrePorC4 * qtdC4 * cobre;
-    let totalFerro = ferroPorC4 * qtdC4 * ferro;
-    let totalAluminio = aluminioPorC4 * qtdC4 * aluminio;
+  function formatBR(value){
+    return Number(value).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  }
 
-    let totalMateriais = 
-        totalPlastico + 
-        totalBorracha + 
-        totalCobre + 
-        totalFerro + 
-        totalAluminio;
+  function calcular(){
+    const plasticoPrice = Number(document.getElementById('plastico').value) || 0;
+    const borrachaPrice = Number(document.getElementById('borracha').value) || 0;
+    const cobrePrice = Number(document.getElementById('cobre').value) || 0;
+    const ferroPrice = Number(document.getElementById('ferro').value) || 0;
+    const aluminioPrice = Number(document.getElementById('aluminio').value) || 0;
+    const gringo = Number(document.getElementById('gringo').value) || 0;
+    let qtdC4 = Number(document.getElementById('qtdC4').value) || 1;
+    if (qtdC4 < 1) qtdC4 = 1;
 
-    let totalFinal = totalMateriais + gringo;
-    let precoPorC4 = totalFinal / qtdC4;
+    // unidades por 1 C4 (baseando em receita para 50 C4)
+    const plasticoPerC4 = recipeFor50.plastico / 50;
+    const borrachaPerC4 = recipeFor50.borracha / 50;
+    const cobrePerC4 = recipeFor50.cobre / 50;
+    const ferroPerC4 = recipeFor50.ferro / 50;
+    const aluminioPerC4 = recipeFor50.aluminio / 50;
 
-    document.getElementById("resultado").style.display = "block";
-    document.getElementById("resultado").innerHTML = `
-        💼 <b>Quantidade de C4:</b> ${qtdC4} unidades<br><br>
+    // unidades totais necessárias
+    const needPlasticoUnits = plasticoPerC4 * qtdC4;
+    const needBorrachaUnits = borrachaPerC4 * qtdC4;
+    const needCobreUnits = cobrePerC4 * qtdC4;
+    const needFerroUnits = ferroPerC4 * qtdC4;
+    const needAluminioUnits = aluminioPerC4 * qtdC4;
 
-        📦 <b>Custo dos Materiais:</b><br>
-        • Plástico: R$ ${totalPlastico.toLocaleString("pt-BR")}<br>
-        • Borracha: R$ ${totalBorracha.toLocaleString("pt-BR")}<br>
-        • Cobre: R$ ${totalCobre.toLocaleString("pt-BR")}<br>
-        • Ferro: R$ ${totalFerro.toLocaleString("pt-BR")}<br>
-        • Alumínio: R$ ${totalAluminio.toLocaleString("pt-BR")}<br><br>
+    // custo proporcional (considerando preço informado é por packSize)
+    const costPlastico = calcularCustoMaterial(needPlasticoUnits, plasticoPrice, packSize.plastico);
+    const costBorracha = calcularCustoMaterial(needBorrachaUnits, borrachaPrice, packSize.borracha);
+    const costCobre = calcularCustoMaterial(needCobreUnits, cobrePrice, packSize.cobre);
+    const costFerro = calcularCustoMaterial(needFerroUnits, ferroPrice, packSize.ferro);
+    const costAluminio = calcularCustoMaterial(needAluminioUnits, aluminioPrice, packSize.aluminio);
 
-        💣 <b>Total de Materiais:</b> R$ ${totalMateriais.toLocaleString("pt-BR")} <br><br>
-        
-        👤 <b>Custo do Gringo:</b> R$ ${gringo.toLocaleString("pt-BR")} <br><br>
+    const totalMateriais = costPlastico + costBorracha + costCobre + costFerro + costAluminio;
+    const totalGeral = totalMateriais + gringo;
+    const precoPorC4 = totalGeral / qtdC4;
 
-        💰 <b>Total Geral:</b> R$ ${totalFinal.toLocaleString("pt-BR")} <br><br>
+    // mostrar também as unidades necessárias e pacotes equivalentes para cada material
+    const packsPlastico = needPlasticoUnits / packSize.plastico;
+    const packsBorracha = needBorrachaUnits / packSize.borracha;
+    const packsCobre = needCobreUnits / packSize.cobre;
+    const packsFerro = needFerroUnits / packSize.ferro;
+    const packsAluminio = needAluminioUnits / packSize.aluminio;
 
-        🔥 <b>Preço por C4:</b> R$ ${precoPorC4.toLocaleString("pt-BR")}
+    const resultado = document.getElementById('resultado');
+    resultado.style.display = 'block';
+    resultado.innerHTML = `
+      💼 <b>Quantidade de C4:</b> ${qtdC4} unidades<br><br>
+
+      📦 <b>Materiais necessários (unidades / pacotes):</b><br>
+      • Plástico: ${needPlasticoUnits} un — ${formatBR(packsPlastico)} pack(s) (pack = ${packSize.plastico} un)<br>
+      • Borracha: ${needBorrachaUnits} un — ${formatBR(packsBorracha)} pack(s) (pack = ${packSize.borracha} un)<br>
+      • Cobre: ${needCobreUnits} un — ${formatBR(packsCobre)} pack(s) (pack = ${packSize.cobre} un)<br>
+      • Ferro: ${needFerroUnits} un — ${formatBR(packsFerro)} pack(s) (pack = ${packSize.ferro} un)<br>
+      • Alumínio: ${needAluminioUnits} un — ${formatBR(packsAluminio)} pack(s) (pack = ${packSize.aluminio} un)<br><br>
+
+      💸 <b>Custo dos Materiais:</b><br>
+      • Plástico: R$ ${formatBR(costPlastico)}<br>
+      • Borracha: R$ ${formatBR(costBorracha)}<br>
+      • Cobre: R$ ${formatBR(costCobre)}<br>
+      • Ferro: R$ ${formatBR(costFerro)}<br>
+      • Alumínio: R$ ${formatBR(costAluminio)}<br><br>
+
+      💣 <b>Total de Materiais:</b> R$ ${formatBR(totalMateriais)}<br><br>
+
+      👤 <b>Custo do Gringo:</b> R$ ${formatBR(gringo)}<br><br>
+
+      💰 <b>Total Geral:</b> R$ ${formatBR(totalGeral)}<br><br>
+
+      🔥 <b>Preço por C4:</b> R$ ${formatBR(precoPorC4)}
     `;
-}
-</script>
+  }
 
+  document.getElementById('btnCalc').addEventListener('click', calcular);
+
+  // opcional: recalcular automaticamente ao mudar a quantidade
+  document.getElementById('qtdC4').addEventListener('input', () => {
+    // se quiser recalcular ao digitar, descomente a linha abaixo:
+    // calcular();
+  });
+</script>
 </body>
 </html>
