@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Produção RP - Tema Faroeste Moderno</title>
+<style>
+  :root {
+    --bg: #1a1a1a;
+    --card: #2a2a2a;
+    --gold: #c9a45b;
+    --gold-soft: #e2c890;
+    --text: #f2e7c9;
+    --muted: #bcae8a;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; font-family: 'Poppins', sans-serif; }
+  body { background:var(--bg); color:var(--text); padding-bottom:120px; }
+
+  /* HEADER */
+  header {
+    background:#2d2418;
+    padding:18px;
+    text-align:center;
+    border-bottom:3px solid var(--gold);
+  }
+  header img {
+    width:70px;
+    height:70px;
+    border-radius:12px;
+    margin-bottom:6px;
+  }
+  header h1 {
+    font-size:20px;
+    font-weight:700;
+    color:var(--gold);
+  }
+
+  .wrap {
+    max-width:500px;
+    margin:0 auto;
+    padding:14px;
+  }
+
+  .card {
+    background:var(--card);
+    padding:14px;
+    border:1px solid rgba(255,255,255,0.05);
+    border-radius:14px;
+    margin-bottom:14px;
+  }
+
+  .title {
+    font-size:16px;
+    font-weight:700;
+    color:var(--gold);
+    margin-bottom:6px;
+  }
+
+  .item-row {
+    display:flex;
+    gap:8px;
+    margin-top:8px;
+  }
+  .item-row input {
+    flex:1;
+    padding:10px;
+    background:#1f1f1f;
+    border:1px solid rgba(255,255,255,0.08);
+    color:var(--text);
+    border-radius:10px;
+    font-size:15px;
+  }
+
+  .btnAdd {
+    padding:10px 14px;
+    background:var(--gold);
+    border:none;
+    color:#1b1b1b;
+    font-weight:700;
+    border-radius:10px;
+    cursor:pointer;
+  }
+
+  .small { font-size:13px; color:var(--muted); margin-top:6px; }
+
+  .totals {
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:10px;
+  }
+
+  .pill {
+    background:#1e1e1e;
+    padding:8px 12px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.08);
+    font-size:14px;
+  }
+
+  .actions { display:flex; gap:10px; margin-top:12px; }
+
+  .bigBtn {
+    flex:1;
+    padding:12px;
+    background:var(--gold-soft);
+    border:none;
+    border-radius:12px;
+    color:#1d1d1d;
+    font-weight:700;
+    cursor:pointer;
+  }
+
+  .reset { background:#a83b3b !important; color:#fff; }
+
+  .resultCard {
+    position:fixed;
+    left:14px;
+    right:14px;
+    bottom:14px;
+    background:#2d2418;
+    border:2px solid var(--gold);
+    padding:18px;
+    border-radius:14px;
+  }
+  .resultMain { font-size:22px; font-weight:800; color:var(--gold-soft); }
+  .meta { font-size:13px; color:var(--muted); margin-top:4px; }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="" alt="Logo">
+  <h1>Produção— e</h1>
+</header>
+
+<div class="wrap">
+
+  <div class="card">
+    <div class="title">Embalagem</div>
+    <div class="item-row">
+      <input type="number" id="embInput" placeholder="Adicionar quantidade">
+      <button class="btnAdd" onclick="addItem('emb')">ADD +</button>
+    </div>
+    <div class="small">Total: <span id="embTotal">0</span></div>
+  </div>
+
+  <div class="card">
+    <div class="title">Farinha</div>
+    <div class="item-row">
+      <input type="number" id="farInput" placeholder="Adicionar quantidade">
+      <button class="btnAdd" onclick="addItem('far')">ADD +</button>
+    </div>
+    <div class="small">Total: <span id="farTotal">0</span></div>
+  </div>
+
+  <div class="card">
+    <div class="title">Éter</div>
+    <div class="item-row">
+      <input type="number" id="eterInput" placeholder="Adicionar quantidade">
+      <button class="btnAdd" onclick="addItem('eter')">ADD +</button>
+    </div>
+    <div class="small">Total: <span id="eterTotal">0</span></div>
+  </div>
+
+  <div class="card">
+    <div class="title">Sildenafila</div>
+    <div class="item-row">
+      <input type="number" id="silInput" placeholder="Adicionar quantidade">
+      <button class="btnAdd" onclick="addItem('sil')">ADD +</button>
+    </div>
+    <div class="small">Total: <span id="silTotal">0</span></div>
+  </div>
+
+
+  <div class="card">
+    <div class="title">Kits possíveis</div>
+    <div class="totals">
+      <div class="pill">Emb: <span id="kitsEmb">0</span></div>
+      <div class="pill">Far: <span id="kitsFar">0</span></div>
+      <div class="pill">Éter: <span id="kitsEter">0</span></div>
+      <div class="pill">Sil: <span id="kitsSil">0</span></div>
+    </div>
+
+    <div class="actions">
+      <button class="bigBtn" onclick="calcular()">CALCULAR</button>
+      <button class="bigBtn reset" onclick="resetar()">ZERAR</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="resultCard">
+  <div class="resultMain" id="mainResult">0 UNIDADES</div>
+  <div class="meta" id="metaResult">---</div>
+</div>
+
+<script>
+
+const state = { emb:0, far:0, eter:0, sil:0 };
+
+// Necessário para produzir 1 unidade (1000 unidades → divide por 1000)
+const NEED = {
+  emb: 0.2,   // 200 para 1000 → 0.2
+  far: 0.5,   // 500 → 0.5
+  eter: 0.4,
+  sil: 0.4
+};
+
+function updateUI(){
+
+  // Totais adicionados
+  document.getElementById('embTotal').textContent = state.emb;
+  document.getElementById('farTotal').textContent = state.far;
+  document.getElementById('eterTotal').textContent = state.eter;
+  document.getElementById('silTotal').textContent = state.sil;
+
+  // Cálculo de unidades possíveis com cada material
+  const uEmb = Math.floor(state.emb / NEED.emb);
+  const uFar = Math.floor(state.far / NEED.far);
+  const uEter = Math.floor(state.eter / NEED.eter);
+  const uSil = Math.floor(state.sil / NEED.sil);
+
+  // Atualiza os pilares (kits por material)
+  document.getElementById('kitsEmb').textContent = uEmb;
+  document.getElementById('kitsFar').textContent = uFar;
+  document.getElementById('kitsEter').textContent = uEter;
+  document.getElementById('kitsSil').textContent = uSil;
+
+  // Total final = mínimo entre todos
+  const unidades = Math.min(uEmb, uFar, uEter, uSil);
+
+  // Sobras
+  const sEmb = (state.emb - unidades * NEED.emb).toFixed(2);
+  const sFar = (state.far - unidades * NEED.far).toFixed(2);
+  const sEter = (state.eter - unidades * NEED.eter).toFixed(2);
+  const sSil = (state.sil - unidades * NEED.sil).toFixed(2);
+
+  document.getElementById('mainResult').textContent = unidades + " UNIDADES";
+
+  // Cálculo do que falta para +1 unidade
+  const faltaEmb = Math.max(0, NEED.emb - sEmb);
+  const faltaFar = Math.max(0, NEED.far - sFar);
+  const faltaEter = Math.max(0, NEED.eter - sEter);
+  const faltaSil = Math.max(0, NEED.sil - sSil);
+
+  let faltas = [];
+  if (faltaEmb > 0.009) faltas.push("Embalagem: " + faltaEmb.toFixed(2));
+  if (faltaFar > 0.009) faltas.push("Farinha: " + faltaFar.toFixed(2));
+  if (faltaEter > 0.009) faltas.push("Éter: " + faltaEter.toFixed(2));
+  if (faltaSil > 0.009) faltas.push("Sildenafila: " + faltaSil.toFixed(2));
+
+  let msg = "";
+  if (faltas.length === 0) {
+    msg = "Possível fazer +1 unidade.";
+  } else {
+    msg = "Falta para +1 unidade → " + faltas.join(" | ");
+  }
+
+  document.getElementById('metaResult').textContent = msg;
+}
+
+function addItem(type){
+  const input = document.getElementById(type+"Input");
+  const val = Number(input.value);
+  if(val > 0){ state[type] += val; }
+  input.value = "";
+  updateUI();
+}
+
+function calcular(){ updateUI(); }
+
+function resetar(){
+  state.emb=0; 
+  state.far=0; 
+  state.eter=0; 
+  state.sil=0;
+  updateUI();
+}
+
+updateUI();
+
+</script>
+
+</body>
+</html>
