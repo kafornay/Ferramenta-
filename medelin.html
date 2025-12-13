@@ -3,121 +3,232 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MEDELIN APP</title>
+<title>Calculadora MEDELIN</title>
 
 <style>
 body {
-    margin: 0;
-    background: #0a0a0a;
-    font-family: 'Arial', sans-serif;
-    color: #fff;
+    background: radial-gradient(circle at top, #0f2027, #000);
+    color: #eaeaea;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    padding: 20px;
 }
 
-header {
-    background: #0f0f0f;
-    padding: 15px;
+h1 {
     text-align: center;
-    font-size: 22px;
-    font-weight: bold;
-    color: #00ff66;
-    box-shadow: 0 2px 10px rgba(0,255,102,0.3);
+    color: #00ff99;
+    margin-bottom: 20px;
+    text-shadow: 0 0 15px #00ff99;
 }
 
-.container {
-    padding: 15px;
-    max-width: 480px;
+.calculadora {
+    max-width: 650px;
     margin: auto;
+    background: rgba(18,18,18,0.95);
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 0 25px rgba(0,255,153,0.25);
+    border: 1px solid rgba(0,255,153,0.3);
 }
 
-.card {
-    background: #121212;
-    border-radius: 15px;
-    padding: 15px;
-    margin-bottom: 15px;
-    box-shadow: 0 0 15px rgba(0,255,102,0.15);
+.item {
+    border-bottom: 1px solid #1f1f1f;
+    padding: 18px 0;
 }
 
-.card h3 {
+.item:last-child {
+    border-bottom: none;
+}
+
+.item h3 {
     margin: 0 0 10px;
-    color: #00ff66;
+    color: #00ff99;
 }
 
-.inputs {
+.linha {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
 }
 
-input[type="number"] {
-    width: 100%;
+.linha input {
     padding: 10px;
     border-radius: 8px;
     border: none;
-    background: #1e1e1e;
-    color: #00ff66;
-    font-size: 16px;
+    background: #0f0f0f;
+    color: #00ff99;
 }
 
-label {
+.desconto {
+    margin-top: 8px;
     font-size: 14px;
 }
 
-.check {
-    margin-top: 8px;
+button {
+    margin-top: 10px;
+    padding: 10px;
+    width: 100%;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #00ff99, #00ccff);
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.9;
 }
 
 .resultado {
     margin-top: 8px;
     font-size: 15px;
-    color: #9affc4;
+    color: #9affdd;
 }
 
-/* Desmanche */
-.botoes {
+/* DESMANCHE */
+.desmanche {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid rgba(0,255,153,0.3);
+}
+
+.percentuais {
     display: flex;
     gap: 10px;
     margin-top: 10px;
 }
 
-.botao {
+.percentuais button {
     flex: 1;
-    padding: 10px;
-    border-radius: 10px;
-    text-align: center;
-    background: #1e1e1e;
-    cursor: pointer;
-    border: 2px solid transparent;
 }
 
-.botao.ativo {
-    border-color: #00ff66;
-    color: #00ff66;
+@media (max-width: 600px) {
+    .linha {
+        grid-template-columns: 1fr;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<header>FAC MEDELIN</header>
+<h1>FAC MEDELIN</h1>
 
-<div class="container">
+<div class="calculadora">
 
 <!-- ITENS -->
-<script>
-const itens = ["ALGEMA","COLETE","C4","CAPUZ","CORDA","MASTER","CHIP","PENDRIVE"];
-</script>
+<div class="item">
+    <h3>ALGEMA</h3>
+    <div class="linha">
+        <input type="number" placeholder="Quantidade">
+        <input type="number" placeholder="Preço venda">
+    </div>
+    <div class="desconto">
+        <label><input type="checkbox"> Parceria 30%</label>
+    </div>
+    <button onclick="calcularItem(this)">CALCULAR</button>
+    <div class="resultado"></div>
+</div>
 
-<div id="itens"></div>
+<div class="item">
+    <h3>COLETE</h3>
+    <div class="linha">
+        <input type="number" placeholder="Quantidade">
+        <input type="number" placeholder="Preço venda">
+    </div>
+    <div class="desconto">
+        <label><input type="checkbox"> Parceria 30%</label>
+    </div>
+    <button onclick="calcularItem(this)">CALCULAR</button>
+    <div class="resultado"></div>
+</div>
+
+<div class="item">
+    <h3>C4</h3>
+    <div class="linha">
+        <input type="number" placeholder="Quantidade">
+        <input type="number" placeholder="Preço venda">
+    </div>
+    <div class="desconto">
+        <label><input type="checkbox"> Parceria 30%</label>
+    </div>
+    <button onclick="calcularItem(this)">CALCULAR</button>
+    <div class="resultado"></div>
+</div>
+
+<div class="item">
+    <h3>CAPUZ</h3>
+    <div class="linha">
+        <input type="number" placeholder="Quantidade">
+        <input type="number" placeholder="Preço venda">
+    </div>
+    <div class="desconto">
+        <label><input type="checkbox"> Parceria 30%</label>
+    </div>
+    <button onclick="calcularItem(this)">CALCULAR</button>
+    <div class="resultado"></div>
+</div>
+
+<div class="item">
+    <h3>CORDA</h3>
+    <div class="linha">
+        <input type="number" placeholder="Quantidade">
+        <input type="number" placeholder="Preço venda">
+    </div>
+    <div class="desconto">
+        <label><input type="checkbox"> Parceria 30%</label>
+    </div>
+    <button onclick="calcularItem(this)">CALCULAR</button>
+    <div class="resultado"></div>
+</div>
+
+<div class="item">
+    <h3>MASTER</h3>
+    <div class="linha">
+        <input type="number" placeholder="Quantidade">
+        <input type="number" placeholder="Preço venda">
+    </div>
+    <div class="desconto">
+        <label><input type="checkbox"> Parceria 30%</label>
+    </div>
+    <button onclick="calcularItem(this)">CALCULAR</button>
+    <div class="resultado"></div>
+</div>
+
+<div class="item">
+    <h3>CHIP</h3>
+    <div class="linha">
+        <input type="number" placeholder="Quantidade">
+        <input type="number" placeholder="Preço venda">
+    </div>
+    <div class="desconto">
+        <label><input type="checkbox"> Parceria 30%</label>
+    </div>
+    <button onclick="calcularItem(this)">CALCULAR</button>
+    <div class="resultado"></div>
+</div>
+
+<div class="item">
+    <h3>PENDRIVE</h3>
+    <div class="linha">
+        <input type="number" placeholder="Quantidade">
+        <input type="number" placeholder="Preço venda">
+    </div>
+    <div class="desconto">
+        <label><input type="checkbox"> Parceria 30%</label>
+    </div>
+    <button onclick="calcularItem(this)">CALCULAR</button>
+    <div class="resultado"></div>
+</div>
 
 <!-- DESMANCHE -->
-<div class="card">
-    <h3>DESMANCHE DE CARRO</h3>
+<div class="desmanche">
+    <h3 style="color:#00ff99">DESMANCHE DE CARRO</h3>
+    <input type="number" id="valorDesmanche" placeholder="Valor total ganho">
 
-    <input type="number" id="desmancheValor" placeholder="Valor ganho" oninput="calcularDesmanche()">
-
-    <div class="botoes">
-        <div class="botao" onclick="setDesconto(50)">50%</div>
-        <div class="botao" onclick="setDesconto(30)">30%</div>
+    <div class="percentuais">
+        <button onclick="calcularDesmanche(50)">DIVIDIR 50%</button>
+        <button onclick="calcularDesmanche(30)">DIVIDIR 30%</button>
     </div>
 
     <div class="resultado" id="resultadoDesmanche"></div>
@@ -126,57 +237,28 @@ const itens = ["ALGEMA","COLETE","C4","CAPUZ","CORDA","MASTER","CHIP","PENDRIVE"
 </div>
 
 <script>
-const container = document.getElementById("itens");
+function calcularItem(btn) {
+    const item = btn.closest('.item');
+    const inputs = item.querySelectorAll('input[type="number"]');
+    const check = item.querySelector('input[type="checkbox"]');
+    const resultado = item.querySelector('.resultado');
 
-itens.forEach(nome => {
-    container.innerHTML += `
-    <div class="card">
-        <h3>${nome}</h3>
-        <div class="inputs">
-            <input type="number" placeholder="Quantidade" oninput="calcularItem(this)">
-            <input type="number" placeholder="Preço venda" oninput="calcularItem(this)">
-        </div>
-        <div class="check">
-            <label>
-                <input type="checkbox" onchange="calcularItem(this)"> Parceria 30%
-            </label>
-        </div>
-        <div class="resultado"></div>
-    </div>`;
-});
+    let qtd = parseFloat(inputs[0].value) || 0;
+    let preco = parseFloat(inputs[1].value) || 0;
 
-function calcularItem(el) {
-    const card = el.closest(".card");
-    const inputs = card.querySelectorAll("input[type='number']");
-    const check = card.querySelector("input[type='checkbox']");
-    const res = card.querySelector(".resultado");
-
-    const qtd = inputs[0].value || 0;
-    const preco = inputs[1].value || 0;
     let total = qtd * preco;
-
     if (check.checked) total *= 0.7;
 
-    res.innerHTML = total > 0 ? `Total: R$ ${total.toFixed(2)}` : "";
+    resultado.innerHTML = total > 0 ? `Total: R$ ${total.toFixed(2)}` : "";
 }
 
-// DESMANCHE
-let descontoAtual = 0;
+function calcularDesmanche(percentual) {
+    const valor = parseFloat(document.getElementById('valorDesmanche').value) || 0;
+    const res = document.getElementById('resultadoDesmanche');
 
-function setDesconto(valor) {
-    descontoAtual = valor;
-    document.querySelectorAll(".botao").forEach(b => b.classList.remove("ativo"));
-    event.target.classList.add("ativo");
-    calcularDesmanche();
-}
-
-function calcularDesmanche() {
-    const valor = document.getElementById("desmancheValor").value || 0;
-    const res = document.getElementById("resultadoDesmanche");
-
-    if (valor > 0 && descontoAtual > 0) {
-        const final = valor * (descontoAtual / 100);
-        res.innerHTML = `Valor com ${descontoAtual}%: R$ ${final.toFixed(2)}`;
+    if (valor > 0) {
+        const parte = valor * (percentual / 100);
+        res.innerHTML = `Parte (${percentual}%): R$ ${parte.toFixed(2)}`;
     } else {
         res.innerHTML = "";
     }
