@@ -3,220 +3,183 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora MEDELIN</title>
+<title>MEDELIN APP</title>
 
 <style>
 body {
-    background: #0b0b0b;
-    color: #eaeaea;
-    font-family: Arial, sans-serif;
-    padding: 20px;
+    margin: 0;
+    background: #0a0a0a;
+    font-family: 'Arial', sans-serif;
+    color: #fff;
 }
 
-h1 {
+header {
+    background: #0f0f0f;
+    padding: 15px;
     text-align: center;
+    font-size: 22px;
+    font-weight: bold;
     color: #00ff66;
-    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,255,102,0.3);
 }
 
-.calculadora {
-    max-width: 650px;
+.container {
+    padding: 15px;
+    max-width: 480px;
     margin: auto;
+}
+
+.card {
     background: #121212;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0,255,102,0.25);
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 0 15px rgba(0,255,102,0.15);
 }
 
-.item {
-    border-bottom: 1px solid #1f1f1f;
-    padding: 15px 0;
-}
-
-.item:last-child {
-    border-bottom: none;
-}
-
-.item h3 {
+.card h3 {
     margin: 0 0 10px;
     color: #00ff66;
 }
 
-.linha {
+.inputs {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 1fr 1fr;
     gap: 8px;
 }
 
-.linha input {
-    padding: 8px;
-    border-radius: 6px;
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
     border: none;
     background: #1e1e1e;
     color: #00ff66;
+    font-size: 16px;
 }
 
-.desconto {
-    margin-top: 8px;
+label {
     font-size: 14px;
+}
+
+.check {
+    margin-top: 8px;
 }
 
 .resultado {
-    margin-top: 6px;
-    font-size: 14px;
+    margin-top: 8px;
+    font-size: 15px;
     color: #9affc4;
 }
 
-@media (max-width: 600px) {
-    .linha {
-        grid-template-columns: 1fr 1fr;
-    }
+/* Desmanche */
+.botoes {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.botao {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    background: #1e1e1e;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.botao.ativo {
+    border-color: #00ff66;
+    color: #00ff66;
 }
 </style>
 </head>
 
 <body>
 
-<h1>FAC MEDELIN</h1>
+<header>FAC MEDELIN</header>
 
-<div class="calculadora">
+<div class="container">
 
-<!-- ITEM -->
-<div class="item">
-    <h3>ALGEMA</h3>
-    <div class="linha">
-        <input type="number" placeholder="Quantidade" oninput="calcular()">
-        <input type="number" placeholder="Preço venda" oninput="calcular()">
-    </div>
-    <div class="desconto">
-        <label>
-            <input type="checkbox" onchange="calcular()"> Aplicar desconto parceria (30%)
-        </label>
-    </div>
-    <div class="resultado"></div>
-</div>
+<!-- ITENS -->
+<script>
+const itens = ["ALGEMA","COLETE","C4","CAPUZ","CORDA","MASTER","CHIP","PENDRIVE"];
+</script>
 
-<div class="item">
-    <h3>COLETE</h3>
-    <div class="linha">
-        <input type="number" placeholder="Quantidade" oninput="calcular()">
-        <input type="number" placeholder="Preço venda" oninput="calcular()">
-    </div>
-    <div class="desconto">
-        <label>
-            <input type="checkbox" onchange="calcular()"> Aplicar desconto parceria (30%)
-        </label>
-    </div>
-    <div class="resultado"></div>
-</div>
+<div id="itens"></div>
 
-<div class="item">
-    <h3>C4</h3>
-    <div class="linha">
-        <input type="number" placeholder="Quantidade" oninput="calcular()">
-        <input type="number" placeholder="Preço venda" oninput="calcular()">
-    </div>
-    <div class="desconto">
-        <label>
-            <input type="checkbox" onchange="calcular()"> Aplicar desconto parceria (30%)
-        </label>
-    </div>
-    <div class="resultado"></div>
-</div>
+<!-- DESMANCHE -->
+<div class="card">
+    <h3>DESMANCHE DE CARRO</h3>
 
-<div class="item">
-    <h3>CAPUZ</h3>
-    <div class="linha">
-        <input type="number" placeholder="Quantidade" oninput="calcular()">
-        <input type="number" placeholder="Preço venda" oninput="calcular()">
-    </div>
-    <div class="desconto">
-        <label>
-            <input type="checkbox" onchange="calcular()"> Aplicar desconto parceria (30%)
-        </label>
-    </div>
-    <div class="resultado"></div>
-</div>
+    <input type="number" id="desmancheValor" placeholder="Valor ganho" oninput="calcularDesmanche()">
 
-<div class="item">
-    <h3>CORDA</h3>
-    <div class="linha">
-        <input type="number" placeholder="Quantidade" oninput="calcular()">
-        <input type="number" placeholder="Preço venda" oninput="calcular()">
+    <div class="botoes">
+        <div class="botao" onclick="setDesconto(50)">50%</div>
+        <div class="botao" onclick="setDesconto(30)">30%</div>
     </div>
-    <div class="desconto">
-        <label>
-            <input type="checkbox" onchange="calcular()"> Aplicar desconto parceria (30%)
-        </label>
-    </div>
-    <div class="resultado"></div>
-</div>
 
-<div class="item">
-    <h3>MASTER</h3>
-    <div class="linha">
-        <input type="number" placeholder="Quantidade" oninput="calcular()">
-        <input type="number" placeholder="Preço venda" oninput="calcular()">
-    </div>
-    <div class="desconto">
-        <label>
-            <input type="checkbox" onchange="calcular()"> Aplicar desconto parceria (30%)
-        </label>
-    </div>
-    <div class="resultado"></div>
-</div>
-
-<div class="item">
-    <h3>CHIP</h3>
-    <div class="linha">
-        <input type="number" placeholder="Quantidade" oninput="calcular()">
-        <input type="number" placeholder="Preço venda" oninput="calcular()">
-    </div>
-    <div class="desconto">
-        <label>
-            <input type="checkbox" onchange="calcular()"> Aplicar desconto parceria (30%)
-        </label>
-    </div>
-    <div class="resultado"></div>
-</div>
-
-<div class="item">
-    <h3>PENDRIVE</h3>
-    <div class="linha">
-        <input type="number" placeholder="Quantidade" oninput="calcular()">
-        <input type="number" placeholder="Preço venda" oninput="calcular()">
-    </div>
-    <div class="desconto">
-        <label>
-            <input type="checkbox" onchange="calcular()"> Aplicar desconto parceria (30%)
-        </label>
-    </div>
-    <div class="resultado"></div>
+    <div class="resultado" id="resultadoDesmanche"></div>
 </div>
 
 </div>
 
 <script>
-function calcular() {
-    document.querySelectorAll('.item').forEach(item => {
-        const inputs = item.querySelectorAll('input[type="number"]');
-        const checkbox = item.querySelector('input[type="checkbox"]');
-        const resultado = item.querySelector('.resultado');
+const container = document.getElementById("itens");
 
-        let qtd = parseFloat(inputs[0].value) || 0;
-        let preco = parseFloat(inputs[1].value) || 0;
+itens.forEach(nome => {
+    container.innerHTML += `
+    <div class="card">
+        <h3>${nome}</h3>
+        <div class="inputs">
+            <input type="number" placeholder="Quantidade" oninput="calcularItem(this)">
+            <input type="number" placeholder="Preço venda" oninput="calcularItem(this)">
+        </div>
+        <div class="check">
+            <label>
+                <input type="checkbox" onchange="calcularItem(this)"> Parceria 30%
+            </label>
+        </div>
+        <div class="resultado"></div>
+    </div>`;
+});
 
-        let total = qtd * preco;
-        let final = checkbox.checked ? total * 0.7 : total;
+function calcularItem(el) {
+    const card = el.closest(".card");
+    const inputs = card.querySelectorAll("input[type='number']");
+    const check = card.querySelector("input[type='checkbox']");
+    const res = card.querySelector(".resultado");
 
-        if (total > 0) {
-            resultado.innerHTML = checkbox.checked
-                ? `Total com parceria: R$ ${final.toFixed(2)}`
-                : `Total: R$ ${total.toFixed(2)}`;
-        } else {
-            resultado.innerHTML = "";
-        }
-    });
+    const qtd = inputs[0].value || 0;
+    const preco = inputs[1].value || 0;
+    let total = qtd * preco;
+
+    if (check.checked) total *= 0.7;
+
+    res.innerHTML = total > 0 ? `Total: R$ ${total.toFixed(2)}` : "";
+}
+
+// DESMANCHE
+let descontoAtual = 0;
+
+function setDesconto(valor) {
+    descontoAtual = valor;
+    document.querySelectorAll(".botao").forEach(b => b.classList.remove("ativo"));
+    event.target.classList.add("ativo");
+    calcularDesmanche();
+}
+
+function calcularDesmanche() {
+    const valor = document.getElementById("desmancheValor").value || 0;
+    const res = document.getElementById("resultadoDesmanche");
+
+    if (valor > 0 && descontoAtual > 0) {
+        const final = valor * (descontoAtual / 100);
+        res.innerHTML = `Valor com ${descontoAtual}%: R$ ${final.toFixed(2)}`;
+    } else {
+        res.innerHTML = "";
+    }
 }
 </script>
 
