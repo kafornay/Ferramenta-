@@ -21,26 +21,40 @@ h1 {
 }
 
 .calculadora {
-    max-width: 650px;
+    max-width: 700px;
     margin: auto;
     background: rgba(18,18,18,0.95);
     padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 0 25px rgba(0,255,153,0.25);
+    border-radius: 18px;
+    box-shadow: 0 0 30px rgba(0,255,153,0.25);
     border: 1px solid rgba(0,255,153,0.3);
 }
 
 .item {
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    gap: 14px;
     border-bottom: 1px solid #1f1f1f;
     padding: 18px 0;
 }
 
-.item:last-child {
-    border-bottom: none;
+.item:last-child { border-bottom: none; }
+
+.logo {
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #00ff99, #00ccff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #000;
+    box-shadow: 0 0 15px rgba(0,255,153,0.6);
 }
 
 .item h3 {
-    margin: 0 0 10px;
+    margin: 0 0 8px;
     color: #00ff99;
 }
 
@@ -59,7 +73,7 @@ h1 {
 }
 
 .desconto {
-    margin-top: 8px;
+    margin-top: 6px;
     font-size: 14px;
 }
 
@@ -75,17 +89,14 @@ button {
     cursor: pointer;
 }
 
-button:hover {
-    opacity: 0.9;
-}
+button:hover { opacity: 0.9; }
 
 .resultado {
-    margin-top: 8px;
+    margin-top: 6px;
     font-size: 15px;
     color: #9affdd;
 }
 
-/* DESMANCHE */
 .desmanche {
     margin-top: 30px;
     padding-top: 20px;
@@ -98,14 +109,12 @@ button:hover {
     margin-top: 10px;
 }
 
-.percentuais button {
-    flex: 1;
-}
+.percentuais button { flex: 1; }
 
 @media (max-width: 600px) {
-    .linha {
-        grid-template-columns: 1fr;
-    }
+    .item { grid-template-columns: 1fr; }
+    .logo { margin-bottom: 10px; }
+    .linha { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -116,115 +125,125 @@ button:hover {
 
 <div class="calculadora">
 
-<!-- ITENS -->
+<!-- ITEM TEMPLATE -->
 <div class="item">
-    <h3>ALGEMA</h3>
-    <div class="linha">
-        <input type="number" placeholder="Quantidade">
-        <input type="number" placeholder="Preço venda">
+    <div class="logo">ALG</div>
+    <div>
+        <h3>ALGEMA</h3>
+        <div class="linha">
+            <input type="number" placeholder="Quantidade">
+            <input type="number" placeholder="Preço venda">
+        </div>
+        <div class="desconto">
+            <label><input type="checkbox"> Parceria 30%</label>
+        </div>
+        <button onclick="calcularItem(this)">CALCULAR</button>
+        <div class="resultado"></div>
     </div>
-    <div class="desconto">
-        <label><input type="checkbox"> Parceria 30%</label>
-    </div>
-    <button onclick="calcularItem(this)">CALCULAR</button>
-    <div class="resultado"></div>
 </div>
 
 <div class="item">
-    <h3>COLETE</h3>
-    <div class="linha">
-        <input type="number" placeholder="Quantidade">
-        <input type="number" placeholder="Preço venda">
+    <div class="logo">COL</div>
+    <div>
+        <h3>COLETE</h3>
+        <div class="linha">
+            <input type="number" placeholder="Quantidade">
+            <input type="number" placeholder="Preço venda">
+        </div>
+        <div class="desconto"><label><input type="checkbox"> Parceria 30%</label></div>
+        <button onclick="calcularItem(this)">CALCULAR</button>
+        <div class="resultado"></div>
     </div>
-    <div class="desconto">
-        <label><input type="checkbox"> Parceria 30%</label>
-    </div>
-    <button onclick="calcularItem(this)">CALCULAR</button>
-    <div class="resultado"></div>
 </div>
 
 <div class="item">
-    <h3>C4</h3>
-    <div class="linha">
-        <input type="number" placeholder="Quantidade">
-        <input type="number" placeholder="Preço venda">
+    <div class="logo">C4</div>
+    <div>
+        <h3>C4</h3>
+        <div class="linha">
+            <input type="number" placeholder="Quantidade">
+            <input type="number" placeholder="Preço venda">
+        </div>
+        <div class="desconto"><label><input type="checkbox"> Parceria 30%</label></div>
+        <button onclick="calcularItem(this)">CALCULAR</button>
+        <div class="resultado"></div>
     </div>
-    <div class="desconto">
-        <label><input type="checkbox"> Parceria 30%</label>
-    </div>
-    <button onclick="calcularItem(this)">CALCULAR</button>
-    <div class="resultado"></div>
 </div>
 
 <div class="item">
-    <h3>CAPUZ</h3>
-    <div class="linha">
-        <input type="number" placeholder="Quantidade">
-        <input type="number" placeholder="Preço venda">
+    <div class="logo">CAP</div>
+    <div>
+        <h3>CAPUZ</h3>
+        <div class="linha">
+            <input type="number" placeholder="Quantidade">
+            <input type="number" placeholder="Preço venda">
+        </div>
+        <div class="desconto"><label><input type="checkbox"> Parceria 30%</label></div>
+        <button onclick="calcularItem(this)">CALCULAR</button>
+        <div class="resultado"></div>
     </div>
-    <div class="desconto">
-        <label><input type="checkbox"> Parceria 30%</label>
-    </div>
-    <button onclick="calcularItem(this)">CALCULAR</button>
-    <div class="resultado"></div>
 </div>
 
 <div class="item">
-    <h3>CORDA</h3>
-    <div class="linha">
-        <input type="number" placeholder="Quantidade">
-        <input type="number" placeholder="Preço venda">
+    <div class="logo">COR</div>
+    <div>
+        <h3>CORDA</h3>
+        <div class="linha">
+            <input type="number" placeholder="Quantidade">
+            <input type="number" placeholder="Preço venda">
+        </div>
+        <div class="desconto"><label><input type="checkbox"> Parceria 30%</label></div>
+        <button onclick="calcularItem(this)">CALCULAR</button>
+        <div class="resultado"></div>
     </div>
-    <div class="desconto">
-        <label><input type="checkbox"> Parceria 30%</label>
-    </div>
-    <button onclick="calcularItem(this)">CALCULAR</button>
-    <div class="resultado"></div>
 </div>
 
 <div class="item">
-    <h3>MASTER</h3>
-    <div class="linha">
-        <input type="number" placeholder="Quantidade">
-        <input type="number" placeholder="Preço venda">
+    <div class="logo">MST</div>
+    <div>
+        <h3>MASTER</h3>
+        <div class="linha">
+            <input type="number" placeholder="Quantidade">
+            <input type="number" placeholder="Preço venda">
+        </div>
+        <div class="desconto"><label><input type="checkbox"> Parceria 30%</label></div>
+        <button onclick="calcularItem(this)">CALCULAR</button>
+        <div class="resultado"></div>
     </div>
-    <div class="desconto">
-        <label><input type="checkbox"> Parceria 30%</label>
-    </div>
-    <button onclick="calcularItem(this)">CALCULAR</button>
-    <div class="resultado"></div>
 </div>
 
 <div class="item">
-    <h3>CHIP</h3>
-    <div class="linha">
-        <input type="number" placeholder="Quantidade">
-        <input type="number" placeholder="Preço venda">
+    <div class="logo">CHP</div>
+    <div>
+        <h3>CHIP</h3>
+        <div class="linha">
+            <input type="number" placeholder="Quantidade">
+            <input type="number" placeholder="Preço venda">
+        </div>
+        <div class="desconto"><label><input type="checkbox"> Parceria 30%</label></div>
+        <button onclick="calcularItem(this)">CALCULAR</button>
+        <div class="resultado"></div>
     </div>
-    <div class="desconto">
-        <label><input type="checkbox"> Parceria 30%</label>
-    </div>
-    <button onclick="calcularItem(this)">CALCULAR</button>
-    <div class="resultado"></div>
 </div>
 
 <div class="item">
-    <h3>PENDRIVE</h3>
-    <div class="linha">
-        <input type="number" placeholder="Quantidade">
-        <input type="number" placeholder="Preço venda">
+    <div class="logo">USB</div>
+    <div>
+        <h3>PENDRIVE</h3>
+        <div class="linha">
+            <input type="number" placeholder="Quantidade">
+            <input type="number" placeholder="Preço venda">
+        </div>
+        <div class="desconto"><label><input type="checkbox"> Parceria 30%</label></div>
+        <button onclick="calcularItem(this)">CALCULAR</button>
+        <div class="resultado"></div>
     </div>
-    <div class="desconto">
-        <label><input type="checkbox"> Parceria 30%</label>
-    </div>
-    <button onclick="calcularItem(this)">CALCULAR</button>
-    <div class="resultado"></div>
 </div>
 
 <!-- DESMANCHE -->
 <div class="desmanche">
     <h3 style="color:#00ff99">DESMANCHE DE CARRO</h3>
-    <input type="number" id="valorDesmanche" placeholder="Valor total ganho">
+    <input type="number" id="valorDesmanche" placeholder="Valor total ganho" style="width:100%;padding:10px;border-radius:8px;border:none;background:#0f0f0f;color:#00ff99;">
 
     <div class="percentuais">
         <button onclick="calcularDesmanche(50)">DIVIDIR 50%</button>
