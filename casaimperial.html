@@ -5,43 +5,60 @@
 <title>Casa Imperial — Fabricação de Munição</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Montserrat&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat&display=swap');
 
 body {
-    background: radial-gradient(circle at top, #1a0000, #000);
+    margin: 0;
+    min-height: 100vh;
+    background:
+        linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.95)),
+        url("CASAIMPERIAL.png") center top no-repeat;
+    background-size: contain;
+    background-color: #000;
     color: #f5d27a;
     font-family: 'Montserrat', sans-serif;
     text-align: center;
-    padding: 40px;
+    padding: 40px 20px;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    background: linear-gradient(180deg, rgba(10,10,10,0.85), rgba(0,0,0,0.95));
+    border: 2px solid #8b6b2e;
+    border-radius: 18px;
+    box-shadow: 0 0 40px #000;
+    padding: 40px 20px;
 }
 
 h2 {
     font-family: 'Cinzel', serif;
-    font-size: 32px;
+    font-size: 34px;
+    letter-spacing: 3px;
     color: #ffd700;
-    letter-spacing: 2px;
-    text-shadow: 0 0 10px #000;
+    margin-bottom: 10px;
+    text-shadow: 0 0 15px #000;
 }
 
 h3 {
     font-family: 'Cinzel', serif;
     color: #ffcc66;
-    margin-top: 25px;
+    margin-top: 35px;
 }
 
 select, input {
     padding: 12px;
     margin: 6px;
-    width: 270px;
+    width: 260px;
     font-size: 15px;
     border-radius: 6px;
     border: 1px solid #8b6b2e;
-    background: #0f0f0f;
+    background: #0e0e0e;
     color: #f5d27a;
 }
 
 button {
-    padding: 12px;
+    padding: 13px;
     width: 280px;
     background: linear-gradient(145deg, #c9a13d, #8b6b2e);
     color: #000;
@@ -50,8 +67,8 @@ button {
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    margin-top: 10px;
-    box-shadow: 0 0 10px #000;
+    margin-top: 12px;
+    box-shadow: 0 0 12px #000;
 }
 
 button:hover {
@@ -59,20 +76,19 @@ button:hover {
 }
 
 .resultado {
-    margin-top: 25px;
+    margin: 25px auto 0;
     text-align: left;
-    display: inline-block;
-    background: linear-gradient(180deg, #0f0f0f, #1a1a1a);
+    max-width: 420px;
+    background: linear-gradient(180deg, #0b0b0b, #151515);
     padding: 25px;
-    border-radius: 12px;
+    border-radius: 14px;
     border: 1px solid #8b6b2e;
-    box-shadow: 0 0 20px #000;
-    min-width: 320px;
+    box-shadow: inset 0 0 15px #000;
 }
 
 hr {
-    margin: 45px auto;
-    width: 60%;
+    margin: 50px auto;
+    width: 70%;
     border: 1px solid #8b6b2e;
 }
 </style>
@@ -80,7 +96,9 @@ hr {
 
 <body>
 
-<h2>👑 CASA IMPERIAL — FABRICAÇÃO DE MUNIÇÃO 👑</h2>
+<div class="container">
+
+<h2>👑 CASA IMPERIAL 👑<br>FABRICAÇÃO DE MUNIÇÃO</h2>
 
 <h3>① Fabricação por quantidade</h3>
 
@@ -120,6 +138,8 @@ hr {
 
 <div class="resultado" id="resultado2"></div>
 
+</div>
+
 <script>
 const dados = {
     "5mm": { aluminio: 25, cobre: 25, titanio: 1, ferro: 25, plastico: 25, valorLote: 8400 },
@@ -140,7 +160,7 @@ function calcularPorQuantidade() {
         <h3>📜 Relatório Imperial</h3>
         🔫 Munições: <b>${qtd}</b><br><br>
         💰 Valor total: <b>R$ ${(i.valorLote/200*qtd).toLocaleString("pt-BR",{minimumFractionDigits:2})}</b><br><br>
-        📦 Materiais:<br>
+        📦 Materiais necessários:<br>
         • Alumínio: ${i.aluminio * f}<br>
         • Cobre: ${i.cobre * f}<br>
         • Titânio: ${i.titanio * f}<br>
@@ -155,23 +175,23 @@ function calcularPorMaterial() {
 
     const t = dados[tipo];
     const lotes = Math.floor(Math.min(
-        al.value/t.aluminio,
-        co.value/t.cobre,
-        ti.value/t.titanio,
-        fe.value/t.ferro,
-        pl.value/t.plastico
+        al.value / t.aluminio,
+        co.value / t.cobre,
+        ti.value / t.titanio,
+        fe.value / t.ferro,
+        pl.value / t.plastico
     ));
 
     if (lotes <= 0) {
-        resultado2.innerHTML = "❌ Materiais insuficientes.";
+        resultado2.innerHTML = "❌ Materiais insuficientes para forjar munição.";
         return;
     }
 
     resultado2.innerHTML = `
         <h3>📜 Produção Imperial</h3>
-        📦 Lotes: <b>${lotes}</b><br>
-        🔫 Munições: <b>${lotes*200}</b><br>
-        💰 Valor: <b>R$ ${(lotes*t.valorLote).toLocaleString("pt-BR")}</b>
+        📦 Lotes possíveis: <b>${lotes}</b><br>
+        🔫 Munições forjadas: <b>${lotes * 200}</b><br>
+        💰 Valor total: <b>R$ ${(lotes * t.valorLote).toLocaleString("pt-BR")}</b>
     `;
 }
 </script>
