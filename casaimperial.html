@@ -2,59 +2,87 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Calculadora de Fabricação - GTA RP</title>
+<title>Casa Imperial — Fabricação de Munição</title>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Montserrat&display=swap');
+
 body {
-    background: #0b0b0b;
-    color: #00ff88;
-    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at top, #1a0000, #000);
+    color: #f5d27a;
+    font-family: 'Montserrat', sans-serif;
     text-align: center;
-    padding: 30px;
+    padding: 40px;
 }
 
-h2, h3 {
-    margin-top: 30px;
+h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 32px;
+    color: #ffd700;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px #000;
 }
 
-select, input, button {
-    padding: 10px;
+h3 {
+    font-family: 'Cinzel', serif;
+    color: #ffcc66;
+    margin-top: 25px;
+}
+
+select, input {
+    padding: 12px;
     margin: 6px;
-    width: 260px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: none;
+    width: 270px;
+    font-size: 15px;
+    border-radius: 6px;
+    border: 1px solid #8b6b2e;
+    background: #0f0f0f;
+    color: #f5d27a;
 }
 
 button {
-    background: #00ff88;
+    padding: 12px;
+    width: 280px;
+    background: linear-gradient(145deg, #c9a13d, #8b6b2e);
     color: #000;
     font-weight: bold;
+    font-size: 15px;
+    border: none;
+    border-radius: 6px;
     cursor: pointer;
+    margin-top: 10px;
+    box-shadow: 0 0 10px #000;
+}
+
+button:hover {
+    background: linear-gradient(145deg, #ffd700, #b08d2c);
 }
 
 .resultado {
-    margin-top: 20px;
+    margin-top: 25px;
     text-align: left;
     display: inline-block;
-    background: #111;
-    padding: 20px;
-    border-radius: 10px;
-    min-width: 300px;
+    background: linear-gradient(180deg, #0f0f0f, #1a1a1a);
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid #8b6b2e;
+    box-shadow: 0 0 20px #000;
+    min-width: 320px;
 }
+
 hr {
-    margin: 40px 0;
-    border: 1px solid #00ff88;
+    margin: 45px auto;
+    width: 60%;
+    border: 1px solid #8b6b2e;
 }
 </style>
 </head>
 
 <body>
 
-<h2>🔫 CALCULADORA DE FABRICAÇÃO DE MUNIÇÃO</h2>
+<h2>👑 CASA IMPERIAL — FABRICAÇÃO DE MUNIÇÃO 👑</h2>
 
-<!-- ================= OPÇÃO 1 ================= -->
-<h3>① Calcular materiais pela quantidade de munição</h3>
+<h3>① Fabricação por quantidade</h3>
 
 <select id="tipo1">
     <option value="">Selecione a munição</option>
@@ -64,17 +92,15 @@ hr {
     <option value="762">Munição 7.62MM</option>
 </select><br>
 
-<input type="number" id="quantidade" placeholder="Quantidade de munições">
+<input type="number" id="quantidade" placeholder="Quantidade de munições"><br>
 
-<br>
-<button onclick="calcularPorQuantidade()">CALCULAR</button>
+<button onclick="calcularPorQuantidade()">FORJAR MUNIÇÃO</button>
 
 <div class="resultado" id="resultado1"></div>
 
 <hr>
 
-<!-- ================= OPÇÃO 2 ================= -->
-<h3>② Calcular quantas munições dá para fabricar</h3>
+<h3>② Fabricação por materiais disponíveis</h3>
 
 <select id="tipo2">
     <option value="">Selecione a munição</option>
@@ -84,14 +110,13 @@ hr {
     <option value="762">Munição 7.62MM</option>
 </select><br>
 
-<input type="number" id="al" placeholder="Alumínio disponível">
-<input type="number" id="co" placeholder="Cobre disponível">
-<input type="number" id="ti" placeholder="Titânio disponível">
-<input type="number" id="fe" placeholder="Ferro disponível">
-<input type="number" id="pl" placeholder="Plástico disponível">
+<input type="number" id="al" placeholder="Alumínio">
+<input type="number" id="co" placeholder="Cobre">
+<input type="number" id="ti" placeholder="Titânio">
+<input type="number" id="fe" placeholder="Ferro">
+<input type="number" id="pl" placeholder="Plástico"><br>
 
-<br>
-<button onclick="calcularPorMaterial()">CALCULAR</button>
+<button onclick="calcularPorMaterial()">CALCULAR PRODUÇÃO</button>
 
 <div class="resultado" id="resultado2"></div>
 
@@ -103,75 +128,50 @@ const dados = {
     "762": { aluminio: 55, cobre: 55, titanio: 2, ferro: 55, plastico: 55, valorLote: 17500 }
 };
 
-/* ===== OPÇÃO 1 ===== */
 function calcularPorQuantidade() {
-    const tipo = document.getElementById("tipo1").value;
-    const qtd = Number(document.getElementById("quantidade").value);
+    const tipo = tipo1.value;
+    const qtd = Number(quantidade.value);
+    if (!tipo || qtd <= 0) return alert("Preencha corretamente.");
 
-    if (!tipo || qtd <= 0) {
-        alert("Preencha corretamente.");
-        return;
-    }
+    const i = dados[tipo];
+    const f = qtd / 200;
 
-    const item = dados[tipo];
-    const fator = qtd / 200;
-    const valorUnit = item.valorLote / 200;
-    const total = valorUnit * qtd;
-
-    document.getElementById("resultado1").innerHTML = `
-        <h3>📊 RESULTADO</h3>
-        🔫 Quantidade: <b>${qtd}</b><br><br>
-        💰 Valor por unidade: <b>R$ ${valorUnit.toFixed(2)}</b><br>
-        💵 Total: <b>R$ ${total.toLocaleString("pt-BR",{minimumFractionDigits:2})}</b><br><br>
-        📦 Materiais necessários:<br>
-        • Alumínio: ${item.aluminio * fator}<br>
-        • Cobre: ${item.cobre * fator}<br>
-        • Titânio: ${item.titanio * fator}<br>
-        • Ferro: ${item.ferro * fator}<br>
-        • Plástico: ${item.plastico * fator}
+    resultado1.innerHTML = `
+        <h3>📜 Relatório Imperial</h3>
+        🔫 Munições: <b>${qtd}</b><br><br>
+        💰 Valor total: <b>R$ ${(i.valorLote/200*qtd).toLocaleString("pt-BR",{minimumFractionDigits:2})}</b><br><br>
+        📦 Materiais:<br>
+        • Alumínio: ${i.aluminio * f}<br>
+        • Cobre: ${i.cobre * f}<br>
+        • Titânio: ${i.titanio * f}<br>
+        • Ferro: ${i.ferro * f}<br>
+        • Plástico: ${i.plastico * f}
     `;
 }
 
-/* ===== OPÇÃO 2 ===== */
 function calcularPorMaterial() {
-    const tipo = document.getElementById("tipo2").value;
-    if (!tipo) {
-        alert("Selecione a munição.");
-        return;
-    }
+    const tipo = tipo2.value;
+    if (!tipo) return alert("Selecione a munição.");
 
-    const tem = {
-        aluminio: Number(document.getElementById("al").value || 0),
-        cobre: Number(document.getElementById("co").value || 0),
-        titanio: Number(document.getElementById("ti").value || 0),
-        ferro: Number(document.getElementById("fe").value || 0),
-        plastico: Number(document.getElementById("pl").value || 0)
-    };
-
-    const req = dados[tipo];
-
+    const t = dados[tipo];
     const lotes = Math.floor(Math.min(
-        tem.aluminio / req.aluminio,
-        tem.cobre / req.cobre,
-        tem.titanio / req.titanio,
-        tem.ferro / req.ferro,
-        tem.plastico / req.plastico
+        al.value/t.aluminio,
+        co.value/t.cobre,
+        ti.value/t.titanio,
+        fe.value/t.ferro,
+        pl.value/t.plastico
     ));
 
     if (lotes <= 0) {
-        document.getElementById("resultado2").innerHTML =
-            "❌ Materiais insuficientes para fabricar um lote.";
+        resultado2.innerHTML = "❌ Materiais insuficientes.";
         return;
     }
 
-    const totalMunicao = lotes * 200;
-    const totalValor = lotes * req.valorLote;
-
-    document.getElementById("resultado2").innerHTML = `
-        <h3>📊 RESULTADO</h3>
-        📦 Lotes possíveis: <b>${lotes}</b><br>
-        🔫 Munições fabricadas: <b>${totalMunicao}</b><br>
-        💰 Valor total: <b>R$ ${totalValor.toLocaleString("pt-BR")}</b>
+    resultado2.innerHTML = `
+        <h3>📜 Produção Imperial</h3>
+        📦 Lotes: <b>${lotes}</b><br>
+        🔫 Munições: <b>${lotes*200}</b><br>
+        💰 Valor: <b>R$ ${(lotes*t.valorLote).toLocaleString("pt-BR")}</b>
     `;
 }
 </script>
