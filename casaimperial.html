@@ -13,9 +13,13 @@ body {
     padding: 30px;
 }
 
+h2, h3 {
+    margin-top: 30px;
+}
+
 select, input, button {
     padding: 10px;
-    margin: 8px;
+    margin: 6px;
     width: 260px;
     font-size: 16px;
     border-radius: 5px;
@@ -30,12 +34,17 @@ button {
 }
 
 .resultado {
-    margin-top: 25px;
+    margin-top: 20px;
     text-align: left;
     display: inline-block;
     background: #111;
     padding: 20px;
     border-radius: 10px;
+    min-width: 300px;
+}
+hr {
+    margin: 40px 0;
+    border: 1px solid #00ff88;
 }
 </style>
 </head>
@@ -44,66 +53,88 @@ button {
 
 <h2>🔫 CALCULADORA DE FABRICAÇÃO DE MUNIÇÃO</h2>
 
-<select id="tipo">
+<!-- ================= OPÇÃO 1 ================= -->
+<h3>① Calcular materiais pela quantidade de munição</h3>
+
+<select id="tipo1">
     <option value="">Selecione a munição</option>
     <option value="5mm">Munição 5MM</option>
     <option value="9mm">Munição 9MM</option>
     <option value="12cbc">Munição CBC 12</option>
     <option value="762">Munição 7.62MM</option>
-</select>
+</select><br>
 
-<h3>📦 Materiais disponíveis</h3>
-
-<input type="number" id="al" placeholder="Alumínio">
-<input type="number" id="co" placeholder="Cobre">
-<input type="number" id="ti" placeholder="Titânio">
-<input type="number" id="fe" placeholder="Ferro">
-<input type="number" id="pl" placeholder="Plástico">
+<input type="number" id="quantidade" placeholder="Quantidade de munições">
 
 <br>
+<button onclick="calcularPorQuantidade()">CALCULAR</button>
 
-<button onclick="calcular()">CALCULAR</button>
+<div class="resultado" id="resultado1"></div>
 
-<div class="resultado" id="resultado"></div>
+<hr>
+
+<!-- ================= OPÇÃO 2 ================= -->
+<h3>② Calcular quantas munições dá para fabricar</h3>
+
+<select id="tipo2">
+    <option value="">Selecione a munição</option>
+    <option value="5mm">Munição 5MM</option>
+    <option value="9mm">Munição 9MM</option>
+    <option value="12cbc">Munição CBC 12</option>
+    <option value="762">Munição 7.62MM</option>
+</select><br>
+
+<input type="number" id="al" placeholder="Alumínio disponível">
+<input type="number" id="co" placeholder="Cobre disponível">
+<input type="number" id="ti" placeholder="Titânio disponível">
+<input type="number" id="fe" placeholder="Ferro disponível">
+<input type="number" id="pl" placeholder="Plástico disponível">
+
+<br>
+<button onclick="calcularPorMaterial()">CALCULAR</button>
+
+<div class="resultado" id="resultado2"></div>
 
 <script>
 const dados = {
-    "5mm": {
-        aluminio: 25,
-        cobre: 25,
-        titanio: 1,
-        ferro: 25,
-        plastico: 25,
-        valorLote: 8400
-    },
-    "9mm": {
-        aluminio: 40,
-        cobre: 40,
-        titanio: 1,
-        ferro: 40,
-        plastico: 40,
-        valorLote: 10500
-    },
-    "12cbc": {
-        aluminio: 55,
-        cobre: 55,
-        titanio: 2,
-        ferro: 55,
-        plastico: 55,
-        valorLote: 17500
-    },
-    "762": {
-        aluminio: 55,
-        cobre: 55,
-        titanio: 2,
-        ferro: 55,
-        plastico: 55,
-        valorLote: 17500
-    }
+    "5mm": { aluminio: 25, cobre: 25, titanio: 1, ferro: 25, plastico: 25, valorLote: 8400 },
+    "9mm": { aluminio: 40, cobre: 40, titanio: 1, ferro: 40, plastico: 40, valorLote: 10500 },
+    "12cbc": { aluminio: 55, cobre: 55, titanio: 2, ferro: 55, plastico: 55, valorLote: 17500 },
+    "762": { aluminio: 55, cobre: 55, titanio: 2, ferro: 55, plastico: 55, valorLote: 17500 }
 };
 
-function calcular() {
-    const tipo = document.getElementById("tipo").value;
+/* ===== OPÇÃO 1 ===== */
+function calcularPorQuantidade() {
+    const tipo = document.getElementById("tipo1").value;
+    const qtd = Number(document.getElementById("quantidade").value);
+
+    if (!tipo || qtd <= 0) {
+        alert("Preencha corretamente.");
+        return;
+    }
+
+    const item = dados[tipo];
+    const fator = qtd / 200;
+    const valorUnit = item.valorLote / 200;
+    const total = valorUnit * qtd;
+
+    document.getElementById("resultado1").innerHTML = `
+        <h3>📊 RESULTADO</h3>
+        🔫 Quantidade: <b>${qtd}</b><br><br>
+        💰 Valor por unidade: <b>R$ ${valorUnit.toFixed(2)}</b><br>
+        💵 Total: <b>R$ ${total.toLocaleString("pt-BR",{minimumFractionDigits:2})}</b><br><br>
+        📦 Materiais necessários:<br>
+        • Alumínio: ${item.aluminio * fator}<br>
+        • Cobre: ${item.cobre * fator}<br>
+        • Titânio: ${item.titanio * fator}<br>
+        • Ferro: ${item.ferro * fator}<br>
+        • Plástico: ${item.plastico * fator}
+    `;
+}
+
+/* ===== OPÇÃO 2 ===== */
+function calcularPorMaterial() {
+    const tipo = document.getElementById("tipo2").value;
     if (!tipo) {
         alert("Selecione a munição.");
         return;
@@ -119,7 +150,6 @@ function calcular() {
 
     const req = dados[tipo];
 
-    // 🔒 FUNÇÃO ORIGINAL PRESERVADA
     const lotes = Math.floor(Math.min(
         tem.aluminio / req.aluminio,
         tem.cobre / req.cobre,
@@ -129,35 +159,19 @@ function calcular() {
     ));
 
     if (lotes <= 0) {
-        document.getElementById("resultado").innerHTML =
-            "❌ Materiais insuficientes para fabricar 1 lote (200 munições).";
+        document.getElementById("resultado2").innerHTML =
+            "❌ Materiais insuficientes para fabricar um lote.";
         return;
     }
 
     const totalMunicao = lotes * 200;
-    const totalDinheiro = lotes * req.valorLote;
+    const totalValor = lotes * req.valorLote;
 
-    // ➕ APENAS INFORMATIVO (não altera cálculo)
-    const valorPorUnidade = req.valorLote / 200;
-    const valorPorMil = valorPorUnidade * 1000;
-
-    document.getElementById("resultado").innerHTML = `
+    document.getElementById("resultado2").innerHTML = `
         <h3>📊 RESULTADO</h3>
-
-        🔢 Lotes fabricados: <b>${lotes}</b><br>
-        🔫 Total de munição: <b>${totalMunicao}</b><br><br>
-
-        💰 Valor por lote (200): 
-        <b>R$ ${req.valorLote.toLocaleString("pt-BR")}</b><br>
-
-        💵 Valor por unidade:
-        <b>R$ ${valorPorUnidade.toFixed(2)}</b><br>
-
-        📦 Valor a cada 1000:
-        <b>R$ ${valorPorMil.toLocaleString("pt-BR", {minimumFractionDigits: 2})}</b><br><br>
-
-        💰 Total recebido:
-        <b>R$ ${totalDinheiro.toLocaleString("pt-BR")}</b>
+        📦 Lotes possíveis: <b>${lotes}</b><br>
+        🔫 Munições fabricadas: <b>${totalMunicao}</b><br>
+        💰 Valor total: <b>R$ ${totalValor.toLocaleString("pt-BR")}</b>
     `;
 }
 </script>
