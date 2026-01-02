@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Calculadora de Fabricação - GTA RP</title>
+
+<style>
+body {
+    background: #0b0b0b;
+    color: #00ff88;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 30px;
+}
+
+select, input, button {
+    padding: 10px;
+    margin: 8px;
+    width: 260px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+}
+
+button {
+    background: #00ff88;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.resultado {
+    margin-top: 25px;
+    text-align: left;
+    display: inline-block;
+    background: #111;
+    padding: 20px;
+    border-radius: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🔫 CALCULADORA DE FABRICAÇÃO DE MUNIÇÃO</h2>
+
+<select id="tipo">
+    <option value="">Selecione a munição</option>
+    <option value="5mm">Munição 5MM</option>
+    <option value="9mm">Munição 9MM</option>
+    <option value="12cbc">Munição CBC 12</option>
+    <option value="762">Munição 7.62MM</option>
+</select>
+
+<h3>📦 Materiais disponíveis</h3>
+
+<input type="number" id="al" placeholder="Alumínio">
+<input type="number" id="co" placeholder="Cobre">
+<input type="number" id="ti" placeholder="Titânio">
+<input type="number" id="fe" placeholder="Ferro">
+<input type="number" id="pl" placeholder="Plástico">
+
+<br>
+
+<button onclick="calcular()">CALCULAR</button>
+
+<div class="resultado" id="resultado"></div>
+
+<script>
+const dados = {
+    "5mm": {
+        aluminio: 25,
+        cobre: 25,
+        titanio: 1,
+        ferro: 25,
+        plastico: 25,
+        valorLote: 8400
+    },
+    "9mm": {
+        aluminio: 40,
+        cobre: 40,
+        titanio: 1,
+        ferro: 40,
+        plastico: 40,
+        valorLote: 10500
+    },
+    "12cbc": {
+        aluminio: 55,
+        cobre: 55,
+        titanio: 2,
+        ferro: 55,
+        plastico: 55,
+        valorLote: 17500
+    },
+    "762": {
+        aluminio: 55,
+        cobre: 55,
+        titanio: 2,
+        ferro: 55,
+        plastico: 55,
+        valorLote: 17500
+    }
+};
+
+function calcular() {
+    const tipo = document.getElementById("tipo").value;
+    if (!tipo) {
+        alert("Selecione a munição.");
+        return;
+    }
+
+    const tem = {
+        aluminio: Number(document.getElementById("al").value || 0),
+        cobre: Number(document.getElementById("co").value || 0),
+        titanio: Number(document.getElementById("ti").value || 0),
+        ferro: Number(document.getElementById("fe").value || 0),
+        plastico: Number(document.getElementById("pl").value || 0)
+    };
+
+    const req = dados[tipo];
+
+    // 🔒 FUNÇÃO ORIGINAL PRESERVADA
+    const lotes = Math.floor(Math.min(
+        tem.aluminio / req.aluminio,
+        tem.cobre / req.cobre,
+        tem.titanio / req.titanio,
+        tem.ferro / req.ferro,
+        tem.plastico / req.plastico
+    ));
+
+    if (lotes <= 0) {
+        document.getElementById("resultado").innerHTML =
+            "❌ Materiais insuficientes para fabricar 1 lote (200 munições).";
+        return;
+    }
+
+    const totalMunicao = lotes * 200;
+    const totalDinheiro = lotes * req.valorLote;
+
+    // ➕ APENAS INFORMATIVO (não altera cálculo)
+    const valorPorUnidade = req.valorLote / 200;
+    const valorPorMil = valorPorUnidade * 1000;
+
+    document.getElementById("resultado").innerHTML = `
+        <h3>📊 RESULTADO</h3>
+
+        🔢 Lotes fabricados: <b>${lotes}</b><br>
+        🔫 Total de munição: <b>${totalMunicao}</b><br><br>
+
+        💰 Valor por lote (200): 
+        <b>R$ ${req.valorLote.toLocaleString("pt-BR")}</b><br>
+
+        💵 Valor por unidade:
+        <b>R$ ${valorPorUnidade.toFixed(2)}</b><br>
+
+        📦 Valor a cada 1000:
+        <b>R$ ${valorPorMil.toLocaleString("pt-BR", {minimumFractionDigits: 2})}</b><br><br>
+
+        💰 Total recebido:
+        <b>R$ ${totalDinheiro.toLocaleString("pt-BR")}</b>
+    `;
+}
+</script>
+
+</body>
+</html>
