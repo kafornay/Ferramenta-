@@ -21,7 +21,7 @@ body {
     background: #111827;
     padding: 30px;
     border-radius: 16px;
-    width: 350px;
+    width: 360px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
@@ -38,7 +38,7 @@ label {
 
 input {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     margin-top: 5px;
     margin-bottom: 15px;
     border-radius: 8px;
@@ -57,11 +57,6 @@ input:focus {
     padding: 15px;
     border-radius: 10px;
     margin-top: 15px;
-}
-
-.resultado p {
-    margin: 5px 0;
-    font-size: 16px;
 }
 
 .valor {
@@ -100,13 +95,13 @@ button:hover {
 <div class="container">
     <h1>Mercado Couto</h1>
 
-    <label>Quantidade de Produtos</label>
+    <label>Quantidade</label>
     <input type="number" id="quantidade" placeholder="Ex: 12">
 
-    <label>Valor Pago Total (R$)</label>
-    <input type="number" id="valorPago" placeholder="Ex: 120.00">
+    <label>Valor Pago Total</label>
+    <input type="text" id="valorPago" placeholder="R$ 0,00">
 
-    <label>% de Lucro Desejado</label>
+    <label>% de Lucro</label>
     <input type="number" id="lucro" placeholder="Ex: 30">
 
     <button onclick="calcular()">Calcular</button>
@@ -116,21 +111,42 @@ button:hover {
         <p>Preço de Venda: <span class="valor" id="final">R$ 0,00</span></p>
     </div>
 
-    <div class="footer">Calculadora Comercial v1.0</div>
+    <div class="footer">Calculadora Comercial</div>
 </div>
 
 <script>
+// FORMATA MOEDA ENQUANTO DIGITA
+const campoValor = document.getElementById('valorPago');
+
+campoValor.addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+
+    value = (value / 100).toFixed(2) + '';
+
+    value = value.replace(".", ",");
+    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+    e.target.value = "R$ " + value;
+});
+
+// CONVERTE TEXTO FORMATADO EM NÚMERO
+function moedaParaNumero(valor){
+    valor = valor.replace("R$", "").trim();
+    valor = valor.replace(/\./g, "").replace(",", ".");
+    return parseFloat(valor);
+}
+
 function formatar(valor){
     return valor.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
 }
 
 function calcular(){
     let quantidade = parseFloat(document.getElementById('quantidade').value);
-    let valorPago = parseFloat(document.getElementById('valorPago').value);
+    let valorPago = moedaParaNumero(document.getElementById('valorPago').value);
     let lucro = parseFloat(document.getElementById('lucro').value);
 
     if(!quantidade || !valorPago){
-        alert("Preencha quantidade e valor pago.");
+        alert("Preencha quantidade e valor.");
         return;
     }
 
