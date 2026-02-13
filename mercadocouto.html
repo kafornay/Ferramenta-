@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora - Mercado Couto</title>
+
+<style>
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: #111827;
+    padding: 30px;
+    border-radius: 16px;
+    width: 350px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #22c55e;
+}
+
+label {
+    font-size: 14px;
+    color: #9ca3af;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    background: #1f2937;
+    color: #fff;
+}
+
+input:focus {
+    outline: 2px solid #22c55e;
+}
+
+.resultado {
+    background: #020617;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+.resultado p {
+    margin: 5px 0;
+    font-size: 16px;
+}
+
+.valor {
+    color: #22c55e;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #22c55e;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #16a34a;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 12px;
+    color: #6b7280;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Mercado Couto</h1>
+
+    <label>Quantidade de Produtos</label>
+    <input type="number" id="quantidade" placeholder="Ex: 12">
+
+    <label>Valor Pago Total (R$)</label>
+    <input type="number" id="valorPago" placeholder="Ex: 120.00">
+
+    <label>% de Lucro Desejado</label>
+    <input type="number" id="lucro" placeholder="Ex: 30">
+
+    <button onclick="calcular()">Calcular</button>
+
+    <div class="resultado">
+        <p>Custo Unitário: <span class="valor" id="unitario">R$ 0,00</span></p>
+        <p>Preço de Venda: <span class="valor" id="final">R$ 0,00</span></p>
+    </div>
+
+    <div class="footer">Calculadora Comercial v1.0</div>
+</div>
+
+<script>
+function formatar(valor){
+    return valor.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+}
+
+function calcular(){
+    let quantidade = parseFloat(document.getElementById('quantidade').value);
+    let valorPago = parseFloat(document.getElementById('valorPago').value);
+    let lucro = parseFloat(document.getElementById('lucro').value);
+
+    if(!quantidade || !valorPago){
+        alert("Preencha quantidade e valor pago.");
+        return;
+    }
+
+    let custoUnitario = valorPago / quantidade;
+    let precoFinal = custoUnitario + (custoUnitario * (lucro/100));
+
+    document.getElementById('unitario').innerText = formatar(custoUnitario);
+    document.getElementById('final').innerText = formatar(precoFinal);
+}
+</script>
+
+</body>
+</html>
