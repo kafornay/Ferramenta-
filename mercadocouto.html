@@ -2,167 +2,200 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora - Mercado Couto</title>
+<title>Encarte Mercado Couto</title>
 
 <style>
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: linear-gradient(135deg, #0f172a, #1e293b);
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#ececec;
 }
 
-.container {
-    background: #111827;
-    padding: 30px;
-    border-radius: 16px;
-    width: 360px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+/* PAINEL */
+#painel{
+    background:#fff;
+    padding:10px;
+    border-bottom:4px solid #f26522;
+    position:sticky;
+    top:0;
+    z-index:99;
 }
 
-h1 {
-    text-align: center;
-    margin-bottom: 5px;
-    color: #22c55e;
+button{
+    background:#f26522;
+    color:#fff;
+    border:none;
+    padding:10px 14px;
+    margin:5px;
+    font-weight:bold;
+    cursor:pointer;
 }
 
-.sub {
-    text-align: center;
-    font-size: 12px;
-    color: #6b7280;
-    margin-bottom: 20px;
+/* ENCARTE */
+#encarte{
+    width:900px;
+    margin:20px auto;
+    background:#fff;
+    padding:20px;
 }
 
-label {
-    font-size: 14px;
-    color: #9ca3af;
+/* TOPO */
+.topo{
+    background:#f26522;
+    color:#fff;
+    text-align:center;
+    padding:18px;
 }
 
-input {
-    width: 100%;
-    padding: 12px;
-    margin-top: 5px;
-    margin-bottom: 15px;
-    border-radius: 8px;
-    border: none;
-    font-size: 16px;
-    background: #1f2937;
-    color: #fff;
+.topo h1{margin:0;font-size:34px;}
+.topo h2{margin:5px 0 0;font-weight:normal;}
+
+/* GRADE CENTRALIZADA */
+.grade{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:18px;
+    margin-top:25px;
 }
 
-input:focus {
-    outline: 2px solid #22c55e;
+/* CARD PRODUTO */
+.produto{
+    width:200px;
+    text-align:center;
+    position:relative;
 }
 
-.resultado {
-    background: #020617;
-    padding: 15px;
-    border-radius: 10px;
-    margin-top: 15px;
+.produto img{
+    width:100%;
+    height:150px;
+    object-fit:contain;
 }
 
-.valor {
-    color: #22c55e;
-    font-weight: bold;
-    font-size: 18px;
+/* ETIQUETA PREÇO */
+.preco{
+    position:absolute;
+    top:110px;
+    left:50%;
+    transform:translateX(-50%) rotate(-5deg);
+    background:#ffd400;
+    padding:6px 14px;
+    font-size:22px;
+    font-weight:bold;
+    color:#c40000;
+    box-shadow:2px 2px 4px rgba(0,0,0,.3);
 }
 
-button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
-    background: #22c55e;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.3s;
+.nome{
+    margin-top:25px;
+    font-weight:bold;
 }
 
-button:hover {
-    background: #16a34a;
+.desc{
+    font-size:13px;
+    color:#555;
 }
 
-.footer {
-    text-align: center;
-    margin-top: 15px;
-    font-size: 12px;
-    color: #6b7280;
+/* RODAPÉ */
+.rodape{
+    margin-top:25px;
+    border-top:2px solid #ccc;
+    padding-top:10px;
+    font-size:13px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-    <h1>Mercado Couto</h1>
-    <div class="sub">Margem padrão da loja: 40%</div>
+<div id="painel">
+    <button onclick="addProduto()">Adicionar Produto</button>
+    <button onclick="gerarImagem()">Baixar IMAGEM</button>
+    <button onclick="window.print()">Baixar PDF</button>
+    <div id="form"></div>
+</div>
 
-    <label>Quantidade</label>
-    <input type="number" id="quantidade" placeholder="Ex: 12">
-
-    <label>Valor Pago Total</label>
-    <input type="text" id="valorPago" placeholder="R$ 0,00">
-
-    <label>% de Lucro</label>
-    <input type="number" id="lucro" value="40">
-
-    <button onclick="calcular()">Calcular</button>
-
-    <div class="resultado">
-        <p>Custo Unitário: <span class="valor" id="unitario">R$ 0,00</span></p>
-        <p>Preço de Venda: <span class="valor" id="final">R$ 0,00</span></p>
+<div id="encarte">
+    <div class="topo">
+        <h1>MERCADO COUTO</h1>
+        <h2>PROMOÇÃO RELÂMPAGO</h2>
     </div>
 
-    <div class="footer">Sistema de Precificação</div>
+    <div class="grade" id="grade"></div>
+
+    <div class="rodape">
+        Ofertas válidas enquanto durarem os estoques.<br>
+        Aceitamos cartões e PIX.<br><br>
+
+        <b>Jardim Feo</b><br>
+        Rua Américo Berlim, 243 – Barra<br><br>
+
+        <b>Araras</b><br>
+        Rua Acre, 484 – Em frente ao Otto de Alencar<br>
+        Teresópolis – RJ
+    </div>
 </div>
 
 <script>
-// FORMATA MOEDA ENQUANTO DIGITA
-const campoValor = document.getElementById('valorPago');
+let total = 0;
 
-campoValor.addEventListener('input', function(e) {
-    let value = e.target.value.replace(/\D/g, '');
-
-    value = (value / 100).toFixed(2) + '';
-
-    value = value.replace(".", ",");
-    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
-    e.target.value = "R$ " + value;
-});
-
-// CONVERTE TEXTO FORMATADO EM NÚMERO
-function moedaParaNumero(valor){
-    valor = valor.replace("R$", "").trim();
-    valor = valor.replace(/\./g, "").replace(",", ".");
-    return parseFloat(valor);
-}
-
-function formatar(valor){
-    return valor.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-}
-
-function calcular(){
-    let quantidade = parseFloat(document.getElementById('quantidade').value);
-    let valorPago = moedaParaNumero(document.getElementById('valorPago').value);
-    let lucro = parseFloat(document.getElementById('lucro').value);
-
-    if(!quantidade || !valorPago){
-        alert("Preencha quantidade e valor.");
+function addProduto(){
+    if(total >= 12){
+        alert("Máximo de 12 produtos.");
         return;
     }
 
-    let custoUnitario = valorPago / quantidade;
-    let precoFinal = custoUnitario + (custoUnitario * (lucro/100));
+    total++;
 
-    document.getElementById('unitario').innerText = formatar(custoUnitario);
-    document.getElementById('final').innerText = formatar(precoFinal);
+    const div = document.createElement("div");
+    div.innerHTML = `
+        <hr>
+        Nome: <input id="nome${total}">
+        Descrição: <input id="desc${total}">
+        Preço: <input id="preco${total}">
+        URL da imagem: <input id="img${total}">
+        <button onclick="inserir(${total})">Inserir</button>
+    `;
+    document.getElementById("form").appendChild(div);
+}
+
+function inserir(id){
+    const nome = document.getElementById("nome"+id).value;
+    const desc = document.getElementById("desc"+id).value;
+    const preco = document.getElementById("preco"+id).value;
+    const img = document.getElementById("img"+id).value || "https://via.placeholder.com/150";
+
+    const card = document.createElement("div");
+    card.className = "produto";
+    card.innerHTML = `
+        <img src="${img}">
+        <div class="preco">R$ ${preco}</div>
+        <div class="nome">${nome}</div>
+        <div class="desc">${desc}</div>
+    `;
+
+    document.getElementById("grade").appendChild(card);
+}
+
+/* EXPORTAR COMO IMAGEM */
+function gerarImagem(){
+    const node = document.getElementById("encarte");
+    const data = new XMLSerializer().serializeToString(node);
+
+    const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200">
+        <foreignObject width="100%" height="100%">
+            ${data}
+        </foreignObject>
+    </svg>`;
+
+    const blob = new Blob([svg], {type:"image/svg+xml;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "encarte.png";
+    a.click();
 }
 </script>
 
