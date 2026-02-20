@@ -3,131 +3,204 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora de C4 - Pro</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<title>Calculadora Casa Imperial</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Special+Elite&display=swap" rel="stylesheet">
 
 <style>
+    :root {
+        --gold: #d4af37;
+        --dark-gold: #8e6d13;
+        --paper: #c2a382;
+        --bg-dark: #0f0a05;
+    }
+
     body {
-        background: linear-gradient(160deg, #0b0b0b, #101010, #0a0a0a);
-        color: #fff;
-        font-family: 'Poppins', sans-serif;
+        background-color: var(--bg-dark);
+        background-image: radial-gradient(circle, #2c1e14 0%, #0f0a05 100%);
+        color: #3d2b1f;
+        font-family: 'Special Elite', serif;
         margin: 0;
         padding: 20px;
         display: flex;
         flex-direction: column;
         align-items: center;
+        min-height: 100vh;
     }
 
-    .box {
+    /* Moldura externa decorativa */
+    .frame {
+        border: 15px solid transparent;
+        border-image: linear-gradient(to bottom right, var(--gold), var(--dark-gold), var(--gold)) 1;
+        padding: 5px;
+        box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        background: #1a110a;
+    }
+
+    /* O Pergaminho */
+    .parchment {
+        background: #e4d0b5;
+        background-image: url('https://www.transparenttextures.com/patterns/papyrus.png');
+        padding: 40px;
         width: 100%;
-        max-width: 500px;
-        background: #111;
-        padding: 25px;
-        border-radius: 20px;
-        border: 1px solid #333;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        max-width: 450px;
+        min-height: 600px;
+        position: relative;
+        box-shadow: inset 0 0 100px rgba(0,0,0,0.3);
+        border-radius: 2px;
+        clip-path: polygon(0% 2%, 5% 0%, 95% 0%, 100% 2%, 100% 98%, 95% 100%, 5% 100%, 0% 98%);
     }
 
-    h1 { color: #00eaff; text-align: center; font-size: 24px; margin-bottom: 20px; }
-    
-    label { display: block; margin-top: 15px; color: #888; font-size: 13px; }
-    
+    h1 {
+        font-family: 'Cinzel', serif;
+        text-align: center;
+        color: #1a110a;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border-bottom: 2px solid rgba(61, 43, 31, 0.3);
+        margin-top: 0;
+        font-size: 28px;
+    }
+
+    .subtitle {
+        text-align: center;
+        font-family: 'Cinzel', serif;
+        font-weight: bold;
+        display: block;
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-top: 15px;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 12px;
+    }
+
     input {
         width: 100%;
-        padding: 12px;
-        margin-top: 5px;
-        border-radius: 10px;
-        border: 1px solid #222;
-        background: #1b1b1b;
-        color: #00eaff;
-        font-weight: bold;
-        box-sizing: border-box;
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid rgba(0,0,0,0.2);
+        font-family: 'Special Elite', serif;
+        font-size: 18px;
+        color: #1a110a;
+        padding: 5px 0;
+        outline: none;
     }
+
+    input:focus { border-bottom-color: var(--dark-gold); }
 
     .grid-inputs {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 15px;
+        gap: 20px;
     }
 
+    /* Botões estilo Vintage */
     .btn-group {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        display: flex;
+        flex-direction: column;
         gap: 10px;
-        margin-top: 25px;
+        margin-top: 30px;
     }
 
     button {
-        padding: 12px 5px;
-        border: none;
-        border-radius: 10px;
+        background: #2c1e14;
+        color: var(--gold);
+        border: 1px solid var(--gold);
+        padding: 12px;
+        font-family: 'Cinzel', serif;
         font-weight: bold;
-        font-size: 12px;
         cursor: pointer;
         transition: 0.3s;
         text-transform: uppercase;
     }
 
-    .btn-normal { background: #444; color: white; }
-    .btn-membro { background: #00ff88; color: #000; }
-    .btn-venda { background: #00eaff; color: #000; }
-    
-    button:hover { opacity: 0.8; transform: translateY(-2px); }
+    button:hover {
+        background: var(--gold);
+        color: #1a110a;
+    }
 
-    .resultado {
-        width: 100%;
-        max-width: 500px;
-        margin-top: 20px;
+    .btn-venda {
+        background: transparent;
+        color: #1a110a;
+        border: 1px dashed #1a110a;
+    }
+
+    /* Resultado */
+    #resultado {
+        margin-top: 30px;
+        border-top: 2px double rgba(0,0,0,0.2);
+        padding-top: 20px;
         display: none;
     }
 
-    .card-res {
-        background: #161616;
-        padding: 20px;
-        border-radius: 15px;
-        margin-bottom: 15px;
-        border-left: 5px solid #444;
-        animation: fadeIn 0.4s ease-out;
+    .res-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        border-bottom: 1px dotted rgba(0,0,0,0.1);
     }
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
+    .total-box {
+        text-align: center;
+        margin-top: 20px;
+        font-family: 'Cinzel', serif;
     }
 
-    .card-res.membro-style { border-left-color: #00ff88; background: #1a221e; }
-    .card-res.venda-style { border-left-color: #00eaff; background: #1a2022; }
+    .price-tag {
+        font-size: 32px;
+        display: block;
+        color: #8b0000;
+        font-weight: bold;
+    }
 
-    .highlight { color: #00eaff; font-weight: bold; }
-    .green { color: #00ff88; }
-    .title-card { font-size: 18px; margin-bottom: 10px; display: block; }
+    /* Estilo da caneta/pena no rodapé */
+    .footer-deco {
+        text-align: right;
+        font-size: 24px;
+        margin-top: 20px;
+        opacity: 0.6;
+    }
 </style>
 </head>
 <body>
 
-<h1>💣 Gestão de Explosivos</h1>
+<div class="frame">
+    <div class="parchment">
+        <h1>Casa Imperial</h1>
+        <span class="subtitle">Diário de Produção</span>
 
-<div class="box">
-    <label>Quantidade de C4</label>
-    <input type="number" id="qtd" value="1" min="1">
+        <label>Quantidade de C4</label>
+        <input type="number" id="qtd" value="1">
 
-    <div class="grid-inputs">
-        <div><label>Preço Plástico</label><input type="number" id="pPla" value="30"></div>
-        <div><label>Preço Borracha</label><input type="number" id="pBor" value="35"></div>
-        <div><label>Preço Cobre</label><input type="number" id="pCob" value="40"></div>
-        <div><label>Preço Ferro</label><input type="number" id="pFer" value="25"></div>
-    </div>
-    <label>Preço Alumínio</label>
-    <input type="number" id="pAlu" value="25">
+        <div class="grid-inputs">
+            <div><label>Plástico</label><input type="number" id="pPla" value="30"></div>
+            <div><label>Borracha</label><input type="number" id="pBor" value="35"></div>
+            <div><label>Cobre</label><input type="number" id="pCob" value="40"></div>
+            <div><label>Ferro</label><input type="number" id="pFer" value="25"></div>
+        </div>
+        <label>Alumínio</label>
+        <input type="number" id="pAlu" value="25">
 
-    <div class="btn-group">
-        <button class="btn-normal" onclick="gerar('base')">Custo Base</button>
-        <button class="btn-membro" onclick="gerar('membro')">Membro</button>
-        <button class="btn-venda" onclick="gerar('venda')">Venda Final</button>
+        <div class="btn-group">
+            <button onclick="gerar('base')">Custo de Produção</button>
+            <button onclick="gerar('membro')">Cálculo de Membro (+60%)</button>
+            <button class="btn-venda" onclick="gerar('venda')">Ordem de Venda (2k)</button>
+        </div>
+
+        <div id="resultado">
+            <div id="lista-materiais"></div>
+            <div class="total-box">
+                <small id="label-total">VALOR TOTAL</small>
+                <span class="price-tag" id="valor-final">R$ 0,00</span>
+            </div>
+        </div>
+
+        <div class="footer-deco">🖋️</div>
     </div>
 </div>
-
-<div id="resultado" class="resultado"></div>
 
 <script>
 function gerar(tipo) {
@@ -141,58 +214,31 @@ function gerar(tipo) {
     };
 
     const baseReceta = { p: 5, b: 5, c: 5, f: 10, a: 10 };
-    let multiplicador = 1.0;
-    let titulo = "📦 Custo de Produção Base";
-    let classe = "";
-    let valorFinal = 0;
-
-    if (tipo === 'membro') {
-        multiplicador = 1.6;
-        titulo = "🚀 Pedido Membro (+60% mat.)";
-        classe = "membro-style";
-    } else if (tipo === 'venda') {
-        titulo = "💰 Venda Externa (R$ 2.000/un)";
-        classe = "venda-style";
-    }
-
+    let mult = (tipo === 'membro') ? 1.6 : 1.0;
+    
     // Cálculo de materiais
-    const matPla = Math.ceil(baseReceta.p * multiplicador) * qtd;
-    const matBor = Math.ceil(baseReceta.b * multiplicador) * qtd;
-    const matCob = Math.ceil(baseReceta.c * multiplicador) * qtd;
-    const matFer = Math.ceil(baseReceta.f * multiplicador) * qtd;
-    const matAlu = Math.ceil(baseReceta.a * multiplicador) * qtd;
+    const m = {
+        pla: Math.ceil(baseReceta.p * mult) * qtd,
+        bor: Math.ceil(baseReceta.b * mult) * qtd,
+        cob: Math.ceil(baseReceta.c * mult) * qtd,
+        fer: Math.ceil(baseReceta.f * mult) * qtd,
+        alu: Math.ceil(baseReceta.a * mult) * qtd
+    };
 
-    // Cálculo Financeiro
-    if (tipo === 'venda') {
-        valorFinal = qtd * 2000;
-    } else {
-        valorFinal = (matPla * precos.pla) + (matBor * precos.bor) + 
-                     (matCob * precos.cob) + (matFer * precos.fer) + 
-                     (matAlu * precos.alu);
-    }
+    let total = (tipo === 'venda') ? (qtd * 2000) : 
+                (m.pla * precos.pla) + (m.bor * precos.bor) + (m.cob * precos.cob) + (m.fer * precos.fer) + (m.alu * precos.alu);
 
-    const resDiv = document.getElementById("resultado");
-    resDiv.style.display = "block";
-    resDiv.innerHTML = `
-        <div class="card-res ${classe}">
-            <b class="title-card">${titulo}</b>
-            
-            <p>Materiais necessários para <b>${qtd} un</b>:</p>
-            • Plástico: <span class="highlight">${matPla}</span><br>
-            • Borracha: <span class="highlight">${matBor}</span><br>
-            • Cobre: <span class="highlight">${matCob}</span><br>
-            • Ferro: <span class="highlight">${matFer}</span><br>
-            • Alumínio: <span class="highlight">${matAlu}</span>
-            
-            <hr style="border: 0; border-top: 1px solid #333; margin: 15px 0;">
-            
-            <div style="font-size: 16px;">
-                ${tipo === 'venda' ? 'Total a receber:' : 'Valor total em materiais:'} <br>
-                <span class="highlight" style="font-size: 26px;">
-                    R$ ${valorFinal.toLocaleString('pt-BR')}
-                </span>
-            </div>
-        </div>
+    // Renderizar
+    document.getElementById("resultado").style.display = "block";
+    document.getElementById("label-total").innerText = (tipo === 'venda') ? "TOTAL A RECEBER" : "CUSTO DOS INSUMOS";
+    document.getElementById("valor-final").innerText = "R$ " + total.toLocaleString('pt-BR');
+    
+    document.getElementById("lista-materiais").innerHTML = `
+        <div class="res-item"><span>Plástico:</span> <b>${m.pla}</b></div>
+        <div class="res-item"><span>Borracha:</span> <b>${m.bor}</b></div>
+        <div class="res-item"><span>Cobre:</span> <b>${m.cob}</b></div>
+        <div class="res-item"><span>Ferro:</span> <b>${m.fer}</b></div>
+        <div class="res-item"><span>Alumínio:</span> <b>${m.alu}</b></div>
     `;
 }
 </script>
