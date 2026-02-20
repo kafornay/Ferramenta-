@@ -100,7 +100,7 @@
 
     .highlight { color: #00eaff; font-weight: bold; }
     .membro { border-left-color: #00ff88; }
-    .gringo { border-left-color: #ff4d4d; }
+    .taxa { color: #ffcc00; font-size: 12px; }
 </style>
 </head>
 <body>
@@ -108,32 +108,32 @@
 <h1>💣 Gestão de C4</h1>
 
 <div class="box">
-    <label>Quantidade para Fabricar</label>
-    <input type="number" id="qtdC4" value="50">
+    <label>Quantidade de C4 para Fabricar</label>
+    <input type="number" id="qtdC4" value="1">
 
     <div class="grid-inputs">
         <div>
-            <label>Plástico (un)</label>
-            <input type="number" id="plastico" value="30">
+            <label>Preço Plástico (un)</label>
+            <input type="number" id="pPlastico" value="30">
         </div>
         <div>
-            <label>Borracha (un)</label>
-            <input type="number" id="borracha" value="35">
+            <label>Preço Borracha (un)</label>
+            <input type="number" id="pBorracha" value="35">
         </div>
         <div>
-            <label>Cobre (un)</label>
-            <input type="number" id="cobre" value="40">
+            <label>Preço Cobre (un)</label>
+            <input type="number" id="pCobre" value="40">
         </div>
         <div>
-            <label>Ferro (un)</label>
-            <input type="number" id="ferro" value="25">
+            <label>Preço Ferro (un)</label>
+            <input type="number" id="pFerro" value="25">
         </div>
     </div>
     
-    <label>Alumínio (un)</label>
-    <input type="number" id="aluminio" value="25">
+    <label>Preço Alumínio (un)</label>
+    <input type="number" id="pAluminio" value="25">
 
-    <button onclick="calcular()">CALCULAR PREÇOS</button>
+    <button onclick="calcular()">CALCULAR MATERIAIS (+60%)</button>
 </div>
 
 <div id="resultado" class="resultado"></div>
@@ -141,50 +141,64 @@
 <script>
 function calcular() {
     let qtd = Number(document.getElementById("qtdC4").value) || 1;
-    let pPla = Number(document.getElementById("plastico").value);
-    let pBor = Number(document.getElementById("borracha").value);
-    let pCob = Number(document.getElementById("cobre").value);
-    let pFer = Number(document.getElementById("ferro").value);
-    let pAlu = Number(document.getElementById("aluminio").value);
+    
+    // Preços unitários dos materiais (para cálculo financeiro final)
+    let valPla = Number(document.getElementById("pPlastico").value);
+    let valBor = Number(document.getElementById("pBorracha").value);
+    let valCob = Number(document.getElementById("pCobre").value);
+    let valFer = Number(document.getElementById("pFerro").value);
+    let valAlu = Number(document.getElementById("pAluminio").value);
 
-    // Receita por 1 C4
-    const matPorC4 = { p: 5, b: 5, c: 5, f: 10, a: 10 };
+    // 1. Receita BASE por 1 C4
+    const base = { p: 5, b: 5, c: 5, f: 10, a: 10 };
 
-    // Cálculo do custo de material puro por UNIDADE
-    let custoMaterialUn = (matPorC4.p * pPla) + (matPorC4.b * pBor) + 
-                          (matPorC4.c * pCob) + (matPorC4.f * pFer) + 
-                          (matPorC4.a * pAlu);
+    // 2. Aplicação dos 60% de acréscimo nos MATERIAIS
+    // (Ex: 5 + 60% = 8 | 10 + 60% = 16)
+    const taxa = 1.60;
+    const matComTaxa = {
+        p: Math.ceil(base.p * taxa),
+        b: Math.ceil(base.b * taxa),
+        c: Math.ceil(base.c * taxa),
+        f: Math.ceil(base.f * taxa),
+        a: Math.ceil(base.a * taxa)
+    };
 
-    // Lógica do Negócio
-    let precoGringoUn = 300; 
-    let precoMembroUn = custoMaterialUn * 1.60; // Material + 60%
+    // 3. Totais Necessários (Qtd * Materiais com Taxa)
+    let totalPla = matComTaxa.p * qtd;
+    let totalBor = matComTaxa.b * qtd;
+    let totalCob = matComTaxa.c * qtd;
+    let totalFer = matComTaxa.f * qtd;
+    let totalAlu = matComTaxa.a * qtd;
 
-    let totalGringo = precoGringoUn * qtd;
-    let totalMembro = precoMembroUn * qtd;
-    let economia = totalGringo - totalMembro;
+    // 4. Cálculo financeiro baseado na nova quantidade de materiais
+    let custoFinalMembro = (totalPla * valPla) + (totalBor * valBor) + 
+                           (totalCob * valCob) + (totalFer * valFer) + 
+                           (totalAlu * valAlu);
 
     document.getElementById("resultado").style.display = "block";
     document.getElementById("resultado").innerHTML = `
         <div class="card-res">
-            🔧 <b>Insumos para ${qtd} un:</b><br>
-            Plástico: ${matPorC4.p * qtd} | Borracha: ${matPorC4.b * qtd}<br>
-            Cobre: ${matPorC4.c * qtd} | Ferro: ${matPorC4.f * qtd}<br>
-            Alumínio: ${matPorC4.a * qtd}
-        </div>
-
-        <div class="card-res gringo">
-            🚩 <b>Preço do Gringo (R$ 300/un):</b><br>
-            Total: <span class="highlight">R$ ${totalGringo.toLocaleString('pt-BR')}</span>
+            🔧 <b>Materiais p/ unidade (c/ taxa 60%):</b><br>
+            Plástico: <span class="highlight">${matComTaxa.p}</span> | 
+            Borracha: <span class="highlight">${matComTaxa.b}</span><br>
+            Cobre: <span class="highlight">${matComTaxa.c}</span> | 
+            Ferro: <span class="highlight">${matComTaxa.f}</span><br>
+            Alumínio: <span class="highlight">${matComTaxa.a}</span>
         </div>
 
         <div class="card-res membro">
-            ✅ <b>Preço para Membro (Custo + 60%):</b><br>
-            Unitário: <span class="highlight">R$ ${precoMembroUn.toLocaleString('pt-BR')}</span><br>
-            Total: <span class="highlight">R$ ${totalMembro.toLocaleString('pt-BR')}</span>
+            📦 <b>Total de Insumos para ${qtd} C4:</b><br>
+            • ${totalPla} Plásticos<br>
+            • ${totalBor} Borrachas<br>
+            • ${totalCob} Cobres<br>
+            • ${totalFer} Ferros<br>
+            • ${totalAlu} Alumínios
         </div>
 
-        <div style="text-align:center; padding: 10px; color: #00ff88; font-weight: bold;">
-            💰 Economia de R$ ${economia.toLocaleString('pt-BR')} em relação ao gringo!
+        <div class="card-res">
+            💰 <b>Custo Financeiro Total:</b><br>
+            <span class="highlight" style="font-size: 20px;">R$ ${custoFinalMembro.toLocaleString('pt-BR')}</span><br>
+            <span class="taxa">Baseado na quantidade com acréscimo.</span>
         </div>
     `;
 }
