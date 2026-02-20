@@ -25,9 +25,10 @@
         padding: 25px;
         border-radius: 20px;
         border: 1px solid #333;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
 
-    h1 { color: #00eaff; text-align: center; font-size: 24px; }
+    h1 { color: #00eaff; text-align: center; font-size: 24px; margin-bottom: 20px; }
     
     label { display: block; margin-top: 15px; color: #888; font-size: 13px; }
     
@@ -51,23 +52,27 @@
 
     .btn-group {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
         gap: 10px;
         margin-top: 25px;
     }
 
     button {
-        padding: 15px;
+        padding: 12px 5px;
         border: none;
-        border-radius: 12px;
+        border-radius: 10px;
         font-weight: bold;
+        font-size: 12px;
         cursor: pointer;
         transition: 0.3s;
+        text-transform: uppercase;
     }
 
-    .btn-normal { background: #555; color: white; }
+    .btn-normal { background: #444; color: white; }
     .btn-membro { background: #00ff88; color: #000; }
-    button:hover { opacity: 0.8; transform: scale(0.98); }
+    .btn-venda { background: #00eaff; color: #000; }
+    
+    button:hover { opacity: 0.8; transform: translateY(-2px); }
 
     .resultado {
         width: 100%;
@@ -81,13 +86,17 @@
         padding: 20px;
         border-radius: 15px;
         margin-bottom: 15px;
-        border-left: 5px solid #555;
+        border-left: 5px solid #444;
+        animation: fadeIn 0.4s ease-out;
     }
 
-    .card-res.membro-style {
-        border-left-color: #00ff88;
-        background: #1a221e;
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
+
+    .card-res.membro-style { border-left-color: #00ff88; background: #1a221e; }
+    .card-res.venda-style { border-left-color: #00eaff; background: #1a2022; }
 
     .highlight { color: #00eaff; font-weight: bold; }
     .green { color: #00ff88; }
@@ -96,46 +105,33 @@
 </head>
 <body>
 
-<h1>💣 Produção de C4</h1>
+<h1>💣 Gestão de Explosivos</h1>
 
 <div class="box">
     <label>Quantidade de C4</label>
     <input type="number" id="qtd" value="1" min="1">
 
     <div class="grid-inputs">
-        <div>
-            <label>Preço Plástico</label>
-            <input type="number" id="pPla" value="30">
-        </div>
-        <div>
-            <label>Preço Borracha</label>
-            <input type="number" id="pBor" value="35">
-        </div>
-        <div>
-            <label>Preço Cobre</label>
-            <input type="number" id="pCob" value="40">
-        </div>
-        <div>
-            <label>Preço Ferro</label>
-            <input type="number" id="pFer" value="25">
-        </div>
+        <div><label>Preço Plástico</label><input type="number" id="pPla" value="30"></div>
+        <div><label>Preço Borracha</label><input type="number" id="pBor" value="35"></div>
+        <div><label>Preço Cobre</label><input type="number" id="pCob" value="40"></div>
+        <div><label>Preço Ferro</label><input type="number" id="pFer" value="25"></div>
     </div>
     <label>Preço Alumínio</label>
     <input type="number" id="pAlu" value="25">
 
     <div class="btn-group">
-        <button class="btn-normal" onclick="gerar(1.0)">CUSTO BASE</button>
-        <button class="btn-membro" onclick="gerar(1.6)">MEMBRO (+60%)</button>
+        <button class="btn-normal" onclick="gerar('base')">Custo Base</button>
+        <button class="btn-membro" onclick="gerar('membro')">Membro</button>
+        <button class="btn-venda" onclick="gerar('venda')">Venda Final</button>
     </div>
 </div>
 
 <div id="resultado" class="resultado"></div>
 
 <script>
-function gerar(multiplicador) {
-    const qtd = Number(document.getElementById("qtd").value);
-    
-    // Preços
+function gerar(tipo) {
+    const qtd = Number(document.getElementById("qtd").value) || 1;
     const precos = {
         pla: Number(document.getElementById("pPla").value),
         bor: Number(document.getElementById("pBor").value),
@@ -144,31 +140,44 @@ function gerar(multiplicador) {
         alu: Number(document.getElementById("pAlu").value)
     };
 
-    // Receita Base (por 1 unidade)
-    const base = { p: 5, b: 5, c: 5, f: 10, a: 10 };
+    const baseReceta = { p: 5, b: 5, c: 5, f: 10, a: 10 };
+    let multiplicador = 1.0;
+    let titulo = "📦 Custo de Produção Base";
+    let classe = "";
+    let valorFinal = 0;
 
-    // Cálculo dos Materiais com o multiplicador (Arredondado para cima)
-    const matPla = Math.ceil(base.p * multiplicador) * qtd;
-    const matBor = Math.ceil(base.b * multiplicador) * qtd;
-    const matCob = Math.ceil(base.c * multiplicador) * qtd;
-    const matFer = Math.ceil(base.f * multiplicador) * qtd;
-    const matAlu = Math.ceil(base.a * multiplicador) * qtd;
+    if (tipo === 'membro') {
+        multiplicador = 1.6;
+        titulo = "🚀 Pedido Membro (+60% mat.)";
+        classe = "membro-style";
+    } else if (tipo === 'venda') {
+        titulo = "💰 Venda Externa (R$ 2.000/un)";
+        classe = "venda-style";
+    }
 
-    const custoFinanceiro = (matPla * precos.pla) + (matBor * precos.bor) + 
-                             (matCob * precos.cob) + (matFer * precos.fer) + 
-                             (matAlu * precos.alu);
+    // Cálculo de materiais
+    const matPla = Math.ceil(baseReceta.p * multiplicador) * qtd;
+    const matBor = Math.ceil(baseReceta.b * multiplicador) * qtd;
+    const matCob = Math.ceil(baseReceta.c * multiplicador) * qtd;
+    const matFer = Math.ceil(baseReceta.f * multiplicador) * qtd;
+    const matAlu = Math.ceil(baseReceta.a * multiplicador) * qtd;
 
-    const isMembro = multiplicador > 1;
+    // Cálculo Financeiro
+    if (tipo === 'venda') {
+        valorFinal = qtd * 2000;
+    } else {
+        valorFinal = (matPla * precos.pla) + (matBor * precos.bor) + 
+                     (matCob * precos.cob) + (matFer * precos.fer) + 
+                     (matAlu * precos.alu);
+    }
+
     const resDiv = document.getElementById("resultado");
-    
     resDiv.style.display = "block";
     resDiv.innerHTML = `
-        <div class="card-res ${isMembro ? 'membro-style' : ''}">
-            <b class="title-card ${isMembro ? 'green' : ''}">
-                ${isMembro ? '🚀 Pedido Membro (+60%)' : '📦 Custo de Produção Base'}
-            </b>
+        <div class="card-res ${classe}">
+            <b class="title-card">${titulo}</b>
             
-            <p>Total de Materiais para <b>${qtd} un</b>:</p>
+            <p>Materiais necessários para <b>${qtd} un</b>:</p>
             • Plástico: <span class="highlight">${matPla}</span><br>
             • Borracha: <span class="highlight">${matBor}</span><br>
             • Cobre: <span class="highlight">${matCob}</span><br>
@@ -177,10 +186,10 @@ function gerar(multiplicador) {
             
             <hr style="border: 0; border-top: 1px solid #333; margin: 15px 0;">
             
-            <div style="font-size: 18px;">
-                Valor Total em Material: <br>
-                <span class="highlight" style="font-size: 24px; color: ${isMembro ? '#00ff88' : '#00eaff'}">
-                    R$ ${custoFinanceiro.toLocaleString('pt-BR')}
+            <div style="font-size: 16px;">
+                ${tipo === 'venda' ? 'Total a receber:' : 'Valor total em materiais:'} <br>
+                <span class="highlight" style="font-size: 26px;">
+                    R$ ${valorFinal.toLocaleString('pt-BR')}
                 </span>
             </div>
         </div>
